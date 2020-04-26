@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import computeServiceRouter from './compute-service'
 import networkServiceRouter from './network-service'
+import systemManageRouter from './system-manage'
 
 Vue.use(Router)
 const defaultRouter = [{
@@ -9,15 +10,6 @@ const defaultRouter = [{
     component: () => import( /* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
     meta: {
       title: '系统首页'
-    }
-  },
-  {
-    // 权限页面
-    path: '/permission',
-    component: () => import( /* webpackChunkName: "permission" */ '../components/page/Permission.vue'),
-    meta: {
-      title: '权限测试',
-      permission: true
     }
   },
   {
@@ -36,7 +28,11 @@ const defaultRouter = [{
   }
 ]
 
-const lastRouter = defaultRouter.concat(computeServiceRouter, networkServiceRouter)
+const lastRouter = defaultRouter.concat(
+  computeServiceRouter,
+  networkServiceRouter,
+  systemManageRouter
+)
 export default new Router({
   routes: [{
       path: '/',

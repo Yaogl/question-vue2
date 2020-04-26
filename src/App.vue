@@ -9,7 +9,6 @@ import menuList from './layout/menuList'
 export default{
   watch: {
     $route(val) {
-      console.log(process.env);
     }
   }
 }

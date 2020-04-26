@@ -22,7 +22,7 @@ export const listMoreOperate = [
   { label: '解绑弹性ip', value: 9, componentName: '' },
   { label: '挂载磁盘', value: 10, componentName: 'bind-ip' },
   { label: '卸载磁盘', value: 11, componentName: 'bind-ip' },
-  { label: '调整配置', value: 12, componentName: '' },
+  { label: '调整配置', value: 12, componentName: 'adjust-configuration' },
   { label: '更改项目', value: 13, componentName: '' },
   { label: '标记标签', value: 14, componentName: '' },
   { label: '同步状态', value: 15, componentName: '' },

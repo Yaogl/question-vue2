@@ -42,15 +42,11 @@ export default [
   {
     icon: 'el-icon-lx-warn',
     index: '3',
-    title: '错误处理',
+    title: '系统管理',
     subs: [
       {
-        index: '/permission',
-        title: '权限测试'
-      },
-      {
-        index: '/404',
-        title: '404页面'
+        index: '/system-manage/system-manage-module',
+        title: '模块管理'
       }
     ]
   }

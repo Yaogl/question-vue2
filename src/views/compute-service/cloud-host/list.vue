@@ -19,39 +19,22 @@
               :value="item.value">{{ item.label }}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-select v-model="query.value" placeholder="请选择">
-          <el-option
-            v-for="item in moreOperate"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
       </el-col>
       <el-col :span="8" align="right">
-        <el-select
-          v-model="query.tag"
-          multiple
-          collapse-tags
-          style="margin-left: 20px;width: 150px;"
-          placeholder="请选择">
-          <el-option v-for="item in tagList" :key="item.value" :value="item.value" :label="item.name">
-            <el-tag effect="dark" style="border: none;" :color="item.color"> {{ item.name }} </el-tag>
-          </el-option>
-          <p class="select-slot">
-            <el-button @click="addTag">创建标签</el-button>
-          </p>
-          <p class="select-slot">
-            <el-button @click="addTag">管理标签</el-button>
-          </p>
-        </el-select>
-
+        <!-- 标签管理 -->
+        <tags-manage v-model="query.tag" />
         <el-select
           v-model="showList"
           multiple
           collapse-tags
-          style="margin-left: 20px;width: 200px;"
+          class="no-select-header"
+          style="margin-left: 20px;width: 150px;"
           placeholder="请选择">
+          <template slot="prefix">
+            <el-button type="primary">
+              <i class="iconfont">&#xe62b;</i>
+            </el-button>
+          </template>
           <el-option
             v-for="item in headerList"
             :key="item.value"
@@ -92,7 +75,10 @@
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"
+        @sort-change="sortChange"
         style="width: 100%">
+        <el-table-column type="selection" width="55" />
+        <el-table-column label="日期" prop="name" sortable="custom" />
         <el-table-column v-for="(item, index) in showedHeaderList" :key="index" prop="name" :label="item.label" />
         <el-table-column>
           <template slot="header" slot-scope="scope">
@@ -136,22 +122,23 @@
 import List from '@/components/list'
 import * as Config from './config'
 import ExportDialog from './list-components/export-dialog.vue'
-import CreateTag from './list-components/create-tag.vue'
 import ResetPassword from './list-components/reset-password.vue'
 import ResetSystem from './list-components/reset-system.vue'
 import GenerateImage from './list-components/generate-image.vue'
 import BindIp from './list-components/bind-ip.vue'
-import { queryOrgTree } from '@/api/login'
+import AdjustConfiguration from './list-components/adjust-configuration.vue'
+import TagsManage from '@/components/tags-manage'
 
 export default {
   extends: List,
   components: {
     ExportDialog, // 导出弹窗
-    CreateTag, // 创建标签弹窗
     ResetPassword, // 重置密码弹窗
     ResetSystem, // 重置系统弹窗
     GenerateImage, // 生成镜像弹窗
     BindIp, // 绑定ip弹窗
+    AdjustConfiguration, // 调整配置弹窗
+    TagsManage
   },
   computed: {
     showedHeaderList() {
@@ -182,26 +169,18 @@ export default {
         { label: '项目', value: '6' },
         { label: '状态', value: '7' }
       ],
-      tagList: [
-        { name: 'test', color: 'red', value: '1' },
-        { name: 'test1', color: 'green', value: '2' }
-      ],
       showList: ['1'],
       createdSearch: false,
       dialogVisible: false, // 弹窗共用组件显隐状态值
-      dialogName: 'create-tag', // 弹窗组件过多，通过name区分需要点击显示某一个弹窗
+      dialogName: '', // 弹窗组件过多，通过name区分需要点击显示某一个弹窗
     }
   },
   created() {
-    
+
   },
   methods: {
     jumpToCreate() {
       this.$router.push('/compute-service/cloud-host-create')
-    },
-    addTag() {
-      this.dialogName = 'create-tag'
-      this.dialogVisible = true
     },
     downLoad() {
       this.dialogName = 'export-dialog'
@@ -210,6 +189,9 @@ export default {
     clickOperate(item) {
       this.dialogName = item.componentName
       this.dialogVisible = true
+    },
+    sortChange(sort) { // 监听table排序参数，例如返回prop：name,order: descending 降序 ascending 升序 null 清空
+      console.log(sort)
     }
   }
 }

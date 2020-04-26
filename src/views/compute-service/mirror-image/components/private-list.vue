@@ -15,8 +15,14 @@
           v-model="showList"
           multiple
           collapse-tags
+          class="no-select-header"
           style="margin-left: 20px;width: 200px;"
           placeholder="请选择">
+          <template slot="prefix">
+            <el-button type="primary">
+              <i class="iconfont">&#xe62b;</i>
+            </el-button>
+          </template>
           <el-option
             v-for="item in headerList"
             :key="item.value"
@@ -58,18 +64,6 @@
         style="width: 100%">
         <el-table-column type="selection" width="55" />
         <el-table-column v-for="(item, index) in showedHeaderList" :key="index" prop="name" :label="item.label" />
-        <!-- <el-table-column prop="address" label="地址" width="120">
-          <template slot="header" slot-scope="scope">
-            <el-select v-model="query.value" placeholder="状态">
-              <el-option
-                v-for="item in moreOperate"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </template>
-        </el-table-column> -->
       </el-table>
     </el-card>
     <el-row>

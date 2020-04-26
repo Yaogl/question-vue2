@@ -75,31 +75,31 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    .title-row {
-        height: 56px;
-        background: rgb(50, 65, 87);
-        color: #fff;
-        padding: 0 20px;
-        line-height: 56px;
-        .title {
-            margin-left: 7px;
-        }
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  .title-row {
+    height: 56px;
+    background: rgb(50, 65, 87);
+    color: #fff;
+    padding: 0 20px;
+    line-height: 56px;
+    .title {
+      margin-left: 7px;
     }
+  }
 }
 
 .sidebar > ul::-webkit-scrollbar {
-    width: 0;
+  width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-    width: 220px;
+  width: 220px;
 }
 .sidebar > ul {
-    overflow-y: scroll;
-    height: 100%;
+  overflow-y: auto;
+  height: calc(100% - 56px);
 }
 </style>

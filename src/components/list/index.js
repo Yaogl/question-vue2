@@ -3,8 +3,10 @@
  * @file: @/components/list
  * @version: 1.0.0
  */
+import SelectTableMixins from '../../mixins/select-table'
 
 export default {
+  mixins: [SelectTableMixins],
   data() {
     return {
       // 页面唯一标志，缓存搜索条件用
@@ -17,9 +19,6 @@ export default {
       query: {}, // 搜索条件
       createdSearch: true, // 是否在页面创建时立刻搜索
       deleteMessage: '您正在进行删除操作, 是否继续?',
-      selectedItems: [], // 选中列表集合
-      selectIds: [], // 选中列表id的合集
-      multiple: true // 是否多选
     }
   },
   created() {
@@ -34,24 +33,6 @@ export default {
     }
   },
   methods: {
-    changeSelect(list, row) {
-      if (!this.multiple) {
-        this.$refs[this.tableRefs].clearSelection()
-        this.$refs[this.tableRefs].toggleRowSelection(row, true)
-        this.selectedItems = [row]
-        return
-      }
-      this.tableList.map(item => {
-        const idx = list.findIndex(tItem => tItem.id === item.id)
-        if (idx > -1) {
-          const sIdx = this.selectedItems.findIndex(sItem => sItem.id === item.id)
-          sIdx > -1 ? '' : this.selectedItems.push(item)
-        } else {
-          const sIdx = this.selectedItems.findIndex(sItem => sItem.id === item.id)
-          sIdx > -1 ? this.selectedItems.splice(sIdx, 1) : ''
-        }
-      })
-    },
     fetchApi() {
       return Promise.resolve([{name: 1, id: 1}, {name: 2, id: 2}])
     }, // 列表搜索接口函数

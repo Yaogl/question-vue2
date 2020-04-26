@@ -3,6 +3,7 @@
 export default {
   data () {
     return {
+      tableList: [],
       selectedItems: [], // 选中列表集合
       selectIds: [], // 选中列表id的合集
       multiple: true // 是否多选

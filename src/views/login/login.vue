@@ -55,18 +55,19 @@ export default {
     submitForm() {
       this.$refs.login.validate(valid => {
         if (valid) {
-          let formData = new FormData()
-          formData.append('uname', this.param.uname)
-          formData.append('upwd', this.param.upwd)
-          formData.append('type', 'c')
-          login(formData).then(res => {
-            if (res.success === 'true') {
-              this.$cookies.set('username', this.param.uname)
-              this.$cookies.set('password', this.param.upwd)
-            }
-            this.setUserInfo(this.param)
-            this.$router.push('/')
-          })
+          // let formData = new FormData()
+          // formData.append('uname', this.param.uname)
+          // formData.append('upwd', this.param.upwd)
+          // formData.append('type', 'c')
+          // login(formData).then(res => {
+          //   if (res.success === 'true') {
+          //     this.$cookies.set('username', this.param.uname)
+          //     this.$cookies.set('password', this.param.upwd)
+          //   }
+          //
+          // })
+          this.setUserInfo(this.param)
+          this.$router.push('/')
         } else {
           this.$message.error('请输入账号和密码')
         }

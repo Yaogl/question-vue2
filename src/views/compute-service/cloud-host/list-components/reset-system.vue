@@ -23,11 +23,11 @@
 
         <el-form-item label="">
           <el-select v-model="formData.password" class="mgr20 input-width-2" placeholder="请选择">
-            <el-option v-for="(item, index) in systemList" :label="item.name" :value="item.value"></el-option>
+            <el-option v-for="(item, index) in systemList" :key="index" :label="item.name" :value="item.value"></el-option>
           </el-select>
 
           <el-select v-model="formData.password" class="mgr20 input-width-2" placeholder="请选择">
-            <el-option v-for="(item, index) in list" :label="item.name" :value="item.value"></el-option>
+            <el-option v-for="(item, index) in list" :key="index" :label="item.name" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <div class="line"></div>

@@ -7,8 +7,42 @@
         </el-button>
         <el-button type="primary" @click="createSecret('add')">创建VPC</el-button>
         <el-button type="primary">删除</el-button>
+        <el-dropdown placement="bottom-start" trigger="click">
+          <el-button class="el-dropdown-link">
+            更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown" class="operate-dropdown">
+            <el-dropdown-item v-for="item in listMoreOperate"
+              @click.stop.native="clickOperate(item)"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">{{ item.label }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-col>
       <el-col :span="12" align="right">
+        <tags-manage v-model="query.tag"/>
+
+        <el-select
+          v-model="showList"
+          multiple
+          collapse-tags
+          class="no-select-header"
+          style="margin-left: 20px;width: 150px;"
+          placeholder="请选择">
+          <template slot="prefix">
+            <el-button type="primary">
+              <i class="iconfont">&#xe62b;</i>
+            </el-button>
+          </template>
+          <el-option
+            v-for="item in headerList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+
         <el-button type="primary">
           <i class="el-icon-bottom"></i>
         </el-button>
@@ -41,30 +75,14 @@
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
-        <el-table-column
-          type="selection"
-          width="55" />
-<!--
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline>
-              <el-form-item label="商品名称">
-                <span>商品名称</span>
-              </el-form-item>
-              <el-form-item label="所属店铺">
-                <span>商品名称</span>
-              </el-form-item>
-            </el-form>
+        <el-table-column type="selection" width="55" />
+        <el-table-column v-for="(item, index) in showedHeaderList" :key="index" prop="name" :label="item.label" />
+        <el-table-column label="操作">
+          <template lang="html" slot-scope="scope">
+            <el-button type="text" @click="editCur(scope.row, 'edit-vpc')">修改</el-button>
+            <el-button type="text" @click="editCur(scope.row, 'bind-tags')">标签</el-button>
+            <el-button type="text">删除</el-button>
           </template>
-        </el-table-column> -->
-        <el-table-column
-          prop="name"
-          label="姓名">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="日期"
-          width="180">
         </el-table-column>
       </el-table>
     </el-card>
@@ -84,41 +102,77 @@
       </el-col>
     </el-row>
 
-    <!-- <create-secret-key :visible.sync="visible" :operate="operate" /> -->
+    <component :is="componentName" :visible.sync="visible" />
   </div>
 </template>
 
 <script>
 import List from '@/components/list'
+import TagsManage from '@/components/tags-manage/index.vue'
+import BindTags from './list-components/bind-tags.vue'
+import EditVpc from './list-components/edit-vpc.vue'
 
 export default {
   extends: List,
+  components: {
+    TagsManage,
+    EditVpc,
+    BindTags
+  },
   data() {
     return {
       pageList: [5, 10, 15, 20, 40, 100],
       createdSearch: false,
       query: {
         name: '',
+        tag: [],
         page: 1,
         size: 10
       },
       tableList: [
         { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
         { name: 11222 }
       ],
+      listMoreOperate: [
+        { label: '编辑标签', value: 1 },
+        { label: '同步状态', value: 2 },
+        { label: '修改项目', value: 3 },
+        { label: '设置删除保护', value: 4 },
+        { label: '删除', value: 5 }
+      ],
+      headerList: [
+        { label: '名称', value: '1' },
+        { label: '系统', value: '2' },
+        { label: '版本', value: '3' },
+        { label: '格式', value: '4' },
+        { label: '容量', value: '5' },
+        { label: '项目', value: '6' },
+        { label: '状态', value: '7' }
+      ],
+      showList: ['1'],
       visible: false,
-      operate: ''
+      curRow: {}, // 点击的当前行数据
+      componentName: ''
+    }
+  },
+  computed: {
+    showedHeaderList() {
+      return this.headerList.filter(item => this.showList.includes(item.value))
     }
   },
   methods: {
     search() {
-      alert(1)
+    },
+    clickOperate(item) {
+      console.log(item);
     },
     createSecret(operate){
       this.$router.push('/network-service/vpc-network-create')
+    },
+    editCur(row, name) {
+      this.curRow = row
+      this.componentName = name
+      this.visible = true
     }
   }
 }

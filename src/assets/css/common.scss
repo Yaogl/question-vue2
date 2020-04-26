@@ -1,7 +1,7 @@
 // 修改全局样式集合
 .operate-dropdown {
   //设置高度才能显示出滚动条 !important
-  height: 300px;
+  max-height: 300px;
   overflow: auto;
 }
 .operate-dropdown::-webkit-scrollbar {
@@ -38,4 +38,19 @@
 }
 .flex{
   display: flex;
+}
+// 下拉菜单不显示头部内容
+.no-select-header{
+  .el-input{
+    .el-input__inner,.el-input__suffix{
+      visibility: hidden;
+    }
+  }
+  .el-input__prefix{
+    color: #333;
+    cursor: pointer;
+  }
+  .el-select__tags{
+    display: none;
+  }
 }
