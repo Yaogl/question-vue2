@@ -1,0 +1,48 @@
+.ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ellipsis-3{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.input-width-1 {
+  width: 100px;
+}
+.input-width-2 {
+  width: 200px;
+}
+.input-width-3 {
+  width: 200px;
+}
+.input-width-4 {
+  width: 200px;
+}
+.input-width-5 {
+  width: 200px;
+}
+.input-width-percent-3 {
+  width: 30%;
+}
+.input-width-percent-4 {
+  width: 40%;
+}
+.input-width-percent-5 {
+  width: 50%;
+}
+.input-width-percent-6 {
+  width: 60%;
+}
+.input-width-percent-7 {
+  width: 70%;
+}
+.input-width-percent-8 {
+  width: 80%;
+}
+.input-width-percent-9 {
+  width: 90%;
+}

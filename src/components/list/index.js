@@ -1,0 +1,150 @@
+/*
+ * @Description: 列表通用组件 搜索条件处理等
+ * @file: @/components/list
+ * @version: 1.0.0
+ */
+
+export default {
+  data() {
+    return {
+      // 页面唯一标志，缓存搜索条件用
+      uniqueName: '',
+      loading: false, // 查询loading状态，页面删除等操作loading不能共用
+      tableList: [], // 列表数据
+      tableRefs: 'tablelist', // 选择列表refs
+      total: 0, // 数据总数
+      cacheQuery: false, // 是否缓存搜索条件
+      query: {}, // 搜索条件
+      createdSearch: true, // 是否在页面创建时立刻搜索
+      deleteMessage: '您正在进行删除操作, 是否继续?',
+      selectedItems: [], // 选中列表集合
+      selectIds: [], // 选中列表id的合集
+      multiple: true // 是否多选
+    }
+  },
+  created() {
+    this._original = {}
+    this._original.query = JSON.parse(JSON.stringify(this.query))
+    if (this.cacheQuery) {
+      this.mergeQuery(`${this.$route.name}-${this.uniqueName}`)
+    }
+    if (this.createdSearch) {
+      this.beforeSearch()
+      this.fetchByPage()
+    }
+  },
+  methods: {
+    changeSelect(list, row) {
+      if (!this.multiple) {
+        this.$refs[this.tableRefs].clearSelection()
+        this.$refs[this.tableRefs].toggleRowSelection(row, true)
+        this.selectedItems = [row]
+        return
+      }
+      this.tableList.map(item => {
+        const idx = list.findIndex(tItem => tItem.id === item.id)
+        if (idx > -1) {
+          const sIdx = this.selectedItems.findIndex(sItem => sItem.id === item.id)
+          sIdx > -1 ? '' : this.selectedItems.push(item)
+        } else {
+          const sIdx = this.selectedItems.findIndex(sItem => sItem.id === item.id)
+          sIdx > -1 ? this.selectedItems.splice(sIdx, 1) : ''
+        }
+      })
+    },
+    fetchApi() {
+      return Promise.resolve([{name: 1, id: 1}, {name: 2, id: 2}])
+    }, // 列表搜索接口函数
+    mergeQuery(type) {
+      const data = JSON.parse(sessionStorage.getItem(`${type}-query`))
+
+      if (!data) {
+        return
+      }
+
+      Object.assign(this.query, data.query)
+    },
+    currentChange(page) {
+      // el-pagination组件 current-change
+      this.fetchByPage(page)
+    },
+    changePages(page) {
+      // el-pagination组件  size-change
+      this.query['per-page'] = page
+      this.fetchByPage(1)
+    },
+    search() {
+      this.beforeSearch()
+      this.fetchByPage(1)
+    },
+    fetchByPage(page = this.query.page) {
+      if (this.loading) {
+        this.$message.warning('正在加载，请勿重复操作')
+        return
+      }
+      this.query.page = page
+      if (this.cacheQuery) {
+
+        // window.scrollTo(0, 0)
+        sessionStorage.setItem(
+          `${this.$route.name}-${this.uniqueName}-query`,
+          JSON.stringify({
+            query: this.query
+          })
+        )
+      }
+
+      const params = {
+        ...this.query
+      }
+
+      this.loading = true
+      return this.fetchApi(params).then(results => {
+        this.loading = false
+        this.tableList = this.formatData(results || [])
+
+        this.total = Number(results.total || 0)
+        this.afterSearch()
+      })
+    },
+    // 对结果处理的钩子
+    formatData(results) {
+      return results
+    },
+    clearQuery() { // 清除搜索条件并搜索
+      this.resetQuery()
+      this.search()
+    },
+    resetQuery() { // 清除搜索条件
+      this.query = JSON.parse(JSON.stringify(this._original.query))
+    },
+    beforeSearch() {},
+    deleteApi: function() {}, // 删除api
+    afterDelete() {},
+    afterSearch() {},
+    deleteRow(row) { // 删除列表当前行
+      this.$confirm(this.deleteMessage, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      })
+        .then(() => {
+          this.deleteApi(row.id)
+            .then(res => {
+              this.$message.success('操作成功')
+              this.search()
+              this.afterDelete()
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+    }
+
+  }
+}

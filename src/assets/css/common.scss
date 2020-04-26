@@ -1,0 +1,41 @@
+// 修改全局样式集合
+.operate-dropdown {
+  //设置高度才能显示出滚动条 !important
+  height: 300px;
+  overflow: auto;
+}
+.operate-dropdown::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background-color: #F5F5F5;
+}
+.operate-dropdown::-webkit-scrollbar-track {
+  //-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+.line{
+  margin: 20px;
+  height: 1px;
+  background: #ccc;
+}
+.select-slot{ // 下拉框下自定义内容
+  padding: 3px 15px;
+}
+
+.el-dialog{
+  .el-input__suffix{
+    top: 6px;
+  }
+}
+
+.mgb20 {
+  margin-bottom: 20px;
+}
+.mgr20 {
+  margin-right: 20px;
+}
+.flex{
+  display: flex;
+}
