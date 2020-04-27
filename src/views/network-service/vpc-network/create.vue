@@ -23,7 +23,7 @@
         </el-form-item>
         <el-form-item label="网段：">
           <div class="flex">
-            <ip-input v-model="formData.ipv4" @status="statusSay" format="ipv4" maxWidth="200" @error="error" @input="inputTest" />
+            <ip-input v-model="formData.ipv4" @status="statusSay" format="ipv4" maxWidth="320" @error="error" @input="inputTest" />
             / &nbsp;<el-select v-model="formData.radio" class="mgr20 input-width-1" placeholder="16">
               <el-option label="16" value="1"></el-option>
               <el-option label="18" value="2"></el-option>
@@ -45,7 +45,7 @@
         </el-form-item>
         <el-form-item label="子网网段：" prop="age">
           <div class="flex">
-            <ip-input v-model="formData.ipv4" @status="statusSay" format="ipv4" maxWidth="200" @error="error" @input="inputTest" />
+            <ip-input v-model="formData.ipv4" @status="statusSay" format="ipv4" maxWidth="320" @error="error" @input="inputTest" />
             / &nbsp;<el-select v-model="formData.radio" class="mgr20 input-width-1" placeholder="16">
               <el-option label="16" value="1"></el-option>
               <el-option label="18" value="2"></el-option>

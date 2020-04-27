@@ -119,6 +119,7 @@
 </template>
 
 <script>
+import { getInstanceList } from '@/api/cloud-host'
 import List from '@/components/list'
 import * as Config from './config'
 import ExportDialog from './list-components/export-dialog.vue'
@@ -170,7 +171,7 @@ export default {
         { label: '状态', value: '7' }
       ],
       showList: ['1'],
-      createdSearch: false,
+      // createdSearch: false,
       dialogVisible: false, // 弹窗共用组件显隐状态值
       dialogName: '', // 弹窗组件过多，通过name区分需要点击显示某一个弹窗
     }
@@ -179,6 +180,7 @@ export default {
 
   },
   methods: {
+    fetchApi: getInstanceList,
     jumpToCreate() {
       this.$router.push('/compute-service/cloud-host-create')
     },

@@ -1,5 +1,4 @@
 /**
- * Detect whether the array contains all the targets and support multiple parameters
  * 检测数组中是否包含全部目标,支持多参数
  * @param arr
  * @param target

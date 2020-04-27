@@ -1,25 +1,11 @@
 <template lang="html">
-  <div class="mirror-image-pub-components">
-    <el-row>
-      <el-col :span="12">
-        <el-button type="primary">
-          <i class="el-icon-refresh"></i>
-        </el-button>
-      </el-col>
-      <el-col :span="12" align="right">
-        <el-button type="primary">
-          <i class="el-icon-bottom"></i>
-        </el-button>
-      </el-col>
-    </el-row>
-    <el-card shadow="never" class="table-box">
+  <div class="route-map-list-com">
+    <el-card shadow="never" class="mgb20">
       <el-form label-width="100px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="每页显示：">
-              <el-select v-model="query.size" placeholder="请选择" class="input-width-1">
-                <el-option v-for="item in pageList" :key="item" :value="item" :label="item + '条'">{{ item }}条/每页</el-option>
-              </el-select>
+            <el-form-item label="" label-width="0">
+              <el-button @click="addRoute">添加路由</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="12" align="right">
@@ -32,9 +18,8 @@
         </el-row>
       </el-form>
       <el-table
-        :ref="tableRefs"
-        :row-style="{height: '60px'}"
-        :header-row-style="{height: '60px'}"
+        :row-style="{height: '50px'}"
+        :header-row-style="{height: '50px'}"
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"
@@ -58,45 +43,50 @@
           @current-change="currentChange"/>
       </el-col>
     </el-row>
+
+    <create-route :visible.sync="visible" :routeInfo="curRow" />
   </div>
 </template>
 
 <script>
 import List from '@/components/list'
+import CreateRoute from './create-route.vue'
 
 export default {
+  components: {
+    CreateRoute
+  },
   extends: List,
   data() {
     return {
       pageList: [5, 10, 15, 20, 40, 100],
       createdSearch: false,
+      tableList: [
+        { name: 1111, data: '2019-01-01' },
+        { name: 1111, data: '2019-01-01' },
+        { name: 1111, data: '2019-01-01' },
+        { name: 1111, data: '2019-01-01' }
+      ],
       query: {
         name: '',
         page: 1,
         size: 10
       },
-      tableList: [
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 }
-      ]
+      visible: false,
+      curRow: {}
     }
   },
   methods: {
-    search() {
-      alert(1)
+    addRoute() {
+      this.curRow = {}
+      this.visible = true
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.mirror-image-pub-components{
+.route-map-list-com{
   padding-bottom: 20px;
-  .table-box{
-    margin: 20px 0;
-  }
 }
 </style>

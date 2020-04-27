@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="vpc-info-container">
+  <div class="sub-vpc-info-container">
     <el-card class="mgb20" shadow="never">
       <el-row>
         <el-col :span="5">
@@ -28,27 +28,29 @@
     </el-card>
 
     <el-tabs v-model="activeName">
-      <el-tab-pane label="子网" name="first">
-        <subnet-list />
+      <el-tab-pane label="网络端口" name="first">
+        <port-list />
       </el-tab-pane>
-      <el-tab-pane label="路由表" name="second">
-        <route-map-list />
+      <el-tab-pane label="虚拟ip" name="second">
+        <cloud-host-list />
       </el-tab-pane>
-      <el-tab-pane label="拓扑图" name="third">
-
+      <el-tab-pane label="云主机" name="third">
+        <virtual-ip-list />
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
-import SubnetList from './info-components/subnet-list.vue'
-import RouteMapList from './info-components/route-map-list.vue'
+import PortList from './subinfo-components/port-list.vue'
+import CloudHostList from './subinfo-components/cloud-host-list.vue'
+import VirtualIpList from './subinfo-components/virtual-ip-list.vue'
 
 export default {
   components: {
-    SubnetList,
-    RouteMapList
+    PortList,
+    CloudHostList,
+    VirtualIpList
   },
   data() {
     return {
@@ -60,7 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.vpc-info-container{
+.sub-vpc-info-container{
   padding: 20px 10px;
   .item{
     color: #666;

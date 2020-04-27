@@ -1,17 +1,17 @@
 <template>
-<div :class="['v-easy-input', 'input', 'input-ip']" :style="{ 'max-width': maxWidth + 'px', 'width': maxWidth + 'px', height: '36px'}">
+<div class="v-easy-input input input-ip" :style="{ 'max-width': maxWidth + 'px', 'width': maxWidth + 'px', height: '36px'}">
   <ul ref="box" :class="disabled ? 'disabled' : ''">
     <li v-for="(item, index) in vHtml" :key="index" :class="format">
-      <input type="text"
+      <el-input type="text"
+        style="width: 80%;"
         :maxlength="maxlength[index]"
         :value="result[index]"
         :readonly="readonly"
         :class="errorClass[index]"
         :disabled="disabled"
         v-bind="$attrs"
-        @keydown="keyDown(index, $event)"
-        @keyup="handleKeyUp(index, $event)"
-        @input="handleInput(index, $event)"
+        @keydown.native="keyDown(index, $event)"
+        @input="handleInput(arguments, index)"
         @focus="handleFocus(index, $event)"
         @blur="handelBlur(index, $event)" />
       <span v-if="index !== (vHtml.length - 1)">{{ splitChar }}</span>
@@ -43,7 +43,7 @@ export default {
   props: {
     maxWidth: {
       type: String,
-      default: '200px'
+      default: '320px'
     },
     width: [String],
     disabled: {
@@ -108,13 +108,12 @@ export default {
   },
 
   methods: {
-    handleInput(index, $event) {
-
-      this.setCurrentValue($event.target.value, index)
+    handleInput(arg, index) {
+      this.setCurrentValue(arg[0], index)
 
       this.format === 'ipv4' ? this.isIpv4(index) : this.isIpv6(index, $event)
 
-      if ($event.target.value == 0) {
+      if (arg[0] == 0) {
         this.maxlength[index] = '1'
       } else {
         this.maxlength[index] = this.format === 'ipv4' ? '3' : '4'
@@ -126,10 +125,10 @@ export default {
       }
 
 
-      this.$emit('input', {
-        $event,
-        index
-      })
+      // this.$emit('input', {
+      //   $event,
+      //   index
+      // })
 
     },
 
@@ -223,8 +222,6 @@ export default {
 
 <style scoped lang="scss">
 .v-easy-input {
-  height: 36px;
-  padding: 0 4px;
   display: inline-block;
   color: #909399;
   ul {
@@ -233,7 +230,6 @@ export default {
     margin: 0;
     padding: 0;
     height: 80%;
-    border: 1px solid #c0c4cc;
     border-radius: 4px;
     .ipv6 {
       width: 62px;
@@ -243,35 +239,14 @@ export default {
       list-style-type: none;
       float: left;
       height: 100%;
-      vertical-align: middle;
       width: calc(24% - 3px);
       overflow: visible;
       margin-right: 4px;
-      input {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        color: #606266;
-        margin: auto;
-        text-align: center;
-        width: 100%;
-        height: 64%;
-        border: none;
-      }
-      input:focus {
-        outline: none;
-      }
-      input:disabled {
-        background-color: #f5f7fa;
-        border-color: #e4e7ed;
-        color: #c0c4cc;
-        cursor: not-allowed;
-      }
+
       span {
         position: absolute;
         bottom: 0;
-        right: -4px;
+        right: 5%;
         color: #999;
         user-select: none;
         font-weight: 700;

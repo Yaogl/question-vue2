@@ -19,7 +19,7 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     console.log(res);
-    if (res.success && res.success !== 'false') {
+    if (res.ret_code === 200) {
       return Promise.resolve(res)
     } else {
       // 失败success为flase 返回reject数据
