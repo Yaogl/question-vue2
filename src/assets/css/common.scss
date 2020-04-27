@@ -48,6 +48,32 @@
     display: none;
   }
 }
+.circle-before {
+  &:before {
+    display: inline-block;
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 2px;
+    vertical-align: middle;
+  }
+  &.red {
+    &:before {
+      background: #FE5500;
+    }
+  }
+  &.gray {
+    &:before {
+      background: #ccc;
+    }
+  }
+  &.green {
+    &:before {
+      background: #2EBA07;
+    }
+  }
+}
 // 样式重置
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,

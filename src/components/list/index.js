@@ -19,6 +19,8 @@ export default {
       query: {}, // 搜索条件
       createdSearch: true, // 是否在页面创建时立刻搜索
       deleteMessage: '您正在进行删除操作, 是否继续?',
+      // 一下为模拟分页增加，后期删除
+      totalList: []
     }
   },
   created() {
@@ -34,7 +36,7 @@ export default {
   },
   methods: {
     fetchApi() {
-      return Promise.resolve([{name: 1, id: 1}, {name: 2, id: 2}])
+      return Promise.resolve([])
     }, // 列表搜索接口函数
     mergeQuery(type) {
       const data = JSON.parse(sessionStorage.getItem(`${type}-query`))
@@ -47,12 +49,20 @@ export default {
     },
     currentChange(page) {
       // el-pagination组件 current-change
-      this.fetchByPage(page)
+      // this.fetchByPage(page)
+      this.query.page = page
+      const start = 0 + this.query.size * (this.query.page - 1)
+      const end = start + this.query.size
+      this.tableList = this.totalList.slice(start, end)
     },
     changePages(page) {
       // el-pagination组件  size-change
-      this.query['per-page'] = page
-      this.fetchByPage(1)
+      this.query.size = page
+      this.query.page = 1
+      const start = 0 + this.query.size * (this.query.page - 1)
+      const end = start + this.query.size
+      this.tableList = this.totalList.slice(start, end)
+      // this.fetchByPage(1)
     },
     search() {
       this.beforeSearch()
@@ -82,9 +92,14 @@ export default {
       this.loading = true
       return this.fetchApi(params).then(results => {
         this.loading = false
-        this.tableList = this.formatData(results || [])
+        // 模拟分页
+        this.totalList = this.formatData(results.data || [])
 
-        this.total = Number(results.total || 0)
+        const start = 0 + this.query.size * (this.query.page - 1)
+        const end = start + this.query.size
+        this.tableList = this.totalList.slice(start, end)
+        // this.total = Number(results.total || 0) 暂时不分页 前端假分页
+        this.total = this.totalList.length
         this.afterSearch()
       })
     },

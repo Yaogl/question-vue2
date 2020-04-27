@@ -18,15 +18,14 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    console.log(res);
     if (res.ret_code === 200) {
       return Promise.resolve(res)
     } else {
       // 失败success为flase 返回reject数据
-      Message({
-        message: res.msg,
-        type: 'error'
-      })
+      // Message({
+      //   message: '请求失败，请稍后再试',
+      //   type: 'error'
+      // })
       return Promise.reject(res)
     }
   },

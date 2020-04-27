@@ -3,13 +3,15 @@ import * as types from '../mutation-types.js'
 const state = {
   tagsList: [], // 页面tab缓存页面
   sideBarCollapse: false, // 侧边菜单是否折叠
-  isFullScreen: false // 是否全屏显示
+  isFullScreen: false, // 是否全屏显示
+  pageList: [5, 10, 20, 30, 50, 100] // 整站分页条数列表
 }
 
 const getters = {
   tagsList: state => state.tagsList,
   sideBarCollapse: state => state.sideBarCollapse,
   isFullScreen: state => state.isFullScreen,
+  pageList: state => state.pageList
 }
 
 const mutations = {

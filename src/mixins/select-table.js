@@ -6,7 +6,8 @@ export default {
       tableList: [],
       selectedItems: [], // 选中列表集合
       selectIds: [], // 选中列表id的合集
-      multiple: true // 是否多选
+      multiple: true, // 是否多选
+      uniqueName: 'id' // 外部定义需要通过什么来判断列表唯一
     }
   },
   methods: {
@@ -18,15 +19,19 @@ export default {
         return
       }
       this.tableList.map(item => {
-        const idx = list.findIndex(tItem => tItem.id === item.id)
+        const idx = list.findIndex(tItem => tItem[this.uniqueName] === item[this.uniqueName])
         if (idx > -1) {
-          const sIdx = this.selectedItems.findIndex(sItem => sItem.id === item.id)
+          const sIdx = this.selectedItems.findIndex(sItem => sItem[this.uniqueName] === item[this.uniqueName])
           sIdx > -1 ? '' : this.selectedItems.push(item)
         } else {
-          const sIdx = this.selectedItems.findIndex(sItem => sItem.id === item.id)
+          const sIdx = this.selectedItems.findIndex(sItem => sItem[this.uniqueName] === item[this.uniqueName])
           sIdx > -1 ? this.selectedItems.splice(sIdx, 1) : ''
         }
       })
+    },
+    clearSelection() {
+      this.$refs[this.tableRefs].clearSelection()
+      this.selectedItems = []
     }
   }
 }
