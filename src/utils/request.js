@@ -18,7 +18,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    if (res.ret_code === 200) {
+    if (res.ret_code === 200 || res.code === 200) {
       return Promise.resolve(res)
     } else {
       // 失败success为flase 返回reject数据

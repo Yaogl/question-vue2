@@ -1,9 +1,10 @@
 <template>
-<div class="wrapper">
+<div class="layout-wrapper">
   <v-sidebar></v-sidebar>
   <div class="content-box" :class="{'content-collapse': sideBarCollapse}">
     <v-head></v-head>
     <!-- <v-tags></v-tags> -->
+    <v-breadcrumb />
     <div class="content">
       <transition name="move" mode="out-in">
         <keep-alive :include="keepLiveList">
@@ -20,15 +21,15 @@
 import vHead from './Header.vue'
 import vSidebar from './Sidebar.vue'
 import vTags from './Tags.vue'
-import {
-  mapGetters
-} from 'vuex'
+import vBreadcrumb from './breadcrumb.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     vHead,
     vSidebar,
-    vTags
+    vTags,
+    vBreadcrumb
   },
   computed: {
     ...mapGetters([

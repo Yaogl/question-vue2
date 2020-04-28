@@ -35,8 +35,8 @@
       </el-form>
       <el-table
         :ref="tableRefs"
-        :row-style="{height: '60px'}"
-        :header-row-style="{height: '60px'}"
+        :row-style="{height: '40px'}"
+        :header-row-style="{height: '45px'}"
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"
@@ -55,7 +55,7 @@
                 <span>商品名称</span>
               </el-form-item>
             </el-form>
-            
+
             <!-- <el-table
               :row-style="{height: '60px'}"
               :header-row-style="{height: '60px'}"
@@ -161,12 +161,9 @@ export default {
 
 <style lang="scss" scoped>
 .disaster-tolerance-list-container{
-  padding-bottom: 20px;
+  padding: 20px;
   .table-box{
     margin: 20px 0;
   }
-  // .el-table__expanded-cell:hover{
-  //   background: #fff;
-  // }
 }
 </style>

@@ -7,9 +7,9 @@ export const login = data => {
     data
   })
 }
-export const queryOrgTree = () => {
+export const loginOut = () => {
   return request({
-    url: '/api/cloud/org/queryOrgTree',
+    url: '/api/cloud/loginout',
     method: 'post'
   })
 }

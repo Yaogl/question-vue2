@@ -101,9 +101,6 @@ export default {
     font-weight: 600;
     margin: 30px 0;
   }
-  .body{
-    padding: 20px;
-  }
   .charging{
     background: #eee;
     padding: 10px;

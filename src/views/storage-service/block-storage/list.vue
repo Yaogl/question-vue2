@@ -1,11 +1,11 @@
 <template lang="html">
-  <div class="vpc-network-list-container">
+  <div class="block-storage-list-container">
     <el-row>
       <el-col :span="12">
         <el-button type="primary">
           <i class="el-icon-refresh"></i>
         </el-button>
-        <el-button type="primary" @click="createSecret('add')">创建VPC</el-button>
+        <el-button type="primary" @click="createSecret('add')">创建云硬盘</el-button>
         <el-button type="primary">删除</el-button>
         <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
@@ -43,7 +43,7 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary">
+        <el-button type="primary" @click="downLoad">
           <i class="el-icon-bottom"></i>
         </el-button>
       </el-col>
@@ -79,9 +79,41 @@
         <el-table-column v-for="(item, index) in showedHeaderList" :key="index" prop="name" :label="item.label" />
         <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
-            <el-button type="text" @click="editCur(scope.row, 'edit-vpc')">修改</el-button>
-            <el-button type="text" @click="editCur(scope.row, 'bind-tags')">标签</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" @click="editCur(scope.row, 'edit-vpc')">挂载</el-button>
+            <el-dropdown placement="bottom-start" trigger="click">
+              <el-button class="el-dropdown-link">
+                更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown" class="operate-dropdown">
+                <el-dropdown-item>
+                  <p style="min-width: 80px;">扩容</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>快照</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>备份</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>续费</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>克隆</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>转包年包月</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>删除</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>修改项目</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p @click="showComponents(scope.row, 'bind-tags')">标签</p>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -109,14 +141,14 @@
 <script>
 import List from '@/components/list'
 import TagsManage from '@/components/tags-manage/index.vue'
-import BindTags from './list-components/bind-tags.vue'
-import EditVpc from './list-components/edit-vpc.vue'
+import ExportDialog from './components/export-dialog.vue'
+import BindTags from './components/bind-tags.vue'
 
 export default {
   extends: List,
   components: {
     TagsManage,
-    EditVpc,
+    ExportDialog,
     BindTags
   },
   data() {
@@ -163,6 +195,16 @@ export default {
   methods: {
     search() {
     },
+    downLoad() {
+      console.log(111);
+      this.componentName = 'export-dialog'
+      this.visible = true
+    },
+    showComponents(row, name) {
+      this.curRow = row
+      this.componentName = name
+      this.visible = true
+    },
     clickOperate(item) {
       console.log(item);
     },
@@ -179,7 +221,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.vpc-network-list-container{
+.block-storage-list-container{
   padding: 20px;
   .table-box{
     margin: 20px 0;

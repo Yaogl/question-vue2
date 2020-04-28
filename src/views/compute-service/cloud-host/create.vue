@@ -256,6 +256,9 @@ export default {
   data() {
     return {
       formData: {
+        project_id: 'admin', // 所属项目
+        user_id: 'admin', // 创建主机的用户id
+
         age: 1,
         radio1: '',
         radio: '',

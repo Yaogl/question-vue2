@@ -27,6 +27,9 @@
 .mgb20 {
   margin-bottom: 20px;
 }
+.mgt20{
+  margin-top: 20px;
+}
 .mgr20 {
   margin-right: 20px;
 }
@@ -46,6 +49,11 @@
   }
   .el-select__tags{
     display: none;
+  }
+}
+.el-input--small, .el-input--suffix{
+  .el-input__suffix{
+    line-height: 30px;
   }
 }
 .circle-before {

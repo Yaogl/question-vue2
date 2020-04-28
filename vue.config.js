@@ -48,6 +48,14 @@ module.exports = {
         pathRewrite: {
           '/api': ''
         }
+      },
+      '/testApi': {
+        target: 'http://10.255.66.213:8089',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '/testApi': ''
+        }
       }
     }
   },

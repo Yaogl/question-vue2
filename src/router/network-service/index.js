@@ -8,13 +8,13 @@ const routers = [{
   path: '/network-service/vpc-network-create',
   component: () => import('@/views/network-service/vpc-network/create'),
   meta: {
-    title: 'VPC子网'
+    title: '创建VPC子网'
   }
 }, {
   path: '/network-service/vpc-network-info',
   component: () => import('@/views/network-service/vpc-network/info'),
   meta: {
-    title: 'VPC子网'
+    title: 'VPC子网详情'
   }
 }, {
   path: '/network-service/vpc-network-sub-info',

@@ -1,15 +1,25 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+<div id="app">
+
+  <router-view></router-view>
+</div>
 </template>
 <script>
-import menuList from './layout/menuList'
+import { mapActions } from 'vuex'
 
-export default{
+export default {
   watch: {
     $route(val) {
+      this.setBreadcrumbList(val)
     }
+  },
+  created() {
+    console.log(process.env);
+  },
+  methods: {
+    ...mapActions([
+      'setBreadcrumbList'
+    ])
   }
 }
 </script>

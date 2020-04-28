@@ -147,6 +147,7 @@
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">{{ item.label }}</el-dropdown-item> -->
+                  <!-- 暂时不用循环，各种循环的disabled取值并不相同 -->
                   <el-dropdown-item
                     @click.stop.native="clickOperate({label: '开机'}, scope.row)"
                     :disabled="scope.row.moreOperateLoading || scope.row.status === 'ACTIVE'"
@@ -159,7 +160,6 @@
                   >
                     <p>关机</p>
                   </el-dropdown-item>
-
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -182,6 +182,7 @@
           @current-change="currentChange"/>
       </el-col>
     </el-row>
+    <!-- 各种弹窗功能开发 -->
     <component :is="dialogName" :visible.sync="dialogVisible" />
   </div>
 </template>
@@ -197,6 +198,8 @@ import GenerateImage from './list-components/generate-image.vue'
 import BindIp from './list-components/bind-ip.vue'
 import AdjustConfiguration from './list-components/adjust-configuration.vue'
 import TagsManage from '@/components/tags-manage'
+import MountDisk from './list-components/mount-disk.vue'
+import UnmountDisk from './list-components/unmount-disk.vue'
 import { mapGetters } from 'vuex'
 import { dateFormat } from '@/utils'
 
@@ -209,7 +212,10 @@ export default {
     GenerateImage, // 生成镜像弹窗
     BindIp, // 绑定ip弹窗
     AdjustConfiguration, // 调整配置弹窗
-    TagsManage
+    TagsManage, // 标签管理
+    MountDisk, // 挂载磁盘
+    UnmountDisk, // 卸载磁盘
+    // 标记标签 和挂载磁盘一致 暂时不处理
   },
   computed: {
     showedHeaderList() {

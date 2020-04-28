@@ -4,21 +4,24 @@
       <el-row>
         <el-col :span="5">
           <p class="item">名称：test</p>
-          <p class="item">云主机数量：10</p>
-          <p class="item">项目：test</p>
+          <p class="item">网段：192.108.1.1</p>
+          <p class="item">项目：项目</p>
+          <p class="item">网络ACL：test-acl</p>
         </el-col>
         <el-col :span="8">
-          <p class="item">ID：test</p>
-          <p class="item">VPC网段：10</p>
-          <p class="item">创建时间：test</p>
+          <p class="item">ID：fc19288-kf1229-ff3939-io99883</p>
+          <p class="item">DNS地址：192.169.01.01，192.169.01.01</p>
+          <p class="item">DHCP段：192.169.01.01，192.169.01.01</p>
+          <p class="item">创建时间：2019-09-09 12:12:12</p>
         </el-col>
         <el-col :span="5">
-          <p class="item">状态：test</p>
-          <p class="item">平台-地区：10</p>
-          <p class="item">标签：<el-tag type="success" effect="dark">test</el-tag></p>
+          <p class="item">所需网络：test</p>
+          <p class="item">地区：北京6区</p>
+          <p class="item">网关：192.169.01.01</p>
+          <p class="item">区域：可用区域</p>
         </el-col>
         <el-col :span="5">
-          <p class="item">子网数量：test</p>
+          <p class="item">DHCP：test</p>
           <p class="item">区域：10</p>
           <p class="item">删除保护：
             <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
@@ -32,10 +35,10 @@
         <port-list />
       </el-tab-pane>
       <el-tab-pane label="虚拟ip" name="second">
-        <cloud-host-list />
+        <virtual-ip-list />
       </el-tab-pane>
       <el-tab-pane label="云主机" name="third">
-        <virtual-ip-list />
+        <cloud-host-list />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -67,7 +70,7 @@ export default {
   .item{
     color: #666;
     line-height: 20px;
-    padding: 20px 0;
+    padding: 15px 0;
   }
 }
 </style>

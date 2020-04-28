@@ -30,3 +30,10 @@ export const getInstanceVnc = vmid => {
     method: 'get'
   })
 }
+// 获取test
+export const getTest = vmid => {
+  return request({
+    url: `/testApi/test`,
+    method: 'get'
+  })
+}

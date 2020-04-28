@@ -1,15 +1,15 @@
 // 全站路由列表
 export default [
   {
-    icon: 'el-icon-lx-home',
+    icon: '&#xe62d;',
     index: '/dashboard',
     title: '系统首页'
   },
   {
-    icon: 'el-icon-lx-calendar',
+    icon: '&#xe621;',
     index: '1',
     title: '计算服务',
-    subs: [
+    children: [
       {
         index: '/compute-service/cloud-host-list',
         title: '云主机'
@@ -29,10 +29,10 @@ export default [
     ]
   },
   {
-    icon: 'el-icon-eleme',
+    icon: '&#xe6e7;',
     index: '2',
     title: '网络服务',
-    subs: [
+    children: [
       {
         index: '/network-service/vpc-network-list',
         title: 'VPC子网'
@@ -40,10 +40,33 @@ export default [
     ]
   },
   {
-    icon: 'el-icon-lx-warn',
+    icon: '&#xe745;',
     index: '3',
+    title: '存储服务',
+    children: [
+      {
+        index: '/storage-service/block-storage-list',
+        title: '块存储'
+      },
+      {
+        index: '/storage-service/object-storage-list',
+        title: '对象存储'
+      },
+      {
+        index: '/storage-service/file-storage-list',
+        title: '文件存储'
+      },
+      {
+        index: '/storage-service/snapshot-list',
+        title: '快照'
+      }
+    ]
+  },
+  {
+    icon: '&#xe60a;',
+    index: '4',
     title: '系统管理',
-    subs: [
+    children: [
       {
         index: '/system-manage/system-manage-module',
         title: '模块管理'

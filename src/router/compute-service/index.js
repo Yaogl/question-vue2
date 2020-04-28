@@ -8,13 +8,13 @@ const routers = [{
   path: '/compute-service/cloud-host-info',
   component: () => import('@/views/compute-service/cloud-host/info'),
   meta: {
-    title: '云主机'
+    title: '云主机详情'
   }
 }, {
   path: '/compute-service/cloud-host-create',
   component: () => import('@/views/compute-service/cloud-host/create'),
   meta: {
-    title: '云主机'
+    title: '创建云主机'
   }
 }, {
   path: '/compute-service/mirror-image-list',

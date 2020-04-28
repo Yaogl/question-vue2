@@ -1,33 +1,33 @@
 <template>
 <div class="sidebar">
   <div class="title-row">
-    <i @click="collapseChage" :class="sideBarCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"></i>
+    <i @click="collapseChage" class="iconfont">&#xe665;</i>
     <span v-if="!sideBarCollapse" class="title">长城云平台</span>
   </div>
   <el-menu class="sidebar-el-menu" @select="menuSelect" :default-active="onRoutes" :collapse="sideBarCollapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened>
     <template v-for="item in items">
-      <template v-if="item.subs">
+      <template v-if="item.children">
         <el-submenu :index="item.index" :key="item.index">
           <template slot="title">
-            <i :class="item.icon"></i>
+            <i class="iconfont" v-html="item.icon"></i>
             <span slot="title">{{ item.title }}</span>
           </template>
-          <template v-for="subItem in item.subs">
-            <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
+          <template v-for="subItem in item.children">
+            <el-submenu v-if="subItem.children" :index="subItem.index" :key="subItem.index">
               <template slot="title">{{ subItem.title }}</template>
-              <el-menu-item v-for="(threeItem,i) in subItem.subs" :key="i" :index="threeItem.index">
-                <span style="margin-left: 40px;">{{ threeItem.title }}</span>
+              <el-menu-item v-for="(threeItem,i) in subItem.children" :key="i" :index="threeItem.index">
+                <span style="margin-left: 24px;">{{ threeItem.title }}</span>
               </el-menu-item>
             </el-submenu>
             <el-menu-item v-else :index="subItem.index" :key="subItem.index">
-              <span style="margin-left: 20px;">{{ subItem.title }}</span>
+              <span style="margin-left: 10px;">{{ subItem.title }}</span>
             </el-menu-item>
           </template>
         </el-submenu>
       </template>
       <template v-else>
         <el-menu-item :index="item.index" :key="item.index">
-          <i :class="item.icon"></i>
+          <i class="iconfont" v-html="item.icon"></i>
           <span slot="title">{{ item.title }}</span>
         </el-menu-item>
       </template>
@@ -37,10 +37,7 @@
 </template>
 
 <script>
-import {
-  mapGetters,
-  mapActions
-} from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import menuList from './menuList'
 
 export default {
@@ -62,7 +59,6 @@ export default {
       'setSideBarCollapse'
     ]),
     menuSelect(path) {
-      // console.log(path);
       if (this.onRoutes === path) return
       this.$router.push(path)
     },

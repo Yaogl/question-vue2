@@ -65,7 +65,7 @@ export default {
   .item{
     color: #666;
     line-height: 20px;
-    padding: 20px 0;
+    padding: 15px 0;
   }
 }
 </style>

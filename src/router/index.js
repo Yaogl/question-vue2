@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import computeServiceRouter from './compute-service'
 import networkServiceRouter from './network-service'
 import systemManageRouter from './system-manage'
+import storageServiceRouter from './storage-service'
 
 Vue.use(Router)
 const defaultRouter = [{
@@ -31,7 +32,8 @@ const defaultRouter = [{
 const lastRouter = defaultRouter.concat(
   computeServiceRouter,
   networkServiceRouter,
-  systemManageRouter
+  systemManageRouter,
+  storageServiceRouter
 )
 export default new Router({
   routes: [{
@@ -42,7 +44,7 @@ export default new Router({
       path: '/',
       component: () => import( /* webpackChunkName: "home" */ '../layout/Home.vue'),
       meta: {
-        title: '自述文件'
+        title: '全局'
       },
       children: lastRouter
     },
@@ -58,4 +60,4 @@ export default new Router({
       redirect: '/404'
     }
   ]
-});
+})

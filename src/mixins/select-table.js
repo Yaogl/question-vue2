@@ -10,6 +10,17 @@ export default {
       uniqueName: 'id' // 外部定义需要通过什么来判断列表唯一
     }
   },
+  mounted() {
+    if (!this.multiple) { // 如果没有多选，去掉全选按钮
+      this.$nextTick(() => {
+        const theader = this.$refs[this.tableRefs].$el.getElementsByClassName('el-table__header-wrapper')[0]
+        if (theader) {
+          const checkbox = theader.getElementsByClassName('el-checkbox')[0]
+          checkbox && (checkbox.style.display = 'none')
+        }
+      })
+    }
+  },
   methods: {
     changeSelect(list, row) {
       if (!this.multiple) {
