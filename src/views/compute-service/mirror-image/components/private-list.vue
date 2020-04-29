@@ -56,8 +56,8 @@
       </el-form>
       <el-table
         :ref="tableRefs"
-        :row-style="{height: '60px'}"
-        :header-row-style="{height: '60px'}"
+        :row-style="{height: '45px'}"
+        :header-row-style="{height: '50px'}"
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"
@@ -68,7 +68,7 @@
     </el-card>
     <el-row>
       <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
       <el-col :span="12" align="right">
         <el-pagination
@@ -86,15 +86,17 @@
 
 <script>
 import List from '@/components/list'
+import { getImageList } from '@/api/cloud-host'
 
 export default {
   extends: List,
   data() {
     return {
       pageList: [5, 10, 15, 20, 40, 100],
-      createdSearch: false,
+      tableRefs: 'private-list',
       query: {
         name: '',
+        visibility: 'private',
         page: 1,
         size: 10
       },
@@ -107,13 +109,6 @@ export default {
         { label: '容量', value: '5' },
         { label: '项目', value: '6' },
         { label: '状态', value: '7' }
-      ],
-      tableList: [
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 }
       ]
     }
   },
@@ -123,9 +118,7 @@ export default {
     }
   },
   methods: {
-    search() {
-      alert(1)
-    }
+    fetchApi: getImageList
   }
 }
 </script>

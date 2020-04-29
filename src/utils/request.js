@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 
+axios.defaults.withCredentials = true
 const service = axios.create({
   timeout: 20000 // request timeout
 })

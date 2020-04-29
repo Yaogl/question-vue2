@@ -5,6 +5,12 @@ const routers = [{
     title: '块存储'
   }
 }, {
+  path: '/storage-service/block-storage-create',
+  component: () => import('@/views/storage-service/block-storage/create'),
+  meta: {
+    title: '块存储'
+  }
+}, {
   path: '/storage-service/snapshot-list',
   component: () => import('@/views/storage-service/snapshot/list'),
   meta: {
@@ -13,6 +19,12 @@ const routers = [{
 }, {
   path: '/storage-service/object-storage-list',
   component: () => import('@/views/storage-service/object-storage/list'),
+  meta: {
+    title: '对象存储'
+  }
+}, {
+  path: '/storage-service/object-storage-info',
+  component: () => import('@/views/storage-service/object-storage/info'),
   meta: {
     title: '对象存储'
   }

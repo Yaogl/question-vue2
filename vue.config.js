@@ -42,19 +42,19 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     proxy: {
-      '/api': {
+      '/bcp': {
         target: process.env.VUE_APP_BASE_URL,
         changeOrigin: true,
         pathRewrite: {
-          '/api': ''
+          '^/bcp': '/bcp'
         }
       },
-      '/testApi': {
+      '/api': {
         target: 'http://10.255.66.213:8089',
         ws: false,
         changeOrigin: true,
         pathRewrite: {
-          '/testApi': ''
+          '^/api': '/api'
         }
       }
     }

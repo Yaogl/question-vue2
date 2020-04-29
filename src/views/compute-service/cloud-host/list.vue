@@ -6,7 +6,7 @@
         <el-button type="primary" class="mgr20" @click="jumpToCreate">创建云主机</el-button>
         <el-button type="primary" :disabled="openDisabled" @click="changeStatus('open')">开机</el-button>
         <el-button type="primary" :disabled="closeDisabled" @click="changeStatus('close')">关机</el-button>
-        <el-button type="primary">重启</el-button>
+        <el-button type="primary" :disabled="closeDisabled" @click="restart">重启</el-button>
 
         <!-- <el-dropdown placement="bottom-start" class="mgr20">
           <el-button class="el-dropdown-link">
@@ -78,7 +78,11 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="名称" prop="name" min-width="30%" v-if="showList.includes('1')"/>
+        <el-table-column label="名称" prop="name" min-width="30%" v-if="showList.includes('1')">
+          <template slot-scope="scope">
+            <span style="cursor: pointer;" @click="jumpToDetail(scope.row)">{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="系统" prop="flavor" v-if="showList.includes('2')" width="70">
           <template slot-scope="scope">
             <i class="iconfont" v-if="scope.row.flavor === '2'" style="color: #0078D7;">&#xe86f;</i>
@@ -159,6 +163,18 @@
                     :disabled="scope.row.moreOperateLoading || scope.row.status !== 'ACTIVE'"
                   >
                     <p>关机</p>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    @click.stop.native="restartOne(scope.row, 'SOFT')"
+                    :disabled="scope.row.moreOperateLoading || scope.row.status !== 'ACTIVE'"
+                  >
+                    <p>软重启</p>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    @click.stop.native="restartOne(scope.row, 'HARD')"
+                    :disabled="scope.row.moreOperateLoading || scope.row.status !== 'ACTIVE'"
+                  >
+                    <p>硬重启</p>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -265,7 +281,49 @@ export default {
   },
   methods: {
     fetchApi: instanceApi.getInstanceList,
+    jumpToDetail(row) {
+      this.$router.push({
+        path: '/compute-service/cloud-host-info',
+        query: {
+          uuid: row.uuid
+        }
+      })
+    },
+    restartOne(row, restart_flag) {
+      row.moreOperateLoading = true
+      instanceApi.restartInstance({ uuid: row.uuid, restart_flag }).then(res => {
+        if (res.ret_code === 200) {
+          this.$message.success('操作成功，正在为您重启')
+        } else {
+          this.$message.error('操作失败，请稍后重试')
+        }
+        row.moreOperateLoading = false
+      })
+    },
+    restart() { // 批量重启
+      if (!this.selectedItems.length) {
+        this.$message.warning('请选择需要操作的虚拟机！')
+        return
+      }
+      let proAll = []
+      this.selectedItems.map(item => {
+        let pro = new Promise(resolve => [
+          instanceApi.restartInstance({ uuid: item.uuid }).then(res => {
+            resolve(true)
+          })
+        ])
+        proAll.push(pro)
+      })
+      Promise.all(proAll).then(res => {
+        this.clearSelection()
+        this.$message.success(`操作完成，正在为您重启`)
+      })
+    },
     changeStatus(operate) {
+      if (!this.selectedItems.length) {
+        this.$message.warning('请选择需要操作的虚拟机！')
+        return
+      }
       // 筛选需要操作的列数据
       this.batchOperate(this.selectedItems, operate)
     },
@@ -290,13 +348,6 @@ export default {
         this.queryInfo()
       })
     },
-    jumpToCreate() {
-      this.$router.push('/compute-service/cloud-host-create')
-    },
-    downLoad() {
-      this.dialogName = 'export-dialog'
-      this.dialogVisible = true
-    },
     clickOperate(item, row) {
       this.curRow = row
       if (item.componentName) {
@@ -320,10 +371,6 @@ export default {
       }
     },
     instanceStart(row) {
-      if (row.status === 'ACTIVE') {
-        this.$message.warning('正在运行中')
-        return
-      }
       row.moreOperateLoading = true
       instanceApi.startInstance({ uuid: row.uuid }).then(res => {
         if (res.ret_code === 200) {
@@ -337,10 +384,6 @@ export default {
       })
     },
     instanceStop(row) {
-      if (row.status !== 'ACTIVE') {
-        this.$message.warning('已经停止，无需操作')
-        return
-      }
       row.moreOperateLoading = true
       instanceApi.stopInstance({ uuid: row.uuid }).then(res => {
         if (res.ret_code === 200) {
@@ -415,6 +458,13 @@ export default {
         }
       })
     },
+    jumpToCreate() {
+      this.$router.push('/compute-service/cloud-host-create')
+    },
+    downLoad() {
+      this.dialogName = 'export-dialog'
+      this.dialogVisible = true
+    }
   },
   beforeDestroy () {
     this.pollingTimeout && clearTimeout(this.pollingTimeout)

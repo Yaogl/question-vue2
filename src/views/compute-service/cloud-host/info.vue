@@ -73,12 +73,16 @@ export default {
       activeName: 'first',
       moreOperate: Config.moreOperate
     }
+  },
+  created() {
+    console.log(this.$route.query);
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .cloud-host-info-conotainer{
+  padding: 20px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -92,7 +96,6 @@ export default {
   .cloud-host-info{
     flex: 1;
     padding: 10px;
-    overflow-y: auto;
     color: #333;
     .left-card{
       background: #DAEDC9;

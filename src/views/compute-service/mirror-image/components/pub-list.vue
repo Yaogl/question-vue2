@@ -33,19 +33,49 @@
       </el-form>
       <el-table
         :ref="tableRefs"
-        :row-style="{height: '60px'}"
-        :header-row-style="{height: '60px'}"
+        :row-style="{height: '45px'}"
+        :header-row-style="{height: '50px'}"
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
-        <el-table-column prop="date" label="日期" width="180" />
-        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="date" label="系统" width="180">
+          <template slot-scope="scope">
+            <i class="iconfont" v-if="scope.row.protected" style="color: #0078D7;">&#xe86f;</i>
+            <i class="iconfont" v-else style="color: red;">&#xe900;</i>
+          </template>
+        </el-table-column>
+        <el-table-column prop="type" label="版本" width="180" />
+        <el-table-column prop="disk_format" label="格式" width="180" />
+        <el-table-column prop="size" label="镜像大小" width="100">
+          <template slot-scope="scope">
+            {{ scope.row.size }}G
+          </template>
+        </el-table-column>
+        <el-table-column prop="date" label="状态" width="180" >
+          <template slot-scope="scope">
+            <p v-if="scope.row.status === 'active'" class="circle-before green">
+              运行中
+            </p>
+            <p v-if="scope.row.status === 'uploading'" class="circle-before gray">
+              关闭
+            </p>
+            <p v-if="scope.row.status === 'error'" class="circle-before red">
+              失败
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column prop="date" label="操作" width="180">
+          <template slot-scope="scope">
+            <el-button type="text">创建虚拟机</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
     <el-row>
       <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
       <el-col :span="12" align="right">
         <el-pagination
@@ -63,31 +93,24 @@
 
 <script>
 import List from '@/components/list'
+import { getImageList } from '@/api/cloud-host'
 
 export default {
   extends: List,
   data() {
     return {
+      tableRefs: 'pub-list',
       pageList: [5, 10, 15, 20, 40, 100],
-      createdSearch: false,
       query: {
         name: '',
+        visibility: 'public',
         page: 1,
         size: 10
-      },
-      tableList: [
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 }
-      ]
+      }
     }
   },
   methods: {
-    search() {
-      alert(1)
-    }
+    fetchApi: getImageList
   }
 }
 </script>

@@ -2,7 +2,7 @@
 <div class="sidebar">
   <div class="title-row">
     <i @click="collapseChage" class="iconfont">&#xe665;</i>
-    <span v-if="!sideBarCollapse" class="title">长城云平台</span>
+    <span v-if="!sideBarCollapse" class="title">长城云服务平台</span>
   </div>
   <el-menu class="sidebar-el-menu" @select="menuSelect" :default-active="onRoutes" :collapse="sideBarCollapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened>
     <template v-for="item in items">

@@ -99,6 +99,7 @@ export default {
   },
   data() {
     return {
+      tableRefs: 'secret-key-list',
       pageList: [5, 10, 15, 20, 40, 100],
       createdSearch: false,
       query: {
@@ -107,9 +108,6 @@ export default {
         size: 10
       },
       tableList: [
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
         { name: 11222 },
         { name: 11222 }
       ],
