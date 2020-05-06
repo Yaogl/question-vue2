@@ -14,7 +14,6 @@
   border-radius: 10px;
   background-color: #F5F5F5;
 }
-
 .line{
   margin: 20px;
   height: 1px;
@@ -56,6 +55,7 @@
     line-height: 30px;
   }
 }
+// 运行时 加点显示状态 颜色自定义
 .circle-before {
   &:before {
     display: inline-block;

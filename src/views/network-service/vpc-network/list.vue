@@ -7,7 +7,7 @@
         </el-button>
         <el-button type="primary" @click="createSecret('add')">创建VPC</el-button>
         <el-button type="primary">删除</el-button>
-        <el-dropdown placement="bottom-start" trigger="click">
+        <!-- <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
             更多操作<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
@@ -18,10 +18,10 @@
               :label="item.label"
               :value="item.value">{{ item.label }}</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
+        </el-dropdown> -->
       </el-col>
       <el-col :span="12" align="right">
-        <tags-manage v-model="query.tag"/>
+        <!-- <tags-manage v-model="query.tag"/> -->
 
         <el-select
           v-model="showList"
@@ -49,11 +49,11 @@
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
-      <el-form label-width="100px">
+      <el-form label-width="100px" @submit.native.prevent>
         <el-row>
           <el-col :span="12">
             <el-form-item label="每页显示：">
-              <el-select v-model="query.size" placeholder="请选择" class="input-width-1">
+              <el-select v-model="query.size" placeholder="请选择" class="input-width-1" @change="changePages">
                 <el-option v-for="item in pageList" :key="item" :value="item" :label="item + '条'">{{ item }}条/每页</el-option>
               </el-select>
             </el-form-item>
@@ -69,32 +69,42 @@
       </el-form>
       <el-table
         :ref="tableRefs"
-        :row-style="{height: '40px'}"
+        :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column v-for="(item, index) in showedHeaderList" :key="index" prop="name" :label="item.label" />
-        <el-table-column label="操作">
+        <el-table-column label="名称" prop="name" min-width="30%" v-if="showList.includes('1')" />
+        <el-table-column label="所在区域" prop="availability_zone" min-width="30%" v-if="showList.includes('2')" />
+        <el-table-column label="状态" prop="name" min-width="30%" v-if="showList.includes('3')">
+          <template slot-scope="scope">
+            {{ scope.row.status === 'ACTIVE' ? '可用' : '不可用' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="子网数量" prop="subnet_num" min-width="30%" v-if="showList.includes('4')" />
+        <el-table-column label="网卡数量" prop="mtu" min-width="30%" v-if="showList.includes('5')" />
+        <el-table-column label="项目" prop="project_name" min-width="30%" v-if="showList.includes('6')" />
+        <el-table-column label="创建时间" prop="created_at" min-width="30%" v-if="showList.includes('7')" />
+        <!-- <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
             <el-button type="text" @click="editCur(scope.row, 'edit-vpc')">修改</el-button>
             <el-button type="text" @click="editCur(scope.row, 'bind-tags')">标签</el-button>
             <el-button type="text">删除</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </el-card>
-    <el-row>
+    <el-row style="margin: 20px;">
       <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
-          :page-sizes="[5, 10, 20, 30, 40]"
-          :page-size="query['per-page']"
+          :page-sizes="pageList"
+          :page-size="query.size"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="changePages"
@@ -111,6 +121,9 @@ import List from '@/components/list'
 import TagsManage from '@/components/tags-manage/index.vue'
 import BindTags from './list-components/bind-tags.vue'
 import EditVpc from './list-components/edit-vpc.vue'
+import { getNetworkList } from '@/api/network-service'
+import { mapGetters } from 'vuex'
+import { dateFormat } from '@/utils'
 
 export default {
   extends: List,
@@ -121,18 +134,12 @@ export default {
   },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
-      createdSearch: false,
       query: {
-        name: '',
-        tag: [],
         page: 1,
-        size: 10
+        size: 10,
+        name: ''
       },
-      tableList: [
-        { name: 11222 },
-        { name: 11222 }
-      ],
+      tableRefs: 'network-table',
       listMoreOperate: [
         { label: '编辑标签', value: 1 },
         { label: '同步状态', value: 2 },
@@ -141,15 +148,15 @@ export default {
         { label: '删除', value: 5 }
       ],
       headerList: [
-        { label: '名称', value: '1' },
-        { label: '系统', value: '2' },
-        { label: '版本', value: '3' },
-        { label: '格式', value: '4' },
-        { label: '容量', value: '5' },
-        { label: '项目', value: '6' },
-        { label: '状态', value: '7' }
+        { label: '名称', value: '1', key: 'name' },
+        { label: '所在区域', value: '2', key: 'availability_zone' },
+        { label: '状态', value: '3', key: 'flavor' },
+        { label: '子网数量', value: '4', key: 'subnet_num' },
+        { label: '网卡数量', value: '5', key: 'mtu' },
+        { label: '项目', value: '6', key: 'project_name' },
+        { label: '创建时间', value: '7', key: 'created_at' }
       ],
-      showList: ['1'],
+      showList: ['1', '2', '3', '4', '5', '6', '7'],
       visible: false,
       curRow: {}, // 点击的当前行数据
       componentName: ''
@@ -158,11 +165,13 @@ export default {
   computed: {
     showedHeaderList() {
       return this.headerList.filter(item => this.showList.includes(item.value))
-    }
+    },
+    ...mapGetters([
+      'pageList'
+    ])
   },
   methods: {
-    search() {
-    },
+    fetchApi: getNetworkList,
     clickOperate(item) {
       console.log(item);
     },
@@ -173,6 +182,13 @@ export default {
       this.curRow = row
       this.componentName = name
       this.visible = true
+    },
+    formatData(list) {
+      list.map(item => {
+        item.project_name = '测试'
+        item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
+      })
+      return list
     }
   }
 }

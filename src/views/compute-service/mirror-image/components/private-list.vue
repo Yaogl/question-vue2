@@ -2,7 +2,7 @@
   <div class="mirror-image-private-components">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="primary" @click="clearQuery">
           <i class="el-icon-refresh"></i>
         </el-button>
         <el-button type="primary">删除</el-button>
@@ -10,7 +10,6 @@
         <el-button type="primary">跨区复制</el-button>
       </el-col>
       <el-col :span="12" align="right">
-        <!-- {{ showedHeaderList }} -->
         <el-select
           v-model="showList"
           multiple
@@ -56,6 +55,7 @@
       </el-form>
       <el-table
         :ref="tableRefs"
+        v-loading="loading"
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
@@ -63,7 +63,64 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column v-for="(item, index) in showedHeaderList" :key="index" prop="name" :label="item.label" />
+        <el-table-column label="名称" prop="name" min-width="200px" v-if="showList.includes('1')" />
+        <el-table-column prop="date" label="系统" v-if="showList.includes('2')">
+          <template slot-scope="scope">
+            <i class="iconfont" v-if="scope.row.size > 4" style="color: #0078D7;">&#xe86f;</i>
+            <i class="iconfont" v-else style="color: red;">&#xe900;</i>
+          </template>
+        </el-table-column>
+        <el-table-column prop="disk_format" label="格式" v-if="showList.includes('3')"/>
+        <el-table-column prop="size" label="镜像大小" v-if="showList.includes('4')">
+          <template slot-scope="scope">
+            {{ scope.row.size }}G
+          </template>
+        </el-table-column>
+        <el-table-column prop="date" label="状态" v-if="showList.includes('5')">
+          <template slot-scope="scope">
+            <p v-if="scope.row.status === 'active'" class="circle-before green">
+              可用
+            </p>
+            <p v-else class="circle-before gray">
+              不可用
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column prop="date" label="项目" v-if="showList.includes('6')">
+          <template slot-scope="scope">
+            开发
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_at" width="160" label="创建时间" v-if="showList.includes('7')"/>
+
+
+        <!-- <el-table-column prop="date" label="操作" width="230">
+          <template slot-scope="scope">
+            <el-button type="text" @click="createInstance">创建虚拟机</el-button>
+            <el-dropdown placement="bottom-start" trigger="click">
+              <el-button class="el-dropdown-link">
+                更多操作<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown" class="operate-dropdown">
+                <el-dropdown-item>
+                  <p style="min-width: 80px;">更新</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>跨区拷贝</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>分享</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>删除</p>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <p>设置删除保护</p>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column> -->
       </el-table>
     </el-card>
     <el-row>
@@ -73,7 +130,7 @@
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
-          :page-sizes="[5, 10, 20, 30, 40]"
+          :page-sizes="pageList"
           :page-size="query['per-page']"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -87,6 +144,7 @@
 <script>
 import List from '@/components/list'
 import { getImageList } from '@/api/cloud-host'
+import { dateFormat } from '@/utils'
 
 export default {
   extends: List,
@@ -100,25 +158,32 @@ export default {
         page: 1,
         size: 10
       },
-      showList: ['1'],
+      showList: ['1', '2', '3', '4', '5', '6', '7'],
       headerList: [
         { label: '名称', value: '1' },
         { label: '系统', value: '2' },
-        { label: '版本', value: '3' },
-        { label: '格式', value: '4' },
-        { label: '容量', value: '5' },
+        { label: '格式', value: '3' },
+        { label: '镜像大小', value: '4' },
+        { label: '状态', value: '5' },
         { label: '项目', value: '6' },
-        { label: '状态', value: '7' }
+        { label: '创建时间', value: '7' },
+        // { label: '删除保护', value: '9' },
+        // { label: '平台', value: '10' },
+        // { label: '区域', value: '11' }
       ]
     }
   },
-  computed: {
-    showedHeaderList() {
-      return this.headerList.filter(item => this.showList.includes(item.value))
-    }
-  },
   methods: {
-    fetchApi: getImageList
+    fetchApi: getImageList,
+    formatData(list) {
+      list.map(item => {
+        item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
+      })
+      return list
+    },
+    createInstance() {
+      this.$router.push('/compute-service/cloud-host-create')
+    }
   }
 }
 </script>

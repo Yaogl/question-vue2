@@ -9,3 +9,4 @@ export const PUSH_BREADCRUMB_LIST = 'PUSH_BREADCRUMB_LIST'
 // 登录以及个人信息 mutation
 export const SET_USERINFO = 'SET_USERINFO'
 export const LOGIN_OUT = 'LOGIN_OUT'
+export const LOGIN_TIME = 'LOGIN_TIME'

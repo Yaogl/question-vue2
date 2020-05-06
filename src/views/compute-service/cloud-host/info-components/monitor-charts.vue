@@ -12,6 +12,12 @@
     <div class="charts-container">
       <ve-line ref="charts" :data="chartData" :title="{text: 'CPU使用率'}" :settings="chartSettings" :extend="extend"></ve-line>
     </div>
+    <div class="charts-container">
+      <ve-line ref="charts" :data="storageData" :title="{text: '内存使用率'}" :settings="chartSettings" :extend="extend"></ve-line>
+    </div>
+    <div class="charts-container">
+      <ve-line ref="charts" :data="readWriteData" :title="{text: '磁盘读写宽带（vda）'}" :settings="readSeting" :extend="extendRead"></ve-line>
+    </div>
   </div>
 </template>
 
@@ -31,10 +37,33 @@ export default {
         show: false
       }
     }
+    this.extendRead = {
+      color: ['#F23D0C'],
+      series: {
+        smooth: false
+      },
+      legend: {
+        show: false
+      }
+    }
+    this.readSeting = {
+      dimension: ['时间'],
+      yAxisName: ['bps']
+    }
     return {
       curTimer: 1,
       chartData: {
         columns: ['时间', 'CPU使用率'],
+        rows: []
+      },
+      // 内存使用率
+      storageData: {
+        columns: ['时间', '内存使用率'],
+        rows: []
+      },
+      // 磁盘读写宽带
+      readWriteData: {
+        columns: ['时间', '磁盘读'],
         rows: []
       }
     }
@@ -42,6 +71,8 @@ export default {
   mounted() {
     const arr = this.getDateArray()
     this.initChartData(arr)
+    this.initStorageChartData(arr)
+    this.initReadChartData(arr)
   },
   methods: {
     // 获取半小时内数据
@@ -72,11 +103,44 @@ export default {
       }
       this.timeout = setTimeout(() => {
         this.initChartData(arr)
-      }, 2000)
+      }, 10000)
+    },
+    // 初始化内存使用率
+    initStorageChartData(arr) {
+      if (this.storageData.rows.length) {
+        arr.map((item, index) => {
+          let num = Number(this.storageData.rows[index]['内存使用率'])
+          this.storageData.rows[index]['内存使用率'] = Math.random() > 0.5 ? (num > 0.98 ? num : num + 0.02) : (num > 0.02 ? num - 0.02 : num)
+        })
+      } else {
+        arr.map((item, index) => {
+          this.storageData.rows.push({ '时间': item, '内存使用率': Math.random().toFixed(2) })
+        })
+      }
+      this.timeout1 = setTimeout(() => {
+        this.initStorageChartData(arr)
+      }, 10000)
+    },
+    initReadChartData(arr) {
+      if (this.readWriteData.rows.length) {
+        arr.map((item, index) => {
+          let num = Number(this.readWriteData.rows[index]['磁盘读'])
+          this.readWriteData.rows[index]['磁盘读'] = Math.random() > 0.5 ? (num > 0.98 ? num : num + 0.02) : (num > 0.02 ? num - 0.02 : num)
+        })
+      } else {
+        arr.map((item, index) => {
+          this.readWriteData.rows.push({ '时间': item, '磁盘读': Math.random().toFixed(2) })
+        })
+      }
+      this.timeout2 = setTimeout(() => {
+        this.initReadChartData(arr)
+      }, 10000)
     }
   },
   beforeDestroy () {
     this.timeout && clearTimeout(this.timeout)
+    this.timeout1 && clearTimeout(this.timeout1)
+    this.timeout2 && clearTimeout(this.timeout2)
   }
 }
 </script>

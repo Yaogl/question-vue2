@@ -35,7 +35,15 @@ export default [
     children: [
       {
         index: '/network-service/vpc-network-list',
-        title: 'VPC子网'
+        title: 'VPC网络'
+      },
+      {
+        index: '/network-service/load-balancing-index',
+        title: '负载均衡'
+      },
+      {
+        index: '/network-service/vpn-service-index',
+        title: 'vpn服务'
       }
     ]
   },
@@ -63,8 +71,23 @@ export default [
     ]
   },
   {
-    icon: '&#xe60a;',
+    icon: '&#xe623;',
     index: '4',
+    title: '安全',
+    children: [
+      {
+        index: '/security/firewall-list',
+        title: '防火墙'
+      },
+      {
+        index: '/security/security-group-list',
+        title: '安全组'
+      }
+    ]
+  },
+  {
+    icon: '&#xe60a;',
+    index: '5',
     title: '系统管理',
     children: [
       {

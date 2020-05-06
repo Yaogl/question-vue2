@@ -38,13 +38,26 @@ export const getInstanceVnc = vmid => {
     method: 'get'
   })
 }
+// 获取虚拟机详情
+export const getInstanceDetail = vmid => {
+  return request({
+    url: `/bcp/v1/instance/details/${vmid}`,
+    method: 'get'
+  })
+}
+// 获取虚拟机详情
+export const getInstanceStatus = vmid => {
+  return request({
+    url: `/bcp/v1/instance/status/${vmid}`,
+    method: 'get'
+  })
+}
 // ---------------
 // 获取镜像列表
 export const getImageList = (params) => {
   return request({
     url: `/bcp/v1/image/list`,
-    method: 'get',
-    params
+    method: 'get'
   })
 }
 // 获取test

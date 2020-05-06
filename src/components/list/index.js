@@ -1,3 +1,4 @@
+// 备份list组件 现在为前端过滤
 /*
  * @Description: 列表通用组件 搜索条件处理等
  * @file: @/components/list
@@ -93,7 +94,15 @@ export default {
       return this.fetchApi(params).then(results => {
         this.loading = false
         // 模拟分页
-        this.totalList = this.formatData(results.data || [])
+        let filterList = results.data
+
+        Object.keys(this.query).map(key => {
+          if (this.query[key] && key != 'page' && key != 'size') {
+            filterList = filterList.filter(item => item[key].includes(this.query[key]) || this.query[key].includes(item[key]))
+          }
+        })
+
+        this.totalList = this.formatData(filterList || [])
 
         const start = 0 + this.query.size * (this.query.page - 1)
         const end = start + this.query.size

@@ -1,14 +1,14 @@
 <template lang="html">
   <div class="module-manage-container">
-    <el-row :gutter="20">
-      <el-col :span="4">
+    <el-row>
+      <el-col :span="5">
         <mytree :treeData="tdata" :defaultProps="defaultProps" @setCurNode="setCurNode"/>
       </el-col>
-      <el-col :span="20">
+      <el-col :span="19">
         <el-card class="box-card mgb20" v-if="curNode.title">
           <p>当前节点：{{ curNode.title }}</p>
         </el-card>
-        <div class="mgb20" v-if="curNode.id">
+        <div class="mgb20">
           <el-button type="primary" @click="add">添加</el-button>
           <el-button type="primary" @click="editRow">修改</el-button>
           <el-button type="primary" @click="deleteNode">删除</el-button>
@@ -137,6 +137,6 @@ export default {
 
 <style lang="scss" scoped>
 .module-manage-container {
-
+  padding: 20px;
 }
 </style>

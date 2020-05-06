@@ -4,11 +4,12 @@ import computeServiceRouter from './compute-service'
 import networkServiceRouter from './network-service'
 import systemManageRouter from './system-manage'
 import storageServiceRouter from './storage-service'
+import securityRouter from './security'
 
 Vue.use(Router)
 const defaultRouter = [{
     path: '/dashboard',
-    component: () => import( /* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
+    component: () => import('../views/dashboard'),
     meta: {
       title: '系统首页'
     }
@@ -33,7 +34,8 @@ const lastRouter = defaultRouter.concat(
   computeServiceRouter,
   networkServiceRouter,
   systemManageRouter,
-  storageServiceRouter
+  storageServiceRouter,
+  securityRouter
 )
 export default new Router({
   routes: [{

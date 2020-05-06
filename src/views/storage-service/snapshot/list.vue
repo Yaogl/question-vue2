@@ -38,8 +38,8 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
-            <el-button type="text">回滚</el-button>
-            <el-button type="text">创建硬盘</el-button>
+            <el-button type="text" @click="rollBack">回滚</el-button>
+            <el-button type="text" @click="createDisk">创建硬盘</el-button>
             <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -52,7 +52,7 @@
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
-          :page-sizes="[5, 10, 20, 30, 40]"
+          :page-sizes="pageList"
           :page-size="query['per-page']"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -93,6 +93,12 @@ export default {
   },
   methods: {
     search() {
+    },
+    rollBack() {
+      this.visible = true
+    },
+    createDisk() {
+      this.$router.push('/storage-service/snapshot-create')
     }
   }
 }

@@ -21,9 +21,9 @@
         </el-dropdown>
       </el-col>
       <el-col :span="12" align="right">
-        <tags-manage v-model="query.tag"/>
+        <!-- <tags-manage v-model="query.tag"/> -->
 
-        <el-select
+        <!-- <el-select
           v-model="showList"
           multiple
           collapse-tags
@@ -41,7 +41,7 @@
             :label="item.label"
             :value="item.value">
           </el-option>
-        </el-select>
+        </el-select> -->
 
         <el-button type="primary" @click="downLoad">
           <i class="el-icon-bottom"></i>
@@ -69,7 +69,7 @@
       </el-form>
       <el-table
         :ref="tableRefs"
-        :row-style="{height: '40px'}"
+        :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
         @select-all="changeSelect"
@@ -118,15 +118,15 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-row>
+    <el-row style="margin: 20px;">
       <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
-          :page-sizes="[5, 10, 20, 30, 40]"
-          :page-size="query['per-page']"
+          :page-sizes="pageList"
+          :page-size="query.size"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="changePages"
@@ -143,6 +143,8 @@ import List from '@/components/list'
 import TagsManage from '@/components/tags-manage/index.vue'
 import ExportDialog from './components/export-dialog.vue'
 import BindTags from './components/bind-tags.vue'
+import { getBlockList } from '@/api/storage-service'
+import { mapGetters } from 'vuex'
 
 export default {
   extends: List,
@@ -153,18 +155,11 @@ export default {
   },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
-      createdSearch: false,
       query: {
         name: '',
-        tag: [],
         page: 1,
         size: 10
       },
-      tableList: [
-        { name: 11222 },
-        { name: 11222 }
-      ],
       listMoreOperate: [
         { label: '编辑标签', value: 1 },
         { label: '同步状态', value: 2 },
@@ -190,13 +185,14 @@ export default {
   computed: {
     showedHeaderList() {
       return this.headerList.filter(item => this.showList.includes(item.value))
-    }
+    },
+    ...mapGetters([
+      'pageList'
+    ])
   },
   methods: {
-    search() {
-    },
+    fetchApi: getBlockList,
     downLoad() {
-      console.log(111);
       this.componentName = 'export-dialog'
       this.visible = true
     },

@@ -1,6 +1,6 @@
 <template>
 <section class="main">
-  <div class="crumbs">
+  <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item><i class="el-icon-rank"></i> 拖拽组件</el-breadcrumb-item>
       <el-breadcrumb-item>拖拽弹框</el-breadcrumb-item>

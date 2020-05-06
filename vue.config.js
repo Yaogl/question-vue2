@@ -40,25 +40,19 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: false,
   productionSourceMap: false,
-  devServer: {
-    proxy: {
-      '/bcp': {
-        target: process.env.VUE_APP_BASE_URL,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/bcp': '/bcp'
-        }
-      },
-      '/api': {
-        target: 'http://10.255.66.213:8089',
-        ws: false,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': '/api'
-        }
-      }
-    }
-  },
+  // devServer: {
+  //   proxy: {
+  //     '/bcp': {
+  //       target: process.env.VUE_APP_BASE_URL,
+  //       changeOrigin: true
+  //     },
+  //     '/api': {
+  //       target: 'http://10.255.66.213:8089',
+  //       ws: false,
+  //       changeOrigin: true
+  //     }
+  //   }
+  // },
 
   configureWebpack: config => {
     // 为生产环境修改配置...

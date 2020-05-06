@@ -1,11 +1,14 @@
 import * as types from '../mutation-types.js'
+import { dateFormat } from '@/utils'
 
 const state = {
   userInfo: {}, // 登录之后获取个人信息
+  loginTime: ''
 }
 
 const getters = {
-  userInfo: state => state.userInfo
+  userInfo: state => state.userInfo,
+  loginTime: state => state.loginTime
 }
 
 const mutations = {
@@ -14,6 +17,9 @@ const mutations = {
   },
   [types.LOGIN_OUT](state, userInfo) {
     state.userInfo = {} // 清空用户数据
+  },
+  [types.LOGIN_TIME](state, time) {
+    state.loginTime = time
   }
 }
 
@@ -23,6 +29,10 @@ const actions = {
   },
   loginOut({ commit }) { // 退出登录，清空信息
     commit(types.LOGIN_OUT)
+  },
+  setLoginTime({ commit }) {
+    const time = dateFormat('YYYY-mm-dd HH:MM', new Date())
+    commit(types.LOGIN_TIME, time)
   }
 }
 

@@ -17,6 +17,12 @@ const routers = [{
     title: '快照'
   }
 }, {
+  path: '/storage-service/snapshot-create',
+  component: () => import('@/views/storage-service/snapshot/create'),
+  meta: {
+    title: '创建硬盘'
+  }
+}, {
   path: '/storage-service/object-storage-list',
   component: () => import('@/views/storage-service/object-storage/list'),
   meta: {
@@ -33,6 +39,18 @@ const routers = [{
   component: () => import('@/views/storage-service/file-storage/list'),
   meta: {
     title: '文件存储'
+  }
+}, {
+  path: '/storage-service/file-storage-create',
+  component: () => import('@/views/storage-service/file-storage/create'),
+  meta: {
+    title: '文件存储'
+  }
+}, {
+  path: '/storage-service/file-storage-adjust-capacity',
+  component: () => import('@/views/storage-service/file-storage/adjust-capacity'),
+  meta: {
+    title: '调整容量'
   }
 }]
 

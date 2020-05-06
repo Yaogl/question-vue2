@@ -14,16 +14,17 @@ export default {
     }
   },
   created() {
-    console.log(process.env);
+    this.setLoginTime()
   },
   methods: {
     ...mapActions([
-      'setBreadcrumbList'
+      'setBreadcrumbList',
+      'setLoginTime'
     ])
   }
 }
 </script>
 <style>
 /*深色主题*/
-/*@import "./assets/css/theme-green/color-green.css";   浅绿色主题*/
+@import "./assets/css/theme-green/color-green.css";
 </style>

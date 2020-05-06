@@ -48,7 +48,11 @@ const mutations = {
     state.breadcrumbList = list
   },
   [types.PUSH_BREADCRUMB_LIST](state, item) {
-    state.breadcrumbList.push(item)
+    if (state.breadcrumbList.length > 2) {
+      state.breadcrumbList[2] = item
+    } else {
+      state.breadcrumbList.push(item)
+    }
   }
 }
 

@@ -105,7 +105,7 @@
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
-          :page-sizes="[5, 10, 20, 30, 40]"
+          :page-sizes="pageList"
           :page-size="query['per-page']"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"

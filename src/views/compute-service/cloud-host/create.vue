@@ -13,10 +13,21 @@
           开发项目
         </el-form-item>
         <el-form-item label="云提供商：" prop="age">
-          开发项目
+          <el-select v-model="formData.radio" placeholder="请选择云提供商">
+            <el-option label="OpenStack" value="1"></el-option>
+            <el-option label="金山云" value="2"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="地域和可用区：" prop="age">
-          开发项目
+          <el-select v-model="formData.radio" placeholder="请选择地域">
+            <el-option label="保定" value="1"></el-option>
+            <el-option label="天津" value="2"></el-option>
+            <el-option label="徐水" value="3"></el-option>
+          </el-select>
+          <el-select v-model="formData.radio" placeholder="请选择可用区">
+            <el-option label="Nova" value="1"></el-option>
+            <el-option label="LVM" value="2"></el-option>
+          </el-select>
         </el-form-item>
       </el-card>
 
@@ -29,12 +40,25 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="配置：" prop="age">
-          <el-radio-group v-model="formData.radio1">
+          <el-radio-group v-model="formData.radio1" class="mgb20">
             <el-radio-button label="通用型"></el-radio-button>
             <el-radio-button label="计算型"></el-radio-button>
             <el-radio-button label="内存型"></el-radio-button>
             <el-radio-button label="高主频型"></el-radio-button>
           </el-radio-group>
+
+          <el-table
+            :row-style="{height: '45px'}"
+            :header-row-style="{height: '45px'}"
+            :data="tableList"
+            style="width: 100%">
+            <el-table-column type="selection" width="55" />
+            <el-table-column prop="name" label="名称" />
+            <el-table-column prop="date" label="内存" />
+            <el-table-column prop="date" label="CPU" />
+            <el-table-column prop="date" label="系统盘" />
+            <el-table-column prop="date" label="CPU型号" />
+          </el-table>
         </el-form-item>
         <el-form-item label="系统镜像：" prop="age">
           <el-radio-group v-model="formData.radio1">
@@ -105,7 +129,7 @@
               <el-radio-button label="自动分配"></el-radio-button>
               <el-radio-button label="指定IP"></el-radio-button>
             </el-radio-group>
-            <ip-input v-model="formData.ipv4" @status="statusSay" format="ipv4" maxWidth="200" @error="error" @input="inputTest" />
+            <ip-input v-model="formData.ipv4" format="ipv4" maxWidth="320" />
           </div>
         </el-form-item>
         <el-form-item label="安全组：" prop="age">
@@ -269,6 +293,9 @@ export default {
         value4: 0,
         num: 1
       },
+      tableList: [
+        { name: 2333 }
+      ],
       showRecovery: false
     }
   },

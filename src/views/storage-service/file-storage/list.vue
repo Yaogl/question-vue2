@@ -1,11 +1,11 @@
 <template lang="html">
-  <div class="block-storage-list-container">
+  <div class="file-storage-list-container">
     <el-row>
       <el-col :span="12">
         <el-button type="primary">
           <i class="el-icon-refresh"></i>
         </el-button>
-        <el-button type="primary" @click="createSecret('add')">创建云硬盘</el-button>
+        <el-button type="primary" @click="createFileSystem">创建文件系统</el-button>
         <el-button type="primary">删除</el-button>
         <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
@@ -21,7 +21,6 @@
         </el-dropdown>
       </el-col>
       <el-col :span="12" align="right">
-        <tags-manage v-model="query.tag"/>
 
         <el-select
           v-model="showList"
@@ -79,41 +78,8 @@
         <el-table-column v-for="(item, index) in showedHeaderList" :key="index" prop="name" :label="item.label" />
         <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
-            <el-button type="text" @click="editCur(scope.row, 'edit-vpc')">挂载</el-button>
-            <el-dropdown placement="bottom-start" trigger="click">
-              <el-button class="el-dropdown-link">
-                更多操作<i class="el-icon-arrow-down el-icon--right"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown" class="operate-dropdown">
-                <el-dropdown-item>
-                  <p style="min-width: 80px;">扩容</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>快照</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>备份</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>续费</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>克隆</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>转包年包月</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>删除</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>修改项目</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p @click="showComponents(scope.row, 'bind-tags')">标签</p>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <el-button type="text" @click="adjustCapacity">调整容量</el-button>
+            <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -125,7 +91,7 @@
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
-          :page-sizes="[5, 10, 20, 30, 40]"
+          :page-sizes="pageList"
           :page-size="query['per-page']"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -139,14 +105,9 @@
 
 <script>
 import List from '@/components/list'
-// import TagsManage from '@/components/tags-manage/index.vue'
-// import ExportDialog from './components/export-dialog.vue'
-// import BindTags from './components/bind-tags.vue'
 
 export default {
   extends: List,
-  components: {
-  },
   data() {
     return {
       pageList: [5, 10, 15, 20, 40, 100],
@@ -191,6 +152,12 @@ export default {
   methods: {
     search() {
     },
+    adjustCapacity() {
+      this.$router.push('/storage-service/file-storage-adjust-capacity')
+    },
+    createFileSystem() {
+      this.$router.push('/storage-service/file-storage-create')
+    },
     downLoad() {
       console.log(111);
       this.componentName = 'export-dialog'
@@ -204,9 +171,6 @@ export default {
     clickOperate(item) {
       console.log(item);
     },
-    createSecret(operate){
-      this.$router.push('/network-service/vpc-network-create')
-    },
     editCur(row, name) {
       this.curRow = row
       this.componentName = name
@@ -217,7 +181,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.block-storage-list-container{
+.file-storage-list-container{
   padding: 20px;
   .table-box{
     margin: 20px 0;

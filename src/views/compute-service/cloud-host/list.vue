@@ -85,7 +85,7 @@
         </el-table-column>
         <el-table-column label="系统" prop="flavor" v-if="showList.includes('2')" width="70">
           <template slot-scope="scope">
-            <i class="iconfont" v-if="scope.row.flavor === '2'" style="color: #0078D7;">&#xe86f;</i>
+            <i class="iconfont" v-if="scope.row.flavor === '2' || scope.row.name.includes('win')" style="color: #0078D7;">&#xe86f;</i>
             <i class="iconfont" v-else style="color: red;">&#xe900;</i>
           </template>
         </el-table-column>
@@ -190,7 +190,7 @@
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
-          :page-sizes="[5, 10, 20, 30, 40]"
+          :page-sizes="pageList"
           :page-size="query.size"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -254,9 +254,7 @@ export default {
       query: {
         page: 1,
         size: 10,
-        name: '',
-        value: '',
-        tag: []
+        name: ''
       },
       tableRefs: 'cloud-host-table', // 列表选择用
       uniqueName: 'uuid', // 列表选择用
@@ -466,7 +464,7 @@ export default {
       this.dialogVisible = true
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.pollingTimeout && clearTimeout(this.pollingTimeout)
   }
 }
