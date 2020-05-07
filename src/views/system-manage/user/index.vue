@@ -1,18 +1,9 @@
 <template lang="html">
-  <div class="secret-key-list-container">
+  <div class="user-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
-          <i class="el-icon-refresh"></i>
-        </el-button>
-        <el-button type="primary" @click="createSecret('add')">创建秘钥对</el-button>
-        <el-button type="primary" @click="createSecret('export')">导入秘钥对</el-button>
+        <el-button type="primary" @click="addNewUser">新增用户</el-button>
         <el-button type="primary">删除</el-button>
-      </el-col>
-      <el-col :span="12" align="right">
-        <el-button type="primary">
-          <i class="el-icon-bottom"></i>
-        </el-button>
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -42,37 +33,11 @@
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
-
-        <el-table-column
-          type="selection"
-          width="55" />
-        </el-table-column>
-
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <p style="font-weight: 600;font-size: 13px;">公钥</p>
-            <p style="line-height: 20px;word-break: break-all;">{{ props.row.keypair.public_key }}</p>
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="name" label="名称">
+        <el-table-column type="selection" width="55" />
+        <el-table-column label="名称" prop="name" />
+        <el-table-column label="状态" prop="name">
           <template slot-scope="scope">
-            {{ scope.row.keypair.name }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="指纹">
-          <template slot-scope="scope">
-            {{ scope.row.keypair.fingerprint }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="项目">
-          <template slot-scope="scope">
-            测试
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="操作" width="120">
-          <template slot-scope="scope">
-            <el-button type="text">删除</el-button>
+            {{ scope.row.status === 'ACTIVE' ? '可用' : '不可用' }}
           </template>
         </el-table-column>
       </el-table>
@@ -93,42 +58,48 @@
       </el-col>
     </el-row>
 
-    <create-secret-key :visible.sync="visible" :operate="operate" />
+    <create-user :visible.sync="visible" :isEdit="isEdit" :editInfo="curRow"/>
   </div>
 </template>
 
 <script>
 import List from '@/components/list'
-import CreateSecretKey from './components/create-secret-key.vue'
-import { getSshkeyList } from '@/api/cloud-host'
+import { getNetworkList } from '@/api/network-service'
 import { mapGetters } from 'vuex'
+import { dateFormat } from '@/utils'
+import CreateUser from './components/create-user.vue'
 
 export default {
   extends: List,
   components: {
-    CreateSecretKey
+    CreateUser
+  },
+  data() {
+    return {
+      query: {
+        page: 1,
+        size: 10,
+        name: ''
+      },
+      tableRefs: 'user-table',
+      visible: false,
+      curRow: {}, // 点击的当前行数据
+      isEdit: false
+    }
   },
   computed: {
     ...mapGetters([
       'pageList'
     ])
   },
-  data() {
-    return {
-      tableRefs: 'secret-key-list',
-      query: {
-        name: '',
-        page: 1,
-        size: 10
-      },
-      visible: false,
-      operate: ''
-    }
-  },
   methods: {
-    fetchApi: getSshkeyList,
-    createSecret(operate){
-      this.operate = operate
+    fetchApi: getNetworkList,
+    addNewUser() {
+      this.visible = true
+    },
+    editCur(row, name) {
+      this.curRow = row
+      this.componentName = name
       this.visible = true
     }
   }
@@ -136,7 +107,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.secret-key-list-container{
+.user-list-container{
   padding: 20px;
   .table-box{
     margin: 20px 0;

@@ -6,7 +6,7 @@
         <el-button type="primary" class="mgr20" @click="jumpToCreate">创建云主机</el-button>
         <el-button type="primary" :disabled="openDisabled" @click="changeStatus('open')">开机</el-button>
         <el-button type="primary" :disabled="closeDisabled" @click="changeStatus('close')">关机</el-button>
-        <el-button type="primary" :disabled="closeDisabled" @click="restart">重启</el-button>
+        <el-button type="primary" @click="restart">重启</el-button>
 
         <!-- <el-dropdown placement="bottom-start" class="mgr20">
           <el-button class="el-dropdown-link">

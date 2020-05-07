@@ -93,6 +93,14 @@ export default [
       {
         index: '/system-manage/system-manage-module',
         title: '模块管理'
+      },
+      {
+        index: '/system-manage/system-manage-user',
+        title: '用户管理'
+      },
+      {
+        index: '/system-manage/system-manage-project',
+        title: '项目管理'
       }
     ]
   }

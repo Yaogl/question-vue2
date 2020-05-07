@@ -8,7 +8,7 @@
     <div class="dialog-body">
       <el-form :model="formData" label-width="100px">
         <el-form-item label="秘钥名称：" prop="name">
-          <el-input v-model="formData.name" class="input-width-2"></el-input>
+          <el-input v-model="formData.name" class="input-width-2" placeholder="请输入名称"></el-input>
         </el-form-item>
         <el-form-item label="描述：" prop="name">
           <el-input placeholder="请输入描述" class="input-width-percent-7" v-model="formData.desc" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" />
@@ -42,11 +42,18 @@ export default {
       default: () => {}
     }
   },
+  watch: {
+    visible(val) {
+      if (!val) {
+        Object.assign(this.$data, this.$options.data())
+      }
+    }
+  },
   data() {
     return {
       formData: {
-        name: 'all', // 范围
-        desc: '#333333'
+        name: '',
+        desc: ''
       }
     }
   },

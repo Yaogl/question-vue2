@@ -60,6 +60,15 @@ export const getImageList = (params) => {
     method: 'get'
   })
 }
+// ----------------
+// 获取秘钥列表
+export const getSshkeyList = (params) => {
+  return request({
+    url: `/bcp/v1/sshkey/list`,
+    method: 'get'
+  })
+}
+
 // 获取test
 export const getTest = () => {
   return request({

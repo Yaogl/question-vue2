@@ -1,18 +1,9 @@
 <template lang="html">
-  <div class="secret-key-list-container">
+  <div class="project-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
-          <i class="el-icon-refresh"></i>
-        </el-button>
-        <el-button type="primary" @click="createSecret('add')">创建秘钥对</el-button>
-        <el-button type="primary" @click="createSecret('export')">导入秘钥对</el-button>
+        <el-button type="primary" @click="addNewStation">新增岗位</el-button>
         <el-button type="primary">删除</el-button>
-      </el-col>
-      <el-col :span="12" align="right">
-        <el-button type="primary">
-          <i class="el-icon-bottom"></i>
-        </el-button>
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -42,37 +33,17 @@
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
-
-        <el-table-column
-          type="selection"
-          width="55" />
-        </el-table-column>
-
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <p style="font-weight: 600;font-size: 13px;">公钥</p>
-            <p style="line-height: 20px;word-break: break-all;">{{ props.row.keypair.public_key }}</p>
+        <el-table-column type="selection" width="55" />
+        <el-table-column label="名称" prop="name" />
+        <el-table-column label="状态" prop="name">
+          <template slot-scope="scope">
+            {{ scope.row.status === 'ACTIVE' ? '可用' : '不可用' }}
           </template>
         </el-table-column>
-
-        <el-table-column prop="name" label="名称">
+        <el-table-column label="操作" prop="name">
           <template slot-scope="scope">
-            {{ scope.row.keypair.name }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="指纹">
-          <template slot-scope="scope">
-            {{ scope.row.keypair.fingerprint }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="项目">
-          <template slot-scope="scope">
-            测试
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="操作" width="120">
-          <template slot-scope="scope">
-            <el-button type="text">删除</el-button>
+            <el-button type="text" @click="resources">分配资源</el-button>
+            <el-button type="text" @click="diUser">分配用户</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -93,42 +64,63 @@
       </el-col>
     </el-row>
 
-    <create-secret-key :visible.sync="visible" :operate="operate" />
+    <create-user :visible.sync="visible" :isEdit="isEdit" :editInfo="curRow"/>
+    <divide-resources :visible.sync="resourcesVisible" />
+    <divide-user :visible.sync="userVisible" />
+
   </div>
 </template>
 
 <script>
 import List from '@/components/list'
-import CreateSecretKey from './components/create-secret-key.vue'
-import { getSshkeyList } from '@/api/cloud-host'
+import { getNetworkList } from '@/api/network-service'
 import { mapGetters } from 'vuex'
+import { dateFormat } from '@/utils'
+import CreateUser from './components/create-user.vue'
+import DivideResources from './components/divide-resources.vue'
+import DivideUser from './components/divide-user.vue'
 
 export default {
   extends: List,
   components: {
-    CreateSecretKey
+    CreateUser,
+    DivideResources,
+    DivideUser
+  },
+  data() {
+    return {
+      query: {
+        page: 1,
+        size: 10,
+        name: ''
+      },
+      tableRefs: 'user-table',
+      visible: false,
+      curRow: {}, // 点击的当前行数据
+      isEdit: false,
+      resourcesVisible: false,
+      userVisible: true
+    }
   },
   computed: {
     ...mapGetters([
       'pageList'
     ])
   },
-  data() {
-    return {
-      tableRefs: 'secret-key-list',
-      query: {
-        name: '',
-        page: 1,
-        size: 10
-      },
-      visible: false,
-      operate: ''
-    }
-  },
   methods: {
-    fetchApi: getSshkeyList,
-    createSecret(operate){
-      this.operate = operate
+    fetchApi: getNetworkList,
+    addNewStation() {
+      this.visible = true
+    },
+    resources() {
+      this.resourcesVisible = true
+    },
+    diUser() {
+      this.userVisible = true
+    },
+    editCur(row, name) {
+      this.curRow = row
+      this.componentName = name
       this.visible = true
     }
   }
@@ -136,7 +128,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.secret-key-list-container{
+.project-list-container{
   padding: 20px;
   .table-box{
     margin: 20px 0;

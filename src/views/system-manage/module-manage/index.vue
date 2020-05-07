@@ -5,9 +5,7 @@
         <mytree :treeData="tdata" :defaultProps="defaultProps" @setCurNode="setCurNode"/>
       </el-col>
       <el-col :span="19">
-        <el-card class="box-card mgb20" v-if="curNode.title">
-          <p>当前节点：{{ curNode.title }}</p>
-        </el-card>
+        <el-alert class="mgb20" @close="clearNode" style="height: 40px;" :title="'当前节点：' + curNode.title" v-if="curNode.title"/>
         <div class="mgb20">
           <el-button type="primary" @click="add">添加</el-button>
           <el-button type="primary" @click="editRow">修改</el-button>
@@ -73,6 +71,11 @@ export default {
       'setTreeData',
       'setNodeId'
     ]),
+    clearNode() {
+      this.tableList = []
+      this.curNode = {}
+      this.selectedItems = []
+    },
     editRow() {
       this.visible = true
       this.isEdit = true
@@ -100,9 +103,16 @@ export default {
       this.selectedItems = []
     },
     delOne(target, node) {
-      let index = target.findIndex(item => item.id === node.id)
-      target.splice(index, 1)
-      this.setTreeData(JSON.parse(JSON.stringify(this.tdata)))
+      for (let i = 0; i < target.length; i++) {
+        if (target[i].id === node.id) {
+          target.splice(i, 1)
+          this.setTreeData(JSON.parse(JSON.stringify(this.tdata)))
+        } else {
+          if (target[i].children.length) {
+            this.delOne(target[i].children, node)
+          }
+        }
+      }
     },
     deleteNode() {
       if (!this.selectedItems.length) {

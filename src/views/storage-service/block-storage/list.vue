@@ -23,7 +23,7 @@
       <el-col :span="12" align="right">
         <!-- <tags-manage v-model="query.tag"/> -->
 
-        <!-- <el-select
+        <el-select
           v-model="showList"
           multiple
           collapse-tags
@@ -41,7 +41,7 @@
             :label="item.label"
             :value="item.value">
           </el-option>
-        </el-select> -->
+        </el-select>
 
         <el-button type="primary" @click="downLoad">
           <i class="el-icon-bottom"></i>
@@ -68,6 +68,7 @@
         </el-row>
       </el-form>
       <el-table
+        v-loading="loading"
         :ref="tableRefs"
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
@@ -76,11 +77,41 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column v-for="(item, index) in showedHeaderList" :key="index" prop="name" :label="item.label" />
-        <el-table-column label="操作">
+        <el-table-column label="名称" prop="name" v-if="showList.includes('1')" >
+          <template slot-scope="scope">
+            <span class="pointer" @click="toDetail(scope.row)">{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" prop="volume_type" v-if="showList.includes('2')" />
+        <el-table-column label="状态" prop="status" v-if="showList.includes('3')">
+          <template slot-scope="scope">
+            {{ scope.row.status === 'in-use' ? '已挂载' : '未挂载' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="容量" prop="size" v-if="showList.includes('4')">
+          <template slot-scope="scope">
+            {{ scope.row.size }} GB
+          </template>
+        </el-table-column>
+
+        <el-table-column label="计费方式" prop="size" v-if="showList.includes('5')">
+          <template slot-scope="scope">
+
+          </template>
+        </el-table-column>
+
+        <el-table-column label="绑定实例" prop="size" v-if="showList.includes('6')">
+          <template slot-scope="scope">
+
+          </template>
+        </el-table-column>
+
+        <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('7')" />
+
+        <el-table-column label="操作" width="180">
           <template lang="html" slot-scope="scope">
-            <el-button type="text" @click="editCur(scope.row, 'edit-vpc')">挂载</el-button>
-            <el-dropdown placement="bottom-start" trigger="click">
+            <el-button type="text" @click.stop="editCur(scope.row, 'edit-vpc')">挂载</el-button>
+            <!-- <el-dropdown placement="bottom-start" trigger="click">
               <el-button class="el-dropdown-link">
                 更多操作<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
@@ -113,7 +144,7 @@
                   <p @click="showComponents(scope.row, 'bind-tags')">标签</p>
                 </el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown> -->
           </template>
         </el-table-column>
       </el-table>
@@ -145,6 +176,7 @@ import ExportDialog from './components/export-dialog.vue'
 import BindTags from './components/bind-tags.vue'
 import { getBlockList } from '@/api/storage-service'
 import { mapGetters } from 'vuex'
+import { dateFormat } from '@/utils'
 
 export default {
   extends: List,
@@ -160,6 +192,7 @@ export default {
         page: 1,
         size: 10
       },
+      tableRefs: 'block-table-refs',
       listMoreOperate: [
         { label: '编辑标签', value: 1 },
         { label: '同步状态', value: 2 },
@@ -169,14 +202,14 @@ export default {
       ],
       headerList: [
         { label: '名称', value: '1' },
-        { label: '系统', value: '2' },
-        { label: '版本', value: '3' },
-        { label: '格式', value: '4' },
-        { label: '容量', value: '5' },
-        { label: '项目', value: '6' },
-        { label: '状态', value: '7' }
+        { label: '类型', value: '2' },
+        { label: '状态', value: '3' },
+        { label: '容量', value: '4' },
+        { label: '计费方式', value: '5' },
+        { label: '绑定实例', value: '6' },
+        { label: '创建时间', value: '7' }
       ],
-      showList: ['1'],
+      showList: ['1', '2', '3', '4', '5', '6', '7'],
       visible: false,
       curRow: {}, // 点击的当前行数据
       componentName: ''
@@ -196,6 +229,9 @@ export default {
       this.componentName = 'export-dialog'
       this.visible = true
     },
+    toDetail(row) {
+      this.$router.push(`/storage-service/block-storage-info?volume_id=${row.id}`)
+    },
     showComponents(row, name) {
       this.curRow = row
       this.componentName = name
@@ -211,6 +247,12 @@ export default {
       this.curRow = row
       this.componentName = name
       this.visible = true
+    },
+    formatData(list) {
+      list.map(item => {
+        item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
+      })
+      return list
     }
   }
 }

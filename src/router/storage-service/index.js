@@ -11,6 +11,12 @@ const routers = [{
     title: '块存储'
   }
 }, {
+  path: '/storage-service/block-storage-info',
+  component: () => import('@/views/storage-service/block-storage/info'),
+  meta: {
+    title: '块存储详情'
+  }
+}, {
   path: '/storage-service/snapshot-list',
   component: () => import('@/views/storage-service/snapshot/list'),
   meta: {

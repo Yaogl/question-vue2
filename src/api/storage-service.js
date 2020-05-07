@@ -7,10 +7,10 @@ export const getBlockList = () => {
     method: 'get'
   })
 }
-// 获取子网列表
-export const getSubnetList = () => {
+// 获取卷详情
+export const getBlockInfo = (id) => {
   return request({
-    url: '/bcp/v1/subnet/list',
+    url: `/bcp/v1/volume/info?volume_id=${id}`,
     method: 'get'
   })
 }

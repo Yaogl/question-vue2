@@ -2,14 +2,19 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 const service = axios.create({
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
   baseURL: process.env.VUE_APP_BASE_URL,
   timeout: 20000 // request timeout
 })
 
 service.interceptors.request.use(
   config => {
+    // if (config.method === 'post' && config.data) {
+    //   config.data = JSON.stringify(config.data)
+    // }
+    // console.log(config, 8);
     return config
   },
   error => {
