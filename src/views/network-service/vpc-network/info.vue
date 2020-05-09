@@ -61,7 +61,7 @@ export default {
 
 <style lang="scss" scoped>
 .vpc-info-container{
-  padding: 20px 10px;
+  padding: 20px 20px;
   .item{
     color: #666;
     line-height: 20px;

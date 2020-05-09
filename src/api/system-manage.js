@@ -1,5 +1,40 @@
 // 系统相关接口
 import request from '../utils/request'
+// 创建角色
+export const roleAdd = (data) => {
+  return request({
+    url: '/api/role/add/info',
+    method: 'post',
+    data
+  })
+}
+// 修改角色
+export const roleUpdate = (data) => {
+  return request({
+    url: '/api/role/update/info',
+    method: 'post',
+    data
+  })
+}
+// 角色列表
+export const roleList = (params) => {
+  return request({
+    url: '/api/role/get/list',
+    method: 'get',
+    params
+  })
+}
+// 删除角色
+export const delRole = (list) => {
+  let search = []
+  list.map(id => {
+    search.push(`ids=${id}`)
+  })
+  return request({
+    url: `/api/role/del/info?${search.join('&')}`,
+    method: 'get'
+  })
+}
 // 新增更新接口
 export const projectAdd = (data) => {
   if (data.id) {

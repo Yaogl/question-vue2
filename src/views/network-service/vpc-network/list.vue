@@ -69,6 +69,7 @@
       </el-form>
       <el-table
         :ref="tableRefs"
+        v-loading="loading"
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
@@ -76,7 +77,11 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="名称" prop="name" min-width="30%" v-if="showList.includes('1')" />
+        <el-table-column label="名称" prop="name" min-width="30%" v-if="showList.includes('1')">
+          <template slot-scope="scope">
+            <span class="pointer" @click="toSubInfo(scope.row)">{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="所在区域" prop="availability_zone" min-width="30%" v-if="showList.includes('2')" />
         <el-table-column label="状态" prop="name" min-width="30%" v-if="showList.includes('3')">
           <template slot-scope="scope">
@@ -174,6 +179,14 @@ export default {
     fetchApi: getNetworkList,
     clickOperate(item) {
       console.log(item);
+    },
+    toSubInfo(row) {
+      this.$router.push({
+        path: '/network-service/vpc-network-info',
+        query: {
+          network_uuid: row.id
+        }
+      })
     },
     createSecret(operate){
       this.$router.push('/network-service/vpc-network-create')

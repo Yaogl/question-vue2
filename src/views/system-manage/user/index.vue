@@ -65,6 +65,7 @@
 <script>
 import List from '@/components/list'
 import { getNetworkList } from '@/api/network-service'
+import { roleList } from '@/api/system-manage'
 import { mapGetters } from 'vuex'
 import { dateFormat } from '@/utils'
 import CreateUser from './components/create-user.vue'
@@ -86,6 +87,9 @@ export default {
       curRow: {}, // 点击的当前行数据
       isEdit: false
     }
+  },
+  created() {
+    roleList()
   },
   computed: {
     ...mapGetters([

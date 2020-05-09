@@ -1,5 +1,6 @@
 import * as types from '../mutation-types.js'
 import { dateFormat } from '@/utils'
+import { removeToken } from '@/utils/auth'
 
 const state = {
   userInfo: {}, // 登录之后获取个人信息
@@ -17,6 +18,7 @@ const mutations = {
   },
   [types.LOGIN_OUT](state, userInfo) {
     state.userInfo = {} // 清空用户数据
+    removeToken() // 清空token
   },
   [types.LOGIN_TIME](state, time) {
     state.loginTime = time

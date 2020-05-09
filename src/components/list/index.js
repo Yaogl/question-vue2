@@ -97,7 +97,7 @@ export default {
         let filterList = results.data
 
         Object.keys(this.query).map(key => {
-          if (this.query[key] && key != 'page' && key != 'size') {
+          if (this.query[key] && key != 'page' && key != 'size' && !key.includes('id')) {
             filterList = filterList.filter(item => item[key].includes(this.query[key]) || this.query[key].includes(item[key]))
           }
         })

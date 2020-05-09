@@ -5,19 +5,30 @@
 
     <el-carousel :autoplay="false" indicator-position="none" ref="carousel">
       <el-carousel-item>
-        <el-form :model="param" :rules="rules" ref="login" label-width="0px" size="normal" class="ms-content">
-          <el-form-item prop="uname">
-            <el-input v-model.trim="param.uname" placeholder="username">
-              <el-button slot="prepend">
-                <i class="iconfont">&#xe651;</i>
-              </el-button>
+        <el-form :model="loginFormData" :rules="loginRules" ref="login" label-width="0px" size="normal" class="ms-content">
+          <el-form-item prop="userName">
+            <el-input v-model.trim="loginFormData.userName" placeholder="请输入用户名">
+              <i slot="prefix" class="iconfont">&#xe651;</i>
             </el-input>
           </el-form-item>
-          <el-form-item prop="upwd">
-            <el-input type="upwd" placeholder="password" show-password v-model.trim="param.upwd" @keyup.enter.native="submitForm()">
-              <el-button slot="prepend">
-                <i class="iconfont">&#xe645;</i>
-              </el-button>
+          <el-form-item prop="userPwd">
+            <el-input
+              placeholder="请输入密码"
+              show-password
+              v-model.trim="loginFormData.userPwd"
+              @keyup.enter.native="submitForm()">
+              <i slot="prefix" class="iconfont">&#xe645;</i>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item prop="verifyCode">
+            <el-input
+              placeholder="请输入验证码"
+              v-model.trim="loginFormData.verifyCode"
+              @keyup.enter.native="submitForm()">
+              <i slot="prefix" class="iconfont">&#xe645;</i>
+              <img slot="append" :src="verifyInfo.img" @click="refreshVerificationCode" width="120" height="40">
+
             </el-input>
           </el-form-item>
           <div class="login-btn">
@@ -29,26 +40,20 @@
         </el-form>
       </el-carousel-item>
       <el-carousel-item>
-        <el-form :model="formData" :rules="rules" ref="register" label-width="0px" size="normal" class="ms-content">
+        <el-form :model="registerFormData" :rules="registerRules" ref="register" label-width="0px" size="normal" class="ms-content">
           <el-form-item prop="uname">
-            <el-input v-model.trim="formData.uname" placeholder="username">
-              <el-button slot="prepend">
-                <i class="iconfont">&#xe651;</i>
-              </el-button>
+            <el-input v-model.trim="registerFormData.uname" placeholder="请输入用户名">
+              <i slot="prefix" class="iconfont">&#xe651;</i>
             </el-input>
           </el-form-item>
           <el-form-item prop="upwd">
-            <el-input type="upwd" placeholder="password" show-password v-model.trim="formData.upwd" @keyup.enter.native="submitForm()">
-              <el-button slot="prepend">
-                <i class="iconfont">&#xe645;</i>
-              </el-button>
+            <el-input type="upwd" placeholder="请输入密码" show-password v-model.trim="registerFormData.upwd">
+              <i slot="prefix" class="iconfont">&#xe645;</i>
             </el-input>
           </el-form-item>
           <el-form-item prop="tupwd">
-            <el-input type="upwd" placeholder="password" show-password v-model.trim="formData.tupwd" @keyup.enter.native="submitForm()">
-              <el-button slot="prepend">
-                <i class="iconfont">&#xe645;</i>
-              </el-button>
+            <el-input type="upwd" placeholder="请确认密码" show-password v-model.trim="registerFormData.tupwd">
+              <i slot="prefix" class="iconfont">&#xe645;</i>
             </el-input>
           </el-form-item>
           <div class="login-btn">
@@ -66,100 +71,63 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { login } from '@/api/login'
+import { authLogin, getVersionCode } from '@/api/login'
+import * as Config from './config'
+import MD5 from 'js-md5'
+
 export default {
   data() {
     return {
-      isRegister: false, // 是否显示注册
-      param: {
-        uname: 'admin',
-        upwd: '123123'
+      loginFormData: {
+        userName: '',
+        userPwd: '',
+        verifyCode: '',
+        verifyToken: ''
       },
-      formData: {
-        uname: 'admin',
-        upwd: '123123',
+      registerRules: Config.getRegisterRules(this),
+      loginRules: Config.getLoginRules(this),
+      registerFormData: {
+        userName: '',
+        userPwd: '',
         tupwd: ''
       },
-      rules: {
-        uname: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { validator: this.validUserName(), trigger: 'blur' }
-        ],
-        upwd: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { validator: this.validPassword(), trigger: 'blur' }
-        ],
-        tupwd: [
-          { required: true, message: '请确认密码', trigger: 'blur' },
-          { validator: this.validPasswordAgain(), trigger: 'blur' }
-        ]
-      }
+      verifyInfo: {}
     }
   },
   created() {
+    this.refreshVerificationCode()
   },
   methods: {
     ...mapActions([
       'setUserInfo'
     ]),
+    refreshVerificationCode(){
+      getVersionCode().then(res => {
+        res.result.img = 'data:image/jpg;base64,' + res.result.img
+        this.verifyInfo = res.result
+        console.log(this.verifyInfo);
+      })
+    },
+    submitForm() {
+      console.log(this.loginFormData);
+      this.$refs.login.validate(valid => {
+        if (valid) {
+          let clone = JSON.parse(JSON.stringify(this.loginFormData))
+          // clone.userPwd = MD5(clone.userPwd)
+          clone.verifyToken = this.verifyInfo.cToken
+          authLogin(clone).then(res => {
+            this.$message.success('登录成功')
+            this.setUserInfo(this.loginFormData)
+            this.$router.push('/')
+          })
+        }
+      })
+    },
     transfer() {
       this.$refs.carousel.next()
       this.$refs.register.resetFields()
       this.$refs.login.resetFields()
     },
-    submitForm() {
-      this.$refs.login.validate(valid => {
-        if (valid) {
-          // let formData = new FormData()
-          // formData.append('uname', this.param.uname)
-          // formData.append('upwd', this.param.upwd)
-          // formData.append('type', 'c')
-          // login(formData).then(res => {
-          //   if (res.success === 'true') {
-          //     this.$cookies.set('username', this.param.uname)
-          //     this.$cookies.set('password', this.param.upwd)
-          //   }
-          //
-          // })
-          this.setUserInfo(this.param)
-          this.$router.push('/')
-        }
-      })
-    },
-    validUserName() {
-      return (rule, value, callback) => {
-        let reg = /^[a-zA-Z]{1,30}$/
-        if (!reg.test(value)) {
-          return callback(new Error('只能输入1-30个以字母开头的字串'))
-        } else {
-          return callback()
-        }
-      }
-    },
-    validPassword() {
-      return (rule, value, callback) => {
-        let reg = /^(\w){6,20}$/
-        if (!reg.test(value)) {
-          return callback(new Error('只能输入6-20个字母、数字、下划线'))
-        } else {
-          return callback()
-        }
-      }
-    },
-    validPasswordAgain() {
-      return (rule, value, callback) => {
-        let reg = /^(\w){6,20}$/
-        if (!reg.test(value)) {
-          return callback(new Error('只能输入6-20个字母、数字、下划线'))
-        } else {
-          if (value !== this.formData.upwd) {
-            return callback(new Error('密码输入不一致'))
-          } else {
-            return callback()
-          }
-        }
-      }
-    }
   }
 }
 </script>
@@ -205,7 +173,16 @@ export default {
     height: 36px;
     margin-bottom: 10px;
   }
-
+  .el-input__prefix{
+    margin-left: 4px;
+    line-height: normal;
+    top: 11px;
+  }
+  .el-input-group__append, .el-input-group__prepend{
+    padding: 0;
+    border: none;
+    background-color: transparent;
+  }
   .login-tips {
     font-size: 12px;
     line-height: 30px;

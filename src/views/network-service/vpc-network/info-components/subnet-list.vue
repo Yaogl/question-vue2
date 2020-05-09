@@ -24,19 +24,34 @@
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
-        <el-table-column prop="date" label="日期" width="180" />
-        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="" label="状态" />
+        <el-table-column prop="cidr" label="网段" />
+        <el-table-column prop="gateway_ip" label="网关" />
+        <el-table-column prop="" label="DNS地址" />
+        <el-table-column prop="enable_dhcp" label="DHCP状态">
+          <template slot-scope="scope">
+            {{ scope.row.enable_dhcp ? '开' : '关' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_at" label="创建时间" />
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="text">修改</el-button>
+            <el-button type="text">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
-    <el-row>
+    <el-row style="margin: 20px;">
       <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
           :page-sizes="pageList"
-          :page-size="query['per-page']"
+          :page-size="query.size"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="changePages"
@@ -51,26 +66,38 @@
 <script>
 import List from '@/components/list'
 import CreateSubnet from './create-subnet.vue'
+import { getSubnetListInfo } from '@/api/network-service'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     CreateSubnet
   },
   extends: List,
+  computed: {
+    ...mapGetters([
+      'pageList'
+    ])
+  },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
-      createdSearch: false,
       query: {
+        network_uuid: '',
         name: '',
         page: 1,
         size: 10
       },
+      createdSearch: false,
       visible: false,
       curRow: {} // 当前编辑行数据
     }
   },
+  created() {
+    this.query.network_uuid = this.$route.query.network_uuid
+    this.search()
+  },
   methods: {
+    fetchApi: getSubnetListInfo,
     addSubnet() { // 新建时清空编辑行数据
       this.curRow = {}
       this.visible = true

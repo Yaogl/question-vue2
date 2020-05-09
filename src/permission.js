@@ -10,7 +10,7 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  const role = store.getters.userInfo.uname;
+  const role = store.getters.userInfo.userName;
   if (role && to.path === '/login') {
     next('/')
     NProgress.done()

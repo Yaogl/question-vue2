@@ -86,7 +86,7 @@
   }
 }
 // tree 样式调整
-.mytree /deep/ {
+.mytree {
   .el-tree > .el-tree-node:after {
     border-top: none;
   }

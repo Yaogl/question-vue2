@@ -1,20 +1,24 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
+import { baseUrls } from './baseUrl'
+import { getToken, setToken } from './auth'
+import { refreshTokenApi } from '@/api/login'
 
-// axios.defaults.withCredentials = true
 const service = axios.create({
-  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-  baseURL: process.env.VUE_APP_BASE_URL,
-  timeout: 20000 // request timeout
+  // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+  timeout: 20000
 })
+
 
 service.interceptors.request.use(
   config => {
-    // if (config.method === 'post' && config.data) {
-    //   config.data = JSON.stringify(config.data)
+    // 请求地址不一致，需要通过判断添加baseurl
+    const urlname = config.url.indexOf('/bcp') === 0 ? 'bcp' : 'web'
+    config.url = baseUrls[urlname] + config.url
+    // if (getToken()) {
+    //   config.headers['Authorization'] = getToken()
     // }
-    // console.log(config, 8);
     return config
   },
   error => {
@@ -24,15 +28,19 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   response => {
+    if (response.headers.Authorization) {
+      setToken(response.headers.Authorization)
+    }
     const res = response.data
-    if (res.ret_code === 200 || res.code === 200) {
+    if (res.ret_code === 200 || res.code === 200 || res.code === 200002) {
       return Promise.resolve(res)
     } else {
-      // 失败success为flase 返回reject数据
-      // Message({
-      //   message: '请求失败，请稍后再试',
-      //   type: 'error'
-      // })
+      if (res.resultMsg) {
+        Message({
+          message: res.resultMsg,
+          type: 'error'
+        })
+      }
       return Promise.reject(res)
     }
   },
