@@ -35,7 +35,7 @@
         <route-map-list />
       </el-tab-pane>
       <el-tab-pane label="拓扑图" name="third">
-
+        <topo />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -44,11 +44,13 @@
 <script>
 import SubnetList from './info-components/subnet-list.vue'
 import RouteMapList from './info-components/route-map-list.vue'
+import Topo from './info-components/topo.vue'
 
 export default {
   components: {
     SubnetList,
-    RouteMapList
+    RouteMapList,
+    Topo
   },
   data() {
     return {

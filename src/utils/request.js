@@ -16,9 +16,9 @@ service.interceptors.request.use(
     // 请求地址不一致，需要通过判断添加baseurl
     const urlname = config.url.indexOf('/bcp') === 0 ? 'bcp' : 'web'
     config.url = baseUrls[urlname] + config.url
-    // if (getToken()) {
-    //   config.headers['Authorization'] = getToken()
-    // }
+    if (getToken()) {
+      config.headers['Authorization'] = getToken()
+    }
     return config
   },
   error => {
@@ -28,10 +28,19 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   response => {
-    if (response.headers.Authorization) {
-      setToken(response.headers.Authorization)
+    if (response.headers.authorization) {
+      setToken(response.headers.authorization)
     }
     const res = response.data
+
+    if (res.code === 100404) { // 登录超时
+      Message({
+        message: res.resultMsg,
+        type: 'error'
+      })
+      return store.dispatch('loginOut')
+    }
+
     if (res.ret_code === 200 || res.code === 200 || res.code === 200002) {
       return Promise.resolve(res)
     } else {

@@ -17,7 +17,7 @@
           :ref="tableRefs"
           @select-all="changeSelect"
           @select="changeSelect"
-          :row-style="{height: '50px'}"
+          :row-style="{height: '45px'}"
           :header-row-style="{height: '50px'}"
           :data="tableList"
           style="width: 100%">
@@ -36,6 +36,7 @@ import Mytree from './components/mytree.vue'
 import AddTreeNode from './components/add-tree-node.vue'
 import { mapGetters, mapActions } from 'vuex'
 import SelectTableMixins from '@/mixins/select-table'
+import { getSourceList, getTree } from '@/api/system-manage'
 
 export default {
   components: {
@@ -64,7 +65,11 @@ export default {
     }
   },
   created() {
-    this.tdata = JSON.parse(JSON.stringify(this.treeData))
+    // this.tdata = JSON.parse(JSON.stringify(this.treeData))
+    getTree().then(res => {
+      console.log(res);
+      this.tdata = res.result.resTree
+    })
   },
   methods: {
     ...mapActions([

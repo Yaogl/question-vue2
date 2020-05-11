@@ -5,7 +5,6 @@ export default {
     return {
       tableList: [],
       selectedItems: [], // 选中列表集合
-      selectIds: [], // 选中列表id的合集
       multiple: true, // 是否多选
       uniqueName: 'id' // 外部定义需要通过什么来判断列表唯一
     }
@@ -19,6 +18,11 @@ export default {
           checkbox && (checkbox.style.display = 'none')
         }
       })
+    }
+  },
+  computed: {
+    selectIds() {
+      return this.selectedItems.map(item => item[this.uniqueName])
     }
   },
   methods: {

@@ -68,18 +68,17 @@ export const getSshkeyList = (params) => {
     method: 'get'
   })
 }
-
-// 获取test
-export const getTest = () => {
+// 容灾列表
+export const getServerGroupList = (params) => {
   return request({
-    url: `/api/test`,
+    url: '/bcp/v1/server_group/list',
     method: 'get'
   })
 }
-// 获取test4
-export const getTest4 = () => {
+// 容灾详情
+export const getServerGroupInfo = (id) => {
   return request({
-    url: `/api/test4`,
+    url: `/bcp/v1/server_group/details/${id}`,
     method: 'get'
   })
 }

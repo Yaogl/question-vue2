@@ -2,8 +2,9 @@
   <div class="disaster-tolerance-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="ghost" @click="clearQuery">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
         <el-button type="primary" @click="createSecret('add')">创建容灾组</el-button>
         <el-button type="primary">删除</el-button>
@@ -34,79 +35,68 @@
         </el-row>
       </el-form>
       <el-table
+        v-loading="loading"
         :ref="tableRefs"
-        :row-style="{height: '40px'}"
-        :header-row-style="{height: '45px'}"
+        :row-style="{height: '45px'}"
+        :header-row-style="{height: '50px'}"
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
-        <el-table-column
-          type="selection"
-          width="55" />
+        <el-table-column type="selection" width="55" />
 
         <el-table-column type="expand">
           <template slot-scope="props">
-            <el-form label-position="left" inline>
-              <el-form-item label="商品名称">
-                <span>商品名称</span>
-              </el-form-item>
-              <el-form-item label="所属店铺">
-                <span>商品名称</span>
-              </el-form-item>
-            </el-form>
+            <div class="expandRow">
+              <p>
+                <span class="item">名称：<EllipsisText :textContent="props.row.name" :displayLength="30"/></span>
+                <span class="item">已加入云主机：1</span>
+                <span class="item">剩余空间：9</span>
+                <span class="item">策略：反亲和</span>
+                <span class="item">区域：保定</span>
+                <span class="item">创建时间：2020-04-02</span>
+              </p>
+              <p>
+                <span class="item gray">描述：用于容灾</span>
+              </p>
 
-            <!-- <el-table
-              :row-style="{height: '60px'}"
-              :header-row-style="{height: '60px'}"
+            </div>
+            <el-table
+              :row-style="{height: '45px'}"
+              :header-row-style="{height: '50px'}"
               :data="tableList"
               style="width: 100%">
-              <el-table-column
-                prop="name"
-                label="姓名">
-              </el-table-column>
-              <el-table-column
-                prop="date"
-                label="日期"
-                width="180">
-              </el-table-column>
-            </el-table> -->
+              <el-table-column prop="name" label="云主机名称"></el-table-column>
+              <el-table-column prop="" label="系统"></el-table-column>
+              <el-table-column prop="" label="区域"></el-table-column>
+              <el-table-column prop="" label="IP地址"></el-table-column>
+              <el-table-column prop="" label="状态"></el-table-column>
+              <el-table-column prop="" label="操作"></el-table-column>
+            </el-table>
 
           </template>
         </el-table-column>
-        <el-table-column
-          prop="name"
-          label="姓名">
-        </el-table-column>
-        <el-table-column
-          prop="date"
-          label="日期"
-          width="180">
-        </el-table-column>
-
-        <!-- <el-table-column prop="address" label="地址" width="120">
-          <template slot="header" slot-scope="scope">
-            <el-select v-model="query.value" placeholder="状态">
-              <el-option
-                v-for="item in moreOperate"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="" label="策略"></el-table-column>
+        <el-table-column prop="" label="云主机数量"></el-table-column>
+        <el-table-column prop="" label="区域"></el-table-column>
+        <el-table-column prop="" label="创建时间"></el-table-column>
+        <el-table-column prop="" label="操作">
+          <template slot-scope="scope">
+            <el-button type="text">删除</el-button>
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </el-table>
     </el-card>
-    <el-row>
+    <el-row style="margin: 20px;">
       <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
           :page-sizes="pageList"
-          :page-size="query['per-page']"
+          :page-size="query.size"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="changePages"
@@ -121,36 +111,34 @@
 <script>
 import List from '@/components/list'
 import CreateSecretKey from './components/create-secret-key.vue'
+import { mapGetters } from 'vuex'
+import { getServerGroupList } from '@/api/cloud-host'
+import EllipsisText from '@/components/ellipsis-text'
 
 export default {
   extends: List,
   components: {
-    CreateSecretKey
+    CreateSecretKey,
+    EllipsisText
+  },
+  computed: {
+    ...mapGetters([
+      'pageList'
+    ])
   },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
-      createdSearch: false,
       query: {
         name: '',
         page: 1,
         size: 10
       },
-      tableList: [
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 },
-        { name: 11222 }
-      ],
       visible: false,
       operate: ''
     }
   },
   methods: {
-    search() {
-      alert(1)
-    },
+    fetchApi: getServerGroupList,
     createSecret(operate){
       this.operate = operate
       this.visible = true
@@ -164,6 +152,17 @@ export default {
   padding: 20px;
   .table-box{
     margin: 20px 0;
+  }
+  .expandRow{
+    padding: 20px;
+    background: #eee;
+    .item{
+      padding-right: 20px;
+      line-height: 24px;
+    }
+    .gray{
+      color: #999;
+    }
   }
 }
 </style>

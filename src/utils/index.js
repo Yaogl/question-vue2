@@ -20,3 +20,20 @@ export const dateFormat = (fmt, date) => {
   }
   return fmt
 }
+export const randomId = () => {
+  let $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+  let maxPos = $chars.length
+  let id = ''
+  for (let i = 0; i < 16; i++) {
+    id += $chars.charAt(Math.floor(Math.random() * maxPos))
+  }
+  return id;
+}
+export const getIdsStr = (list) => {
+  let str = ''
+  list.forEach((id, index) => {
+    str+= ('ids=' + id)
+    if (index !== (list.length - 1)) str+='&'
+  })
+  return str
+}

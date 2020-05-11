@@ -5,16 +5,17 @@
  * @version: 1.0.0
  */
 import SelectTableMixins from '../../mixins/select-table'
+import { randomId } from '@/utils'
 
 export default {
   mixins: [SelectTableMixins],
   data() {
     return {
       // 页面唯一标志，缓存搜索条件用
-      uniqueName: '',
+      uniquePageName: '',
       loading: false, // 查询loading状态，页面删除等操作loading不能共用
       tableList: [], // 列表数据
-      tableRefs: 'tablelist', // 选择列表refs
+      tableRefs: randomId() + '-tablelist', // 选择列表refs
       total: 0, // 数据总数
       cacheQuery: false, // 是否缓存搜索条件
       query: {}, // 搜索条件
@@ -28,7 +29,7 @@ export default {
     this._original = {}
     this._original.query = JSON.parse(JSON.stringify(this.query))
     if (this.cacheQuery) {
-      this.mergeQuery(`${this.$route.name}-${this.uniqueName}`)
+      this.mergeQuery(`${this.$route.name}-${this.uniquePageName}`)
     }
     if (this.createdSearch) {
       this.beforeSearch()
@@ -48,38 +49,32 @@ export default {
 
       Object.assign(this.query, data.query)
     },
-    currentChange(page) {
+    currentChange(pageNum) {
       // el-pagination组件 current-change
-      // this.fetchByPage(page)
-      this.query.page = page
-      const start = 0 + this.query.size * (this.query.page - 1)
-      const end = start + this.query.size
-      this.tableList = this.totalList.slice(start, end)
+      this.query.pageNum = pageNum
+      this.fetchByPage(pageNum)
     },
-    changePages(page) {
+    changePages(pageSize) {
       // el-pagination组件  size-change
-      this.query.size = page
-      this.query.page = 1
-      const start = 0 + this.query.size * (this.query.page - 1)
-      const end = start + this.query.size
-      this.tableList = this.totalList.slice(start, end)
-      // this.fetchByPage(1)
+      this.query.pageSize = pageSize
+      this.query.pageNum = 1
+      this.fetchByPage(1)
     },
     search() {
       this.beforeSearch()
       this.fetchByPage(1)
     },
-    fetchByPage(page = this.query.page) {
+    fetchByPage(pageNum = this.query.pageNum) {
       if (this.loading) {
         this.$message.warning('正在加载，请勿重复操作')
         return
       }
-      this.query.page = page
+      this.query.pageNum = pageNum
       if (this.cacheQuery) {
 
         // window.scrollTo(0, 0)
         sessionStorage.setItem(
-          `${this.$route.name}-${this.uniqueName}-query`,
+          `${this.$route.name}-${this.uniquePageName}-query`,
           JSON.stringify({
             query: this.query
           })
@@ -93,14 +88,8 @@ export default {
       this.loading = true
       return this.fetchApi(params).then(results => {
         this.loading = false
-        // 模拟分页
-        this.totalList = this.formatData(results.data || [])
-
-        const start = 0 + this.query.size * (this.query.page - 1)
-        const end = start + this.query.size
-        this.tableList = this.totalList.slice(start, end)
-        // this.total = Number(results.total || 0) 暂时不分页 前端假分页
-        this.total = this.totalList.length
+        this.tableList = this.formatData(results.result.list || [])
+        this.total = Number(results.result.totalNum || 0) // 暂时不分页 前端假分页
         this.afterSearch()
       })
     },

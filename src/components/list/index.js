@@ -110,6 +110,8 @@ export default {
         // this.total = Number(results.total || 0) 暂时不分页 前端假分页
         this.total = this.totalList.length
         this.afterSearch()
+      }).catch(err => {
+        this.loading = false
       })
     },
     // 对结果处理的钩子
