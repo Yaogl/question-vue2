@@ -94,7 +94,7 @@ export default {
       return this.fetchApi(params).then(results => {
         this.loading = false
         // 模拟分页
-        let filterList = results.data
+        let filterList = results.result
 
         Object.keys(this.query).map(key => {
           if (this.query[key] && key != 'page' && key != 'size' && !key.includes('id')) {

@@ -3,14 +3,14 @@ import request from '../utils/request'
 // 获取所有卷信息
 export const getBlockList = () => {
   return request({
-    url: '/bcp/v1/volume/list',
+    url: '/api/store/volume/list/v1',
     method: 'get'
   })
 }
 // 获取卷详情
 export const getBlockInfo = (id) => {
   return request({
-    url: `/bcp/v1/volume/info?volume_id=${id}`,
+    url: `/api/store/volume/info/v1?volumeId=${id}`,
     method: 'get'
   })
 }

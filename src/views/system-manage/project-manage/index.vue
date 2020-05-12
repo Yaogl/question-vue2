@@ -43,7 +43,6 @@
         <el-table-column label="创建时间" prop="createAt" />
         <el-table-column label="操作" prop="name">
           <template slot-scope="scope">
-            <el-button type="text" @click="resources">分配资源</el-button>
             <el-button type="text" @click="diUser">分配用户</el-button>
             <el-button type="text" @click="delProject([scope.row.id])">删除</el-button>
             <el-button type="text" @click="editProject(scope.row)">编辑</el-button>
@@ -76,8 +75,7 @@
 
 <script>
 import List from '@/components/list/backup'
-import { getNetworkList } from '@/api/network-service'
-import { projectList, delProjects } from '@/api/system-manage'
+import { projectList, delProjects, getUserList } from '@/api/system-manage'
 import { mapGetters } from 'vuex'
 import { dateFormat } from '@/utils'
 import CreateProject from './components/create-project.vue'
@@ -110,6 +108,7 @@ export default {
     ])
   },
   created() {
+    getUserList()
   },
   methods: {
     fetchApi: projectList,

@@ -2,27 +2,14 @@
   <div class="firewall-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="ghost" @click="clearQuery">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
         <el-button type="primary">创建防火墙</el-button>
         <el-button type="primary">删除</el-button>
-        <!-- <el-dropdown placement="bottom-start" trigger="click">
-          <el-button class="el-dropdown-link">
-            更多操作<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown" class="operate-dropdown">
-            <el-dropdown-item v-for="item in listMoreOperate"
-              @click.stop.native="clickOperate(item)"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">{{ item.label }}</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown> -->
       </el-col>
       <el-col :span="12" align="right">
-        <!-- <tags-manage v-model="query.tag"/> -->
-
         <el-select
           v-model="showList"
           multiple
@@ -82,15 +69,15 @@
             {{ scope.row.status === 'ACTIVE' ? '可用' : '不可用' }}
           </template>
         </el-table-column>
-        <el-table-column label="关联子网数量" prop="subnet_num" v-if="showList.includes('3')" />
+        <el-table-column label="关联子网数量" prop="port_num" v-if="showList.includes('3')" />
 
-        <el-table-column label="平台-地区" prop="subnet_num" v-if="showList.includes('4')">
+        <!-- <el-table-column label="平台-地区" prop="subnet_num" v-if="showList.includes('4')">
           <template slot-scope="scope">
             OPS-保定
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="项目" prop="project_name" v-if="showList.includes('5')" />
-        <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('6')" />
+        <!-- <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('6')" /> -->
         <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
             <el-button type="text">修改</el-button>
@@ -122,7 +109,7 @@
 <script>
 import List from '@/components/list'
 import TagsManage from '@/components/tags-manage/index.vue'
-import { getNetworkList } from '@/api/network-service'
+import { getFirewallList } from '@/api/network-service'
 import { mapGetters } from 'vuex'
 import { dateFormat } from '@/utils'
 
@@ -150,9 +137,9 @@ export default {
         { label: '名称', value: '1', key: 'name' },
         { label: '状态', value: '2', key: 'mtu' },
         { label: '关联子网数量', value: '3', key: 'availability_zone' },
-        { label: '平台-地区', value: '4', key: 'flavor' },
+        // { label: '平台-地区', value: '4', key: 'flavor' },
         { label: '项目', value: '5', key: 'project_name' },
-        { label: '创建时间', value: '6', key: 'created_at' }
+        // { label: '创建时间', value: '6', key: 'created_at' }
       ],
       showList: ['1', '2', '3', '4', '5', '6'],
       visible: false,
@@ -169,7 +156,7 @@ export default {
     ])
   },
   methods: {
-    fetchApi: getNetworkList,
+    fetchApi: getFirewallList,
     clickOperate(item) {
       console.log(item);
     },
@@ -184,7 +171,7 @@ export default {
     formatData(list) {
       list.map(item => {
         item.project_name = '开发项目'
-        item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
+        // item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
       })
       return list
     }

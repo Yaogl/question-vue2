@@ -35,7 +35,7 @@
             <el-button type="primary" @click="submitForm()">登录</el-button>
           </div>
           <p class="login-tips">
-            <el-button type="text" @click="transfer">去注册</el-button>
+            <!-- <el-button type="text" @click="transfer">去注册</el-button> -->
           </p>
         </el-form>
       </el-carousel-item>
@@ -91,6 +91,7 @@ export default {
         userPwd: '',
         tupwd: ''
       },
+      refreshLoading: false,
       verifyInfo: {}
     }
   },
@@ -102,14 +103,17 @@ export default {
       'setUserInfo'
     ]),
     refreshVerificationCode(){
+      if (this.refreshLoading) return
+      this.refreshLoading = true
       getVersionCode().then(res => {
         res.result.img = 'data:image/jpg;base64,' + res.result.img
         this.verifyInfo = res.result
-        console.log(this.verifyInfo);
+        this.refreshLoading = false
+      }).catch(err => {
+        this.refreshLoading = false
       })
     },
     submitForm() {
-      console.log(this.loginFormData);
       this.$refs.login.validate(valid => {
         if (valid) {
           let clone = JSON.parse(JSON.stringify(this.loginFormData))

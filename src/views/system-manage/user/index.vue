@@ -6,7 +6,7 @@
           <i class="el-icon-refresh-right"></i>
           刷新
         </el-button>
-        <el-button type="primary" @click="addNewUser">新增用户</el-button>
+        <el-button type="primary" @click="addNewUser">新增角色</el-button>
         <el-button type="primary" @click="deleteRoles">删除</el-button>
       </el-col>
     </el-row>
@@ -39,11 +39,13 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="用户名称" prop="roleName" />
+        <el-table-column label="角色名称" prop="roleName" />
         <el-table-column label="描述" prop="description" />
         <el-table-column label="创建时间" prop="createAt" />
         <el-table-column label="操作">
           <template slot-scope="scope">
+            <el-button type="text" @click="resources(scope.row)">分配资源</el-button>
+            <el-button type="text" @click="diUser">分配用户</el-button>
             <el-button type="text" @click="editRole(scope.row)">修改</el-button>
             <el-button type="text" @click="delRole([scope.row.id])">删除</el-button>
           </template>
@@ -65,22 +67,27 @@
           @current-change="currentChange"/>
       </el-col>
     </el-row>
-
+    <divide-resources :visible.sync="resourcesVisible" />
+    <divide-user :visible.sync="userVisible" />
     <create-user :visible.sync="visible" :roleInfo="curRow" @confirm="search"/>
   </div>
 </template>
 
 <script>
 import List from '@/components/list/backup'
-import { roleList, delRole } from '@/api/system-manage'
+import { roleList, delRole, getRoleResource } from '@/api/system-manage'
 import { mapGetters } from 'vuex'
 import { dateFormat } from '@/utils'
 import CreateUser from './components/create-user.vue'
+import DivideResources from './components/divide-resources.vue'
+import DivideUser from './components/divide-user.vue'
 
 export default {
   extends: List,
   components: {
-    CreateUser
+    CreateUser,
+    DivideResources,
+    DivideUser
   },
   data() {
     return {
@@ -92,6 +99,8 @@ export default {
       tableRefs: 'user-table',
       visible: false,
       curRow: {}, // 点击的当前行数据
+      resourcesVisible: false,
+      userVisible: false
     }
   },
   computed: {
@@ -135,6 +144,14 @@ export default {
       this.curRow = row
       this.componentName = name
       this.visible = true
+    },
+    diUser() {
+      this.userVisible = true
+    },
+    resources(row) {
+      console.log(row);
+      // this.resourcesVisible = true
+      getRoleResource(83)
     },
     formatData(list) {
       list.forEach(item => {

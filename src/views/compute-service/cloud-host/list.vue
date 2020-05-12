@@ -2,7 +2,10 @@
   <div class="cloud-host-container">
     <el-row class="batch-handle-row mgb20">
       <el-col :span="16">
-        <i class="el-icon-refresh-right mgr20"></i>
+        <el-button type="ghost" class="mgr20" @click="clearQuery">
+          <i class="el-icon-refresh-right"></i>
+          刷新
+        </el-button>
         <el-button type="primary" class="mgr20" @click="jumpToCreate">创建云主机</el-button>
         <el-button type="primary" :disabled="openDisabled" @click="changeStatus('open')">开机</el-button>
         <el-button type="primary" :disabled="closeDisabled" @click="changeStatus('close')">关机</el-button>
@@ -290,7 +293,7 @@ export default {
     restartOne(row, restart_flag) {
       row.moreOperateLoading = true
       instanceApi.restartInstance({ uuid: row.uuid, restart_flag }).then(res => {
-        if (res.ret_code === 200) {
+        if (res.code === 200) {
           this.$message.success('操作成功，正在为您重启')
         } else {
           this.$message.error('操作失败，请稍后重试')
@@ -332,7 +335,7 @@ export default {
       list.map(item => {
         let pro = new Promise(resolve => [
           methods({ uuid: item.uuid }).then(res => {
-            if (res.ret_code === 200) {
+            if (res.code === 200) {
               this.operateList.push(item)
             }
             resolve(true)
@@ -371,7 +374,7 @@ export default {
     instanceStart(row) {
       row.moreOperateLoading = true
       instanceApi.startInstance({ uuid: row.uuid }).then(res => {
-        if (res.ret_code === 200) {
+        if (res.code === 200) {
           this.operateList = [row]
           this.$message.success('操作成功')
           this.polling = true
@@ -384,7 +387,7 @@ export default {
     instanceStop(row) {
       row.moreOperateLoading = true
       instanceApi.stopInstance({ uuid: row.uuid }).then(res => {
-        if (res.ret_code === 200) {
+        if (res.code === 200) {
           this.operateList = [row]
           this.$message.success('操作成功')
           this.polling = true
@@ -436,7 +439,7 @@ export default {
     },
     queryInfo () {
       instanceApi.getInstanceList().then((results) => {
-        this.totalList = this.formatData(results.data || [])
+        this.totalList = this.formatData(results.result || [])
 
         const start = 0 + this.query.size * (this.query.page - 1)
         const end = start + this.query.size

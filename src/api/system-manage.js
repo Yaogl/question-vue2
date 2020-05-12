@@ -31,6 +31,15 @@ export const delRole = (list) => {
     method: 'get'
   })
 }
+// 获取用户
+export const getUserList = (params) => {
+  return request({
+    url: `/api/user/get/list`,
+    method: 'get',
+    params
+  })
+}
+
 // 新增更新接口
 export const projectAdd = (data) => {
   if (data.id) {
@@ -70,7 +79,7 @@ export const delProjects = list => {
   })
 }
 // 创建 修改 资源
-export const createSource = data => {
+export const createResource = data => {
   if (data.id) {
     return request({
       url: '/api/res/update/info',
@@ -84,15 +93,22 @@ export const createSource = data => {
     data
   })
 }
+// 删除资源
+export const delResource = (list) => {
+  return request({
+    url: '/api/res/del/info?' + getIdsStr(list),
+    method: 'get'
+  })
+}
 // 资源详情
-export const getSourceInfo = (id) => {
+export const getResourceInfo = (id) => {
   return request({
     url: `/api/res/get/info?id=${id}`,
     method: 'get'
   })
 }
-// 资源列表
-export const getSourceList = (params) => {
+// 右侧资源列表
+export const getResourceList = (params) => {
   return request({
     url: `/api/res/get/list`,
     method: 'get',
@@ -110,6 +126,13 @@ export const getNodeTree = (parentId) => {
 export const getTree = () => {
   return request({
     url: `/api/res/get/resTree?parentId=0`,
+    method: 'get'
+  })
+}
+// 获得角色下关联的资源
+export const getRoleResource = (id) => {
+  return request({
+    url: `/api/role/get/resource?roleId=${id}`,
     method: 'get'
   })
 }

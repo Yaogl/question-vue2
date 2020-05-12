@@ -2,8 +2,9 @@
   <div class="security-group-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="ghost" @click="clearQuery">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
         <el-button type="primary">创建安全组</el-button>
         <el-button type="primary">删除</el-button>
@@ -77,18 +78,18 @@
         style="width: 100%">
         <el-table-column type="selection" width="55" />
         <el-table-column label="名称" prop="name" v-if="showList.includes('1')" />
-        <el-table-column label="状态" prop="name" v-if="showList.includes('2')">
+        <!-- <el-table-column label="状态" prop="name" v-if="showList.includes('2')">
           <template slot-scope="scope">
             {{ scope.row.status === 'ACTIVE' ? '可用' : '不可用' }}
           </template>
-        </el-table-column>
-        <el-table-column label="关联实例数量" prop="subnet_num" v-if="showList.includes('3')" />
+        </el-table-column> -->
+        <!-- <el-table-column label="关联实例数量" prop="subnet_num" v-if="showList.includes('3')" /> -->
 
-        <el-table-column label="平台-地区" prop="subnet_num" v-if="showList.includes('4')">
+        <!-- <el-table-column label="平台-地区" prop="subnet_num" v-if="showList.includes('4')">
           <template slot-scope="scope">
             OPS-保定
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="项目" prop="project_name" v-if="showList.includes('5')" />
         <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('6')" />
         <el-table-column label="操作">
@@ -122,7 +123,7 @@
 <script>
 import List from '@/components/list'
 import TagsManage from '@/components/tags-manage/index.vue'
-import { getNetworkList } from '@/api/network-service'
+import { getSecurityGroupList } from '@/api/network-service'
 import { mapGetters } from 'vuex'
 import { dateFormat } from '@/utils'
 
@@ -148,9 +149,9 @@ export default {
       ],
       headerList: [
         { label: '名称', value: '1', key: 'name' },
-        { label: '状态', value: '2', key: 'mtu' },
-        { label: '关联实例数量', value: '3', key: 'availability_zone' },
-        { label: '平台-地区', value: '4', key: 'flavor' },
+        // { label: '状态', value: '2', key: 'mtu' },
+        // { label: '关联实例数量', value: '3', key: 'availability_zone' },
+        // { label: '平台-地区', value: '4', key: 'flavor' },
         { label: '项目', value: '5', key: 'project_name' },
         { label: '创建时间', value: '6', key: 'created_at' }
       ],
@@ -169,7 +170,7 @@ export default {
     ])
   },
   methods: {
-    fetchApi: getNetworkList,
+    fetchApi: getSecurityGroupList,
     clickOperate(item) {
       console.log(item);
     },

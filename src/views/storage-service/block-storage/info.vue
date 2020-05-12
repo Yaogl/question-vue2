@@ -34,7 +34,7 @@ export default {
   created() {
     this.loading = true
     getBlockInfo(this.$route.query.volume_id).then(res => {
-      this.blockInfo = res.data
+      this.blockInfo = res.result
       this.loading = false
     })
   },

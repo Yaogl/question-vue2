@@ -42,6 +42,14 @@ export default {
       default: () => {}
     }
   },
+  watch: {
+    visible(val) {
+      if (!val) {
+        // 清空树选中状态
+        this.$refs.dividetree.setCheckedKeys([])
+      }
+    }
+  },
   created() {
     this.loading = true
     getTree().then(res => {

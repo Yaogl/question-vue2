@@ -35,7 +35,7 @@ service.interceptors.response.use(
 
     if (res.code === 100404) { // 登录超时
       Message({
-        message: res.resultMsg,
+        message: res.msg,
         type: 'error'
       })
       return store.dispatch('loginOut')

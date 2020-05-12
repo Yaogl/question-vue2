@@ -93,7 +93,7 @@ export default {
     }
   },
   created() {
-    this.query.network_uuid = this.$route.query.network_uuid
+    this.query.networkUuid = this.$route.query.network_uuid
     this.search()
   },
   methods: {
