@@ -43,7 +43,7 @@
         <el-table-column label="创建时间" prop="createAt" />
         <el-table-column label="操作" prop="name">
           <template slot-scope="scope">
-            <el-button type="text" @click="diUser">分配用户</el-button>
+            <el-button type="text" @click="diUser(scope.row)">分配用户</el-button>
             <el-button type="text" @click="delProject([scope.row.id])">删除</el-button>
             <el-button type="text" @click="editProject(scope.row)">编辑</el-button>
           </template>
@@ -67,26 +67,23 @@
     </el-row>
 
     <create-project :visible.sync="visible" :projectInfo="curRow" @confirm="search"/>
-    <divide-resources :visible.sync="resourcesVisible" />
-    <divide-user :visible.sync="userVisible" />
+    <divide-user :visible.sync="userVisible" :userIds="curUserIds" :projectUuid="curRow.uuid"/>
 
   </div>
 </template>
 
 <script>
 import List from '@/components/list/backup'
-import { projectList, delProjects, getUserList } from '@/api/system-manage'
-import { mapGetters } from 'vuex'
+import { projectList, delProjects, getResourceUser } from '@/api/system-manage'
+import { mapGetters, mapActions } from 'vuex'
 import { dateFormat } from '@/utils'
 import CreateProject from './components/create-project.vue'
-import DivideResources from './components/divide-resources.vue'
 import DivideUser from './components/divide-user.vue'
 
 export default {
   extends: List,
   components: {
     CreateProject,
-    DivideResources,
     DivideUser
   },
   data() {
@@ -98,8 +95,9 @@ export default {
       },
       visible: false,
       curRow: {}, // 点击的当前行数据
-      resourcesVisible: false,
-      userVisible: false
+      userVisible: false,
+      operateLoading: true,
+      curUserIds: [] // 当前点击行绑定的用户id列表
     }
   },
   computed: {
@@ -108,9 +106,14 @@ export default {
     ])
   },
   created() {
-    getUserList()
+    this.setAllUserList().then(res => {
+      this.operateLoading = false
+    })
   },
   methods: {
+    ...mapActions([
+      'setAllUserList'
+    ]),
     fetchApi: projectList,
     addNewProject() {
       this.visible = true
@@ -120,14 +123,12 @@ export default {
       this.visible = true
       this.curRow = row
     },
-    resources() {
-      this.resourcesVisible = true
-    },
     deleteProjects() {
       if (!this.selectIds.length) {
         this.$message.warning('请选择需要删除的项目')
         return
       }
+      if (this.operateLoading) return this.$message.warning('请不要重复提交')
       this.delProject(this.selectIds)
     },
     delProject(list) {
@@ -137,16 +138,26 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
+        this.operateLoading = true
         delProjects(list).then(res => {
           if (res.code === 200) {
             this.$message.success('删除成功')
             this.search()
+            this.operateLoading = false
           }
         })
-      }).catch((err) => {})
+      }).catch((err) => {
+        this.operateLoading = false
+      })
     },
-    diUser() {
-      this.userVisible = true
+    diUser(row) {
+      if (this.operateLoading) return this.$message.warning('资源加载中，请稍后')
+      this.curRow = row
+      getResourceUser({ projectUuid: row.uuid, pageNum: 1, pageSize: 100000 }).then(res => {
+        this.curUserIds = res.result.list.map(item => Number(item.uuid))
+        this.operateLoading = false
+        this.userVisible = true
+      })
     },
     editCur(row, name) {
       this.curRow = row

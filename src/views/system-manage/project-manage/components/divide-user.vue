@@ -4,14 +4,16 @@
     width="700px"
     :before-close="handleClose">
     <div slot="title">
-      <span class="title">分配用户</span>
+      <span class="title">分配用户(点击确定保存)</span>
     </div>
     <div class="body">
       <el-transfer v-model="userArr"
         :titles="['待选择用户', '已配置用户']"
+        filterable
+        :filter-method="filterMethod"
         :render-content="renderFunc"
         @change="handleChange"
-        :data="userData">
+        :data="allUserList">
       </el-transfer>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -22,32 +24,47 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { setResourceUser } from '@/api/system-manage'
+
 export default {
-  name: 'add-tree-node',
   props: {
     visible: {
       type: Boolean,
       default: false
+    },
+    projectUuid: {
+      default: ''
+    },
+    userIds: {
+      type: Array,
+      default: () => []
     }
   },
   watch: {
     visible(val) {
       if (!val) {
-        Object.assign(this.$data, this.$options.data())
+        this.userArr = []
+      } else {
+        this.$nextTick(() => {
+          this.userArr = this.userIds
+        })
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'allUserList'
+    ])
   },
   data() {
     return {
       userArr: [],
-      userData: [
-        { key: 1, value: '张三' },
-        { key: 2, value: '李四' },
-        { key: 3, value: '王五' },
-        { key: 4, value: '马六' }
-      ],
       renderFunc(h, option) {
-        return <span>{ option.key } - { option.value }</span>
+        return <span>{ option.key } - { option.uname }</span>
+      },
+      filterMethod(query, item) {
+        return item.uname.indexOf(query) > -1;
       }
     }
   },
@@ -60,10 +77,11 @@ export default {
       console.log(value, direction, movedKeys);
     },
     confirm() {
-      this.$emit('confirm', this.formData)
-      setTimeout(() => {
-        this.handleClose()
-      }, 0)
+      setResourceUser({ projectUuid: this.projectUuid, userUuids: this.userArr }).then(res => {
+        setTimeout(() => {
+          this.handleClose()
+        }, 0)
+      })
     }
   }
 }

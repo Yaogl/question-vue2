@@ -45,7 +45,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="resources(scope.row)">分配资源</el-button>
-            <el-button type="text" @click="diUser">分配用户</el-button>
+            <el-button type="text" @click="diUser(scope.row)">分配用户</el-button>
             <el-button type="text" @click="editRole(scope.row)">修改</el-button>
             <el-button type="text" @click="delRole([scope.row.id])">删除</el-button>
           </template>
@@ -67,7 +67,7 @@
           @current-change="currentChange"/>
       </el-col>
     </el-row>
-    <divide-resources :visible.sync="resourcesVisible" />
+    <divide-resources :visible.sync="resourcesVisible" :roleInfo="curRow" :resourceList="resourceList"/>
     <divide-user :visible.sync="userVisible" />
     <create-user :visible.sync="visible" :roleInfo="curRow" @confirm="search"/>
   </div>
@@ -75,7 +75,7 @@
 
 <script>
 import List from '@/components/list/backup'
-import { roleList, delRole, getRoleResource } from '@/api/system-manage'
+import { roleList, delRole, getRoleResource, getUserList } from '@/api/system-manage'
 import { mapGetters } from 'vuex'
 import { dateFormat } from '@/utils'
 import CreateUser from './components/create-user.vue'
@@ -100,7 +100,9 @@ export default {
       visible: false,
       curRow: {}, // 点击的当前行数据
       resourcesVisible: false,
-      userVisible: false
+      userVisible: false,
+      operateLoading: false,
+      resourceList: [] // 当前列表分配资源的id
     }
   },
   computed: {
@@ -145,13 +147,21 @@ export default {
       this.componentName = name
       this.visible = true
     },
-    diUser() {
-      this.userVisible = true
+    diUser(row) {
+      // this.userVisible = true
+      // getRoleUser(row.id)
     },
     resources(row) {
-      console.log(row);
-      // this.resourcesVisible = true
-      getRoleResource(83)
+      if (this.operateLoading) return
+      this.operateLoading = true
+      this.curRow = row
+      getRoleResource(row.id).then(res => {
+        this.resourceList = res.result.list.map(item => item.resourceId + '')
+        this.resourcesVisible = true
+        this.operateLoading = false
+      }).catch(err => {
+        this.operateLoading = false
+      })
     },
     formatData(list) {
       list.forEach(item => {

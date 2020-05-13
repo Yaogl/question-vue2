@@ -34,21 +34,21 @@ export const restartInstance = data => {
 // 获取vnc链接
 export const getInstanceVnc = vmid => {
   return request({
-    url: `/api/instance/vnc/v1/${vmid}`,
+    url: `/api/instance/vnc/v1?vmid=${vmid}`,
     method: 'get'
   })
 }
 // 获取虚拟机详情
 export const getInstanceDetail = vmid => {
   return request({
-    url: `/api/instance/details/v1/${vmid}`,
+    url: `/api/instance/details/v1?uuid=${vmid}`,
     method: 'get'
   })
 }
 // 获取虚拟机详情
 export const getInstanceStatus = vmid => {
   return request({
-    url: `/api/instance/status/v1/${vmid}`,
+    url: `/api/instance/status/v1?uuid=${vmid}`,
     method: 'get'
   })
 }

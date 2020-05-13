@@ -11,6 +11,8 @@
     <div class="mytree">
       <el-tree
         v-loading="loading"
+        v-if="visible"
+        :default-checked-keys="resourceList"
         ref="dividetree"
         :data="treeData"
         node-key="id"
@@ -29,7 +31,7 @@
 </template>
 
 <script>
-import { getTree } from '@/api/system-manage'
+import { getTree, setRoleResource } from '@/api/system-manage'
 
 export default {
   props: {
@@ -37,9 +39,13 @@ export default {
       type: Boolean,
       default: false
     },
-    editInfo: {
+    roleInfo: {
       type: Object,
       default: () => {}
+    },
+    resourceList: {
+      type: Array,
+      default: () => []
     }
   },
   watch: {
@@ -77,8 +83,18 @@ export default {
       console.log(node);
     },
     confirm() {
-
-      console.log(this.$refs.dividetree.getCheckedNodes());// 获取所有选中节点
+      let resources = this.$refs.dividetree.getCheckedNodes() // 获取所有选中节点
+      if (!resources.length) {
+        this.$message.warning('请选择需要分配的资源')
+        return
+      }
+      let ids = resources.map(item => item.id)
+      setRoleResource(this.roleInfo.id, ids).then(res => {
+        if (res.code === 200) {
+          this.$message.success('操作成功')
+          this.handleClose()
+        }
+      })
     }
   }
 }

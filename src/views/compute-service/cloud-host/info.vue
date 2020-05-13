@@ -181,8 +181,8 @@ export default {
     getDetails() {
       this.loading = true
       instanceApi.getInstanceDetail(this.uuid).then(res => {
-        if (res.data && res.data[0]) {
-          this.instanceInfo = this.format(res.data[0])
+        if (res.result && res.result[0]) {
+          this.instanceInfo = this.format(res.result[0])
         }
         this.loading = false
       })
@@ -200,7 +200,7 @@ export default {
     },
     instanceStop() {
       instanceApi.stopInstance({ uuid: this.uuid }).then(res => {
-        if (res.ret_code === 200) {
+        if (res.code === 200) {
           this.$message.success('操作成功，正在为您关机')
           this.polling = true
           this.pollingInfo()
@@ -211,7 +211,7 @@ export default {
     },
     instanceStart() {
       instanceApi.startInstance({ uuid: this.uuid }).then(res => {
-        if (res.ret_code === 200) {
+        if (res.code === 200) {
           this.$message.success('操作成功，正在为您开机')
           this.polling = true
           this.pollingInfo()
@@ -222,7 +222,7 @@ export default {
     },
     instanceRestart() {
       instanceApi.restartInstance({ uuid: this.uuid }).then(res => {
-        if (res.ret_code === 200) {
+        if (res.code === 200) {
           this.$message.success('操作成功，正在为您重启')
         } else {
           this.$message.error('操作失败，请稍后重试')
@@ -240,7 +240,7 @@ export default {
     },
     queryInfo () {
       instanceApi.getInstanceStatus(this.uuid).then((res) => {
-        if (this.instanceInfo.status === res.data[0].status) {
+        if (this.instanceInfo.status === res.result[0].status) {
           this.pollingInfo()
         } else {
           this.instanceInfo.status = res.data[0].status

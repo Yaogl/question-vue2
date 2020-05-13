@@ -421,8 +421,9 @@ export default {
       instanceApi.getInstanceVnc(row.uuid).then(res => {
         try {
           row.openVnc = false
-          const url = res.data[0].console.url
-          window.open(url)
+          const url = res.result[0].console.url
+          // window.open(url)
+          window.open (url, "newwindow", "height=500, width=800, top=20, left=30, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no")
         } catch (e) {
           console.log(e);
         }

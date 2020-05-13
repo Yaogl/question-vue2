@@ -4,12 +4,14 @@
     width="700px"
     :before-close="handleClose">
     <div slot="title">
-      <span class="title">分配用户</span>
+      <span class="title">分配用户(点击确定保存)</span>
     </div>
     <div class="body">
       <el-transfer v-model="userArr"
         :titles="['待选择用户', '已配置用户']"
         :render-content="renderFunc"
+        filterable
+        :filter-method="filterMethod"
         @change="handleChange"
         :data="userData">
       </el-transfer>
@@ -48,6 +50,9 @@ export default {
       ],
       renderFunc(h, option) {
         return <span>{ option.key } - { option.value }</span>
+      },
+      filterMethod(query, item) {
+        return item.value.indexOf(query) > -1;
       }
     }
   },

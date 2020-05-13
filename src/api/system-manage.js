@@ -31,14 +31,6 @@ export const delRole = (list) => {
     method: 'get'
   })
 }
-// 获取用户
-export const getUserList = (params) => {
-  return request({
-    url: `/api/user/get/list`,
-    method: 'get',
-    params
-  })
-}
 
 // 新增更新接口
 export const projectAdd = (data) => {
@@ -107,6 +99,30 @@ export const getResourceInfo = (id) => {
     method: 'get'
   })
 }
+// 查询项目中所有成员
+export const getResourceUser = (params) => {
+  return request({
+    url: '/api/project/get/user',
+    method: 'get',
+    params
+  })
+}
+// 更新项目中人员 更新逻辑为删除以前新增参数中所有的用户
+export const setResourceUser = (data) => {
+  return request({
+    url: '/api/project/update/user',
+    method: 'post',
+    data
+  })
+}
+// 查询所有人员 增加分页。如不需要，则将pageSize传大值即可
+export const getAllUser = (params) => {
+  return request({
+    url: '/api/user/get/list',
+    method: 'get',
+    params
+  })
+}
 // 右侧资源列表
 export const getResourceList = (params) => {
   return request({
@@ -133,6 +149,27 @@ export const getTree = () => {
 export const getRoleResource = (id) => {
   return request({
     url: `/api/role/get/resource?roleId=${id}`,
+    method: 'get'
+  })
+}
+// 角色下分配资源
+export const setRoleResource = (roleId, list) => {
+  return request({
+    url: `/api/role/update/resource?roleId=${roleId}&${getIdsStr(list)}`,
+    method: 'get'
+  })
+}
+// 角色增加用户
+export const setRoleUser = (roleId) => {
+  return request({
+    url: `/api/role/add/user?roleId=${roleId}&${getIdsStr(list)}`,
+    method: 'get'
+  })
+}
+// 角色删除用户
+export const delRoleUser = (roleId) => {
+  return request({
+    url: `/api/role/del/user?roleId=${roleId}&${getIdsStr(list)}`,
     method: 'get'
   })
 }

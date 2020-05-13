@@ -8,8 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   plugins: [
-    // persistedState({ storage: window.sessionStorage })
-    persistedState({ storage: window.localStorage })
+    persistedState({ storage: window.sessionStorage })
   ],
   modules: {
     common,
