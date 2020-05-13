@@ -16,22 +16,29 @@
         :row-style="{height: '50px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
-        @select-all="changeSelect"
-        @select="changeSelect"
+        v-loading="loading"
         style="width: 100%">
-        <el-table-column prop="date" label="日期" width="180" />
-        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="status" label="状态" />
+        <el-table-column prop="fixed_ips" label="IP地址">
+          <template slot-scope="scope">
+            <p v-for="(item, index) in scope.row.fixed_ips" :key="index">{{ item.ip_address }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column prop="device_owner" label="类型" />
+        <el-table-column prop="mac_address" label="MAC地址" />
+        <el-table-column prop="created_at" label="创建时间" />
       </el-table>
     </el-card>
-    <el-row>
+    <el-row style="margin: 20px;">
       <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
           :page-sizes="pageList"
-          :page-size="query['per-page']"
+          :page-size="query.size"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="changePages"
@@ -43,19 +50,29 @@
 
 <script>
 import List from '@/components/list'
+import { mapGetters } from 'vuex'
+import { getSubnetPortList } from '@/api/network-service'
 
 export default {
   extends: List,
+  computed: {
+    ...mapGetters([
+      'pageList'
+    ])
+  },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
-      createdSearch: false,
       query: {
-        name: '',
+        networkUuid: this.$route.query.network_uuid,
         page: 1,
         size: 10
       }
     }
+  },
+  created() {
+  },
+  methods: {
+    fetchApi: getSubnetPortList,
   }
 }
 </script>

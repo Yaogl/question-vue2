@@ -24,9 +24,17 @@
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
-        <el-table-column prop="date" label="日期" width="180" />
-        <el-table-column prop="name" label="姓名" />
-        <el-table-column prop="name" label="操作">
+        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="name" label="IP地址">
+          <template slot-scope="scope">
+            <div v-if="scope.row.addresses && scope.row.addresses.t1">
+              <p v-for="(item, index) in scope.row.addresses.t1" :key="index">{{ item.addr }}</p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="绑定的云主机" />
+        <el-table-column prop="created" label="创建时间" />
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="bindHost(scope.row)">绑定云主机</el-button>
             <el-button type="text"  @click="unbindHost(scope.row)">解绑云主机</el-button>
@@ -35,15 +43,15 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <el-row>
+    <el-row style="margin: 20px;">
       <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
       <el-col :span="12" align="right">
         <el-pagination
           :current-page="query.page"
           :page-sizes="pageList"
-          :page-size="query['per-page']"
+          :page-size="query.size"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="changePages"
@@ -59,6 +67,8 @@ import List from '@/components/list'
 import CreateVirtualIp from './create-virtual-ip.vue'
 import BindHostDialog from './bind-host-dialog.vue'
 import UnbindHostDialog from './unbind-host-dialog.vue'
+import { mapGetters } from 'vuex'
+import { getSubnetVirtualList } from '@/api/network-service'
 
 export default {
   components: {
@@ -67,11 +77,15 @@ export default {
     UnbindHostDialog
   },
   extends: List,
+  computed: {
+    ...mapGetters([
+      'pageList'
+    ])
+  },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
-      createdSearch: false,
       query: {
+        networkUuid: this.$route.query.network_uuid,
         name: '',
         page: 1,
         size: 10
@@ -85,6 +99,7 @@ export default {
     }
   },
   methods: {
+    fetchApi: getSubnetVirtualList,
     addVirtualIp() {
       this.dialogName = 'create-virtual-ip'
       this.visible = true

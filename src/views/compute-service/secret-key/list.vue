@@ -2,8 +2,9 @@
   <div class="secret-key-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="ghost" @click="clearQuery">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
         <el-button type="primary" @click="createSecret('add')">创建秘钥对</el-button>
         <el-button type="primary" @click="createSecret('export')">导入秘钥对</el-button>

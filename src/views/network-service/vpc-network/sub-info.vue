@@ -1,33 +1,56 @@
 <template lang="html">
   <div class="sub-vpc-info-container">
     <el-card class="mgb20" shadow="never">
-      <el-row>
-        <el-col :span="5">
-          <p class="item">名称：test</p>
-          <p class="item">网段：192.108.1.1</p>
-          <p class="item">项目：项目</p>
-          <p class="item">网络ACL：test-acl</p>
-        </el-col>
-        <el-col :span="8">
-          <p class="item">ID：fc19288-kf1229-ff3939-io99883</p>
-          <p class="item">DNS地址：192.169.01.01，192.169.01.01</p>
-          <p class="item">DHCP段：192.169.01.01，192.169.01.01</p>
-          <p class="item">创建时间：2019-09-09 12:12:12</p>
-        </el-col>
-        <el-col :span="5">
-          <p class="item">所需网络：test</p>
-          <p class="item">地区：北京6区</p>
-          <p class="item">网关：192.169.01.01</p>
-          <p class="item">区域：可用区域</p>
-        </el-col>
-        <el-col :span="5">
-          <p class="item">DHCP：test</p>
-          <p class="item">区域：10</p>
-          <p class="item">删除保护：
-            <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-          </p>
-        </el-col>
-      </el-row>
+      <el-form label-width="100">
+        <el-row>
+          <el-col :span="5">
+            <el-form-item label="名称：">
+              {{ subInfo.name }}
+            </el-form-item>
+            <el-form-item label="网段：">
+              {{ subInfo.cidr }}
+            </el-form-item>
+            <el-form-item label="项目：">
+              开发项目
+            </el-form-item>
+            <el-form-item label="网络ACL：">
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="ID：">
+              {{ subInfo.id }}
+            </el-form-item>
+            <el-form-item label="DHCP段：">
+            </el-form-item>
+            <el-form-item label="创建时间：">
+              {{ subInfo.created_at }}
+            </el-form-item>
+            <el-form-item label="DNS地址：">
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="所属网络：">
+              {{ subInfo.network_id }}
+            </el-form-item>
+            <el-form-item label="网关：">
+              {{ subInfo.gateway_ip }}
+            </el-form-item>
+            <el-form-item label="地区：">
+            </el-form-item>
+
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="DHCP：">
+              {{ subInfo.enable_dhcp ? '开启' : '关闭' }}
+            </el-form-item>
+            <el-form-item label="区域：">
+            </el-form-item>
+            <el-form-item label="删除保护：">
+              <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
     </el-card>
 
     <el-tabs v-model="activeName">
@@ -48,6 +71,7 @@
 import PortList from './subinfo-components/port-list.vue'
 import CloudHostList from './subinfo-components/cloud-host-list.vue'
 import VirtualIpList from './subinfo-components/virtual-ip-list.vue'
+import { getSubnetInfo } from '@/api/network-service'
 
 export default {
   components: {
@@ -58,7 +82,18 @@ export default {
   data() {
     return {
       value: true,
-      activeName: 'first'
+      activeName: 'first',
+      subInfo: {}
+    }
+  },
+  created() {
+    this.getSubInfo()
+  },
+  methods: {
+    getSubInfo() {
+      getSubnetInfo(this.$route.query.network_uuid).then(res => {
+        this.subInfo = res.result[0]
+      })
     }
   }
 }
@@ -66,11 +101,6 @@ export default {
 
 <style lang="scss" scoped>
 .sub-vpc-info-container{
-  padding: 20px 10px;
-  .item{
-    color: #666;
-    line-height: 20px;
-    padding: 15px 0;
-  }
+  padding: 20px 20px;
 }
 </style>

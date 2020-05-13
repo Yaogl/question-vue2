@@ -24,7 +24,11 @@
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
-        <el-table-column prop="name" label="名称" />
+        <el-table-column prop="name" label="名称">
+          <template slot-scope="scope">
+            <el-button type="text" @click="toSubInfo(scope.row)">{{ scope.row.name }}</el-button>
+          </template>
+        </el-table-column>
         <el-table-column prop="" label="状态" />
         <el-table-column prop="cidr" label="网段" />
         <el-table-column prop="gateway_ip" label="网关" />
@@ -98,6 +102,14 @@ export default {
   },
   methods: {
     fetchApi: getSubnetListInfo,
+    toSubInfo(row) {
+      this.$router.push({
+        path: '/network-service/vpc-network-sub-info',
+        query: {
+          network_uuid: row.id
+        }
+      })
+    },
     addSubnet() { // 新建时清空编辑行数据
       this.curRow = {}
       this.visible = true

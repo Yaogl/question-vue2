@@ -16,7 +16,7 @@ service.interceptors.request.use(
     // 请求地址不一致，需要通过判断添加baseurl
     const urlname = config.url.indexOf('/bcp') === 0 ? 'bcp' : 'web'
     config.url = baseUrls[urlname] + config.url
-    if (getToken()) {
+    if (getToken() && config.url.indexOf('/bcp') !== 0) {
       config.headers['Authorization'] = getToken()
     }
     return config

@@ -2,8 +2,9 @@
   <div class="file-storage-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="ghost" @click="clearQuery">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
         <el-button type="primary" @click="createFileSystem">创建文件系统</el-button>
         <el-button type="primary">删除</el-button>

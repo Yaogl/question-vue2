@@ -2,8 +2,9 @@
   <div class="block-storage-list-container">
     <el-row>
       <el-col :span="24">
-        <el-button type="primary">
+        <el-button type="ghost" @click="clearQuery">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
         <el-button type="primary">删除</el-button>
       </el-col>

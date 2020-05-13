@@ -2,8 +2,9 @@
   <div class="vpc-network-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="ghost" @click="clearQuery">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
         <el-button type="primary" @click="createSecret('add')">创建VPC</el-button>
         <el-button type="primary">删除</el-button>
@@ -79,7 +80,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="名称" prop="name" min-width="30%" v-if="showList.includes('1')">
           <template slot-scope="scope">
-            <span class="pointer" @click="toSubInfo(scope.row)">{{ scope.row.name }}</span>
+            <el-button type="text" @click="toSubInfo(scope.row)">{{ scope.row.name }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="所在区域" prop="availability_zone" min-width="30%" v-if="showList.includes('2')" />

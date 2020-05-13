@@ -83,7 +83,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="名称" prop="name" min-width="30%" v-if="showList.includes('1')">
           <template slot-scope="scope">
-            <span style="cursor: pointer;" @click="jumpToDetail(scope.row)">{{ scope.row.name }}</span>
+            <el-button type="text" @click="jumpToDetail(scope.row)">{{ scope.row.name }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="系统" prop="flavor" v-if="showList.includes('2')" width="70">

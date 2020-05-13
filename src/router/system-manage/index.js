@@ -1,4 +1,10 @@
 const routers = [{
+  path: '/system-manage/index',
+  component: () => import('@/views/system-manage/index'),
+  meta: {
+    title: '测试页面'
+  }
+}, {
   path: '/system-manage/system-manage-module',
   component: () => import('@/views/system-manage/module-manage/index'),
   meta: {

@@ -7,6 +7,8 @@ import VCharts from 'v-charts'
 Vue.use(VCharts)
 import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)
+import VueKonva from 'vue-konva'
+Vue.use(VueKonva)
 
 import 'element-ui/lib/theme-chalk/index.css' // 默认主题
 // import './assets/css/theme-green/index.css'; // 浅绿色主题

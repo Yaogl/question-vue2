@@ -2,8 +2,9 @@
   <div class="mirror-image-pub-components">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
       </el-col>
       <el-col :span="12" align="right">
