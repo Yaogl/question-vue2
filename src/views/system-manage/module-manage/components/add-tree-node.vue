@@ -22,10 +22,16 @@
           <el-input type="number" min="0" placeholder="请输入资源排序" v-model.trim="formData.sortId"></el-input>
         </el-form-item>
         <el-form-item label="资源类型：">
-          <el-radio-group v-model="formData.type">
+          <el-radio-group v-model="formData.type" @change="changeType">
             <el-radio-button label="menu">菜单</el-radio-button>
             <el-radio-button label="button">按钮</el-radio-button>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="formData.type === 'menu'" label="菜单路径：" prop="resourceHref">
+          <el-input placeholder="请输入菜单路径" v-model.trim="formData.resourceHref"></el-input>
+        </el-form-item>
+        <el-form-item v-if="formData.type === 'button'" label="按钮标识：" prop="resourceCode">
+          <el-input placeholder="请输入按钮标识" v-model.trim="formData.resourceCode"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -79,6 +85,8 @@ export default {
         description: '',
         resourceName: '',
         sortId: '',
+        resourceHref: '', // 菜单路由地址
+        resourceCode: '', // 按钮标识
         type: 'menu',
         parentId: '0'
       },
@@ -91,6 +99,9 @@ export default {
         description: [
           { required: true, message: '请输入资源描述', trigger: 'blur' },
           { max: 250, message: '您输入的字数长度超出限制，请重新输入', trigger: 'change' }
+        ],
+        resourceCode: [
+          { required: true, message: '请输入按钮标识', trigger: 'blur' }
         ],
         sortId: [
           { validator: isInteger(this), trigger: 'blur' }
@@ -109,11 +120,14 @@ export default {
         this.formData.parentId = this.parentNode.id || 0
       }
     },
+    changeType(name) {
+      if (name === 'menu') this.formData.resourceCode = ''
+      else this.formData.resourceHref = ''
+    },
     confirm() {
-      this.loading = true
-      // console.log(JSON.stringify(this.formData, 4, null));
       this.$refs['add-node-form'].validate(valid => {
         if (valid) {
+          this.loading = true
           createResource(this.formData).then(res => {
             this.loading = false
             this.$emit('confirm', this.formData)

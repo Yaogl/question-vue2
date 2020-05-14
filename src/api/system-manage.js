@@ -159,17 +159,24 @@ export const setRoleResource = (roleId, list) => {
     method: 'get'
   })
 }
-// 角色增加用户
-export const setRoleUser = (roleId) => {
+// 获取角色下用户列表
+export const getRoleUser = (roleId) => {
   return request({
-    url: `/api/role/add/user?roleId=${roleId}&${getIdsStr(list)}`,
+    url: '/api/role/get/user?roleId=' + roleId,
     method: 'get'
   })
 }
-// 角色删除用户
-export const delRoleUser = (roleId) => {
+// 角色增加用户
+export const setRoleUser = (roleId, list) => {
   return request({
-    url: `/api/role/del/user?roleId=${roleId}&${getIdsStr(list)}`,
+    url: `/api/role/assign/user?roleId=${roleId}&${getIdsStr(list)}`,
+    method: 'get'
+  })
+}
+// 获取用户权限
+export const getUserAuth = (name) => {
+  return request({
+    url: `/api/res/get/userResTree?uname=${name}`,
     method: 'get'
   })
 }

@@ -136,6 +136,7 @@ export default {
       }
     },
     add() {
+      this.treeNodeInfo = {}
       this.visible = true
     },
     setCurNode(node) {
@@ -215,13 +216,14 @@ export default {
       }
     },
     addTreeNode(data) {
-      if (this.curNode.id && data.id) { // 如果有父节点信息，刷新一下列表
-        this.search()
-        this.updateTreeNode(this.tdata, data)
-      } else {
-        this.search()
-        this.initTree()
-      }
+      // if (this.curNode.id && data.id) { // 如果有父节点信息，刷新一下列表
+      //   this.search()
+      //   this.updateTreeNode(this.tdata, data)
+      // } else {
+      //
+      // }
+      this.search()
+      this.initTree()
     }
   }
 }

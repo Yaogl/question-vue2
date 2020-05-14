@@ -43,7 +43,7 @@
         <el-table-column label="创建时间" prop="createAt" />
         <el-table-column label="操作" prop="name">
           <template slot-scope="scope">
-            <el-button type="text" @click="diUser(scope.row)">分配用户</el-button>
+            <el-button type="text" @click="divideUser(scope.row)">分配用户</el-button>
             <el-button type="text" @click="delProject([scope.row.id])">删除</el-button>
             <el-button type="text" @click="editProject(scope.row)">编辑</el-button>
           </template>
@@ -150,7 +150,7 @@ export default {
         this.operateLoading = false
       })
     },
-    diUser(row) {
+    divideUser(row) {
       if (this.operateLoading) return this.$message.warning('资源加载中，请稍后')
       this.curRow = row
       getResourceUser({ projectUuid: row.uuid, pageNum: 1, pageSize: 100000 }).then(res => {

@@ -96,7 +96,7 @@ export default [
       },
       {
         index: '/system-manage/system-manage-user',
-        title: '用户管理'
+        title: '角色管理'
       },
       {
         index: '/system-manage/system-manage-project',

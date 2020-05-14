@@ -6,6 +6,7 @@
 </template>
 <script>
 import { mapActions } from 'vuex'
+import { getUserAuth } from '@/api/system-manage'
 
 export default {
   watch: {
@@ -15,6 +16,7 @@ export default {
   },
   created() {
     this.setLoginTime()
+    // getUserAuth('test1')
   },
   methods: {
     ...mapActions([

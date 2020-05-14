@@ -14,7 +14,7 @@ const routers = [{
   path: '/system-manage/system-manage-user',
   component: () => import('@/views/system-manage/user/index'),
   meta: {
-    title: '用户管理'
+    title: '角色管理'
   }
 }, {
   path: '/system-manage/system-manage-project',

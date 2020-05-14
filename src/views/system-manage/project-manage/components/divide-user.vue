@@ -61,7 +61,7 @@ export default {
     return {
       userArr: [],
       renderFunc(h, option) {
-        return <span>{ option.key } - { option.uname }</span>
+        return <span>{ option.index } - { option.uname }</span>
       },
       filterMethod(query, item) {
         return item.uname.indexOf(query) > -1;
@@ -78,6 +78,7 @@ export default {
     },
     confirm() {
       setResourceUser({ projectUuid: this.projectUuid, userUuids: this.userArr }).then(res => {
+        this.$message.success('分配成功')
         setTimeout(() => {
           this.handleClose()
         }, 0)

@@ -45,7 +45,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="resources(scope.row)">分配资源</el-button>
-            <el-button type="text" @click="diUser(scope.row)">分配用户</el-button>
+            <el-button type="text" @click="divideUser(scope.row)">分配用户</el-button>
             <el-button type="text" @click="editRole(scope.row)">修改</el-button>
             <el-button type="text" @click="delRole([scope.row.id])">删除</el-button>
           </template>
@@ -68,15 +68,15 @@
       </el-col>
     </el-row>
     <divide-resources :visible.sync="resourcesVisible" :roleInfo="curRow" :resourceList="resourceList"/>
-    <divide-user :visible.sync="userVisible" />
-    <create-user :visible.sync="visible" :roleInfo="curRow" @confirm="search"/>
+    <divide-user :visible.sync="userVisible" :userIds="curUserIds" :roleId="curRow.id" />
+    <create-user :visible.sync="visible" :roleInfo="curRow"/>
   </div>
 </template>
 
 <script>
 import List from '@/components/list/backup'
-import { roleList, delRole, getRoleResource, getUserList } from '@/api/system-manage'
-import { mapGetters } from 'vuex'
+import { roleList, delRole, getRoleResource, getUserList, getRoleUser } from '@/api/system-manage'
+import { mapGetters, mapActions } from 'vuex'
 import { dateFormat } from '@/utils'
 import CreateUser from './components/create-user.vue'
 import DivideResources from './components/divide-resources.vue'
@@ -102,7 +102,8 @@ export default {
       resourcesVisible: false,
       userVisible: false,
       operateLoading: false,
-      resourceList: [] // 当前列表分配资源的id
+      resourceList: [], // 当前列表分配资源的id
+      curUserIds: [] // 当前点击行绑定的用户id列表
     }
   },
   computed: {
@@ -110,7 +111,15 @@ export default {
       'pageList'
     ])
   },
+  created() {
+    this.setAllUserList().then(res => {
+      this.operateLoading = false
+    })
+  },
   methods: {
+    ...mapActions([
+      'setAllUserList'
+    ]),
     fetchApi: roleList,
     addNewUser() {
       this.curRow = {}
@@ -147,9 +156,17 @@ export default {
       this.componentName = name
       this.visible = true
     },
-    diUser(row) {
-      // this.userVisible = true
-      // getRoleUser(row.id)
+    divideUser(row) {
+      if (this.operateLoading) return this.$message.warning('资源加载中，请稍后')
+      this.curRow = row
+      this.operateLoading = true
+      getRoleUser(row.id).then(res => {
+        this.curUserIds = res.result.list.map(item => Number(item.uuid))
+        this.operateLoading = false
+        this.userVisible = true
+      }).catch(err => {
+        this.operateLoading = false
+      })
     },
     resources(row) {
       if (this.operateLoading) return

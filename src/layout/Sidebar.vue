@@ -5,7 +5,7 @@
     <span v-if="!sideBarCollapse" class="title">长城云服务平台</span>
   </div>
   <el-menu class="sidebar-el-menu" @select="menuSelect" :default-active="onRoutes" :collapse="sideBarCollapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened>
-    <template v-for="item in items">
+    <template v-for="item in menuList">
       <template v-if="item.children">
         <el-submenu :index="item.index" :key="item.index">
           <template slot="title">
@@ -38,12 +38,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import menuList from './menuList'
 
 export default {
   data() {
     return {
-      items: menuList
+      // items: menuList
     }
   },
   computed: {
@@ -51,7 +50,8 @@ export default {
       return this.$route.path
     },
     ...mapGetters([
-      'sideBarCollapse'
+      'sideBarCollapse',
+      'menuList'
     ])
   },
   methods: {

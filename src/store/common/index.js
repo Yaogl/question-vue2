@@ -59,7 +59,10 @@ const mutations = {
   },
   [types.SET_ALLUSER_LIST](state, list) {
     // 穿梭框需绑定key值 保证唯一
-    list.map(item => item.key = item.id)
+    list.map((item, index) => {
+      item.index = index + 1
+      item.key = item.id
+    })
     state.allUserList = list
   }
 }

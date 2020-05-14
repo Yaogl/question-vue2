@@ -16,6 +16,7 @@
         ref="dividetree"
         :data="treeData"
         node-key="id"
+        :check-strictly="true"
         show-checkbox
         :indent="10"
         :expand-on-click-node="false"
@@ -83,13 +84,14 @@ export default {
       console.log(node);
     },
     confirm() {
-      let resources = this.$refs.dividetree.getCheckedNodes() // 获取所有选中节点
+      // 获取所有选中节点id
+      let resources = this.$refs.dividetree.getCheckedKeys()
+
       if (!resources.length) {
         this.$message.warning('请选择需要分配的资源')
         return
       }
-      let ids = resources.map(item => item.id)
-      setRoleResource(this.roleInfo.id, ids).then(res => {
+      setRoleResource(this.roleInfo.id, resources).then(res => {
         if (res.code === 200) {
           this.$message.success('操作成功')
           this.handleClose()

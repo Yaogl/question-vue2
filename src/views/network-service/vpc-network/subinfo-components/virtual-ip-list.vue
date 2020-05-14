@@ -25,14 +25,14 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column prop="name" label="名称" />
-        <el-table-column prop="name" label="IP地址">
+        <el-table-column label="IP地址">
           <template slot-scope="scope">
             <div v-if="scope.row.addresses && scope.row.addresses.t1">
               <p v-for="(item, index) in scope.row.addresses.t1" :key="index">{{ item.addr }}</p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="绑定的云主机" />
+        <el-table-column prop="" label="绑定的云主机" />
         <el-table-column prop="created" label="创建时间" />
         <el-table-column label="操作">
           <template slot-scope="scope">

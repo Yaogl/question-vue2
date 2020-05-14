@@ -80,7 +80,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="名称" prop="name" v-if="showList.includes('1')" >
           <template slot-scope="scope">
-            <span class="pointer" @click="toDetail(scope.row)">{{ scope.row.name }}</span>
+            <el-button type="text" @click="toDetail(scope.row)">{{ scope.row.name }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="类型" prop="volume_type" v-if="showList.includes('2')" />
@@ -103,7 +103,7 @@
 
         <el-table-column label="绑定实例" prop="size" v-if="showList.includes('6')">
           <template slot-scope="scope">
-
+            <p v-if="scope.row.attachments && scope.row.attachments[0]">{{ scope.row.attachments[0].server_name }}</p>
           </template>
         </el-table-column>
 
@@ -119,27 +119,6 @@
               <el-dropdown-menu slot="dropdown" class="operate-dropdown">
                 <el-dropdown-item>
                   <p style="min-width: 80px;">扩容</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>快照</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>备份</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>续费</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>克隆</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>转包年包月</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>删除</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>修改项目</p>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <p @click="showComponents(scope.row, 'bind-tags')">标签</p>

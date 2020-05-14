@@ -13,9 +13,6 @@ export const validatePhoneTwo = (context) => (rule, value, callback) => {
 }
 // 验证是否为整数
 export const isInteger = (context) => (rule, value, callback) => {
-  if (!value) {
-    return callback(new Error('输入不可以为空'))
-  }
   if (!Number(value)) {
     callback(new Error('请输入正整数'))
   } else {

@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="sub-vpc-info-container">
-    <el-card class="mgb20" shadow="never">
+    <el-card class="mgb20" shadow="never" v-loading="loading">
       <el-form label-width="100">
         <el-row>
           <el-col :span="5">
@@ -83,7 +83,8 @@ export default {
     return {
       value: true,
       activeName: 'first',
-      subInfo: {}
+      subInfo: {},
+      loading: true
     }
   },
   created() {
@@ -92,7 +93,10 @@ export default {
   methods: {
     getSubInfo() {
       getSubnetInfo(this.$route.query.network_uuid).then(res => {
+        this.loading = false
         this.subInfo = res.result[0]
+      }).catch(err => {
+        this.loading = false
       })
     }
   }

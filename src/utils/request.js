@@ -6,17 +6,14 @@ import { getToken, setToken } from './auth'
 import { refreshTokenApi } from '@/api/login'
 
 const service = axios.create({
-  // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+  baseURL: 'http://10.255.128.190:81',
   timeout: 20000
 })
 
 
 service.interceptors.request.use(
   config => {
-    // 请求地址不一致，需要通过判断添加baseurl
-    const urlname = config.url.indexOf('/bcp') === 0 ? 'bcp' : 'web'
-    config.url = baseUrls[urlname] + config.url
-    if (getToken() && config.url.indexOf('/bcp') !== 0) {
+    if (getToken()) {
       config.headers['Authorization'] = getToken()
     }
     return config

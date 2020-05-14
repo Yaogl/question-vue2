@@ -73,7 +73,7 @@
 import { mapActions } from 'vuex'
 import { authLogin, getVersionCode } from '@/api/login'
 import * as Config from './config'
-import MD5 from 'js-md5'
+// import MD5 from 'js-md5'
 
 export default {
   data() {

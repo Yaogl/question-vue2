@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="vpc-info-container">
-    <el-card class="mgb20" shadow="never">
+    <el-card class="mgb20" shadow="never" v-loading="loading">
       <el-row>
         <el-col :span="5">
           <p class="item">名称：{{ networkInfo.name }}</p>
@@ -57,7 +57,8 @@ export default {
     return {
       value: true,
       activeName: 'first',
-      networkInfo: {}
+      networkInfo: {},
+      loading: false
     }
   },
   created() {
@@ -65,8 +66,12 @@ export default {
   },
   methods: {
     getNetWorkInfo() {
+      this.loading = true
       getVpnNetWorkInfo(this.$route.query.network_uuid).then(res => {
         this.networkInfo = res.result[0]
+        this.loading = false
+      }).catch(err => {
+        this.loading = false
       })
     }
   }
