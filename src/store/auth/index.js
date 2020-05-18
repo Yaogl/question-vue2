@@ -27,13 +27,15 @@ const toTreeData = (data, pid) => { // 递归菜单树
 const state = {
   authBtns: {}, // 系统权限按钮集
   menuList: [], // 左侧系统菜单
-  allUserList: [] // 系统所有用户
+  allUserList: [], // 系统所有用户
+  curSecurityInfo: {} // 当前点击的安全组信息，跳转详情页面暂时带过去
 }
 
 const getters = {
   authBtns: state => state.authBtns,
   menuList: state => state.menuList,
-  allUserList: state => state.allUserList
+  allUserList: state => state.allUserList,
+  curSecurityInfo: state => state.curSecurityInfo
 }
 
 const mutations = {
@@ -50,13 +52,13 @@ const mutations = {
       item.key = item.id
     })
     state.allUserList = list
+  },
+  [types.SET_SECURITY_INFO] (state, info) {
+    state.curSecurityInfo = info
   }
 }
 
 const actions = {
-  setTreeData({ commit }, treeData) {
-    commit('SET_TREE_DATA', treeData)
-  },
   setAllUserList({ commit, state }, item) {
     if (state.allUserList.length) return Promise.resolve(true)
     return new Promise((resolve) => {
@@ -81,6 +83,9 @@ const actions = {
       commit(types.USER_AUTH, authBtns)
       commit(types.USER_MENU, toTreeData(menu, '0'))
     })
+  },
+  setSecurityInfo({ commit }, info) {
+    commit(types.SET_SECURITY_INFO, info)
   }
 }
 

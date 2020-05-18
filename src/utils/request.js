@@ -35,8 +35,9 @@ service.interceptors.response.use(
         message: res.resultMsg,
         type: 'error'
       })
-      return store.dispatch('loginOut')
+      store.dispatch('loginOut')
       location.reload()
+      return
     }
 
     if (res.code === 200 || res.code === 200002) {

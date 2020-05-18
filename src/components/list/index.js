@@ -94,14 +94,13 @@ export default {
       return this.fetchApi(params).then(results => {
         this.loading = false
         // 模拟分页
+        // security_group_rules安全组规则字段，后期调整
         let filterList = results.result
-
         Object.keys(this.query).map(key => {
-          if (this.query[key] && key != 'page' && key != 'size' && !key.includes('id')) {
+          if (this.query[key] && key != 'page' && key != 'size' && key === 'name') {
             filterList = filterList.filter(item => item[key].includes(this.query[key]) || this.query[key].includes(item[key]))
           }
         })
-
         this.totalList = this.formatData(filterList || [])
 
         const start = 0 + this.query.size * (this.query.page - 1)

@@ -154,6 +154,12 @@ export const getRoleResource = (id) => {
 }
 // 角色下分配资源
 export const setRoleResource = (roleId, list) => {
+  if (!list.length) { // 清空角色下资源
+    return request({
+      url: `/api/role/update/resource?roleId=${roleId}&ids=`,
+      method: 'get'
+    })
+  }
   return request({
     url: `/api/role/update/resource?roleId=${roleId}${getIdsStr(list, '&')}`,
     method: 'get'
@@ -168,6 +174,12 @@ export const getRoleUser = (roleId) => {
 }
 // 角色增加用户
 export const setRoleUser = (roleId, list) => {
+  if (!list.length) { // 清空角色下用户
+    return request({
+      url: `/api/role/assign/user?roleId=${roleId}&ids=`,
+      method: 'get'
+    })
+  }
   return request({
     url: `/api/role/assign/user?roleId=${roleId}${getIdsStr(list, '&')}`,
     method: 'get'

@@ -78,10 +78,10 @@
       </el-table>
     </el-card>
     <el-row style="margin: 20px;">
-      <el-col :span="12">
+      <el-col :span="8">
         <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
-      <el-col :span="12" align="right">
+      <el-col :span="16" align="right">
         <el-pagination
           :current-page="query.page"
           :page-sizes="pageList"

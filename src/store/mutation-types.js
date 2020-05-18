@@ -6,8 +6,9 @@ export const SET_TAGS_LIST = 'SET_TAGS_LIST'
 export const SET_BREADCRUMB_LIST = 'SET_BREADCRUMB_LIST'
 export const PUSH_BREADCRUMB_LIST = 'PUSH_BREADCRUMB_LIST'
 
-
+// 不在缓存区域的字段
 export const SET_ALLUSER_LIST = 'SET_ALLUSER_LIST'
+export const SET_SECURITY_INFO = 'SET_SECURITY_INFO'
 
 // 登录以及个人信息 mutation
 export const SET_USERINFO = 'SET_USERINFO'

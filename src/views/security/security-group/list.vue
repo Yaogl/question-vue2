@@ -39,7 +39,11 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="名称" prop="name" />
+        <el-table-column label="名称" prop="name">
+          <template lang="html" slot-scope="scope">
+            <el-button type="text" @click="toDetail(scope.row)">{{ scope.row.name }}</el-button>
+          </template>
+        </el-table-column>
         <el-table-column label="项目" prop="project_name" />
         <el-table-column label="创建时间" prop="created_at" />
         <el-table-column label="操作">
@@ -51,10 +55,10 @@
       </el-table>
     </el-card>
     <el-row style="margin: 20px;">
-      <el-col :span="12">
+      <el-col :span="8">
         <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
-      <el-col :span="12" align="right">
+      <el-col :span="16" align="right">
         <el-pagination
           :current-page="query.page"
           :page-sizes="pageList"
@@ -74,7 +78,7 @@
 import List from '@/components/list'
 import TagsManage from '@/components/tags-manage/index.vue'
 import { getSecurityGroupList } from '@/api/network-service'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { dateFormat } from '@/utils'
 
 export default {
@@ -109,9 +113,21 @@ export default {
     ])
   },
   methods: {
+    ...mapActions([
+      'setSecurityInfo'
+    ]),
     fetchApi: getSecurityGroupList,
     clickOperate(item) {
       console.log(item);
+    },
+    toDetail(row) {
+      this.setSecurityInfo(row)
+      this.$router.push({
+        path: '/security/security-group-info',
+        query: {
+          security_group_id: row.id
+        }
+      })
     },
     createSecret(operate){
       this.$router.push('/network-service/vpc-network-create')

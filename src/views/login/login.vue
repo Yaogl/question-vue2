@@ -125,6 +125,8 @@ export default {
               this.setUserInfo(this.loginFormData)
               this.$router.push('/')
             }
+          }).catch(err => {
+            this.refreshVerificationCode()
           })
         }
       })

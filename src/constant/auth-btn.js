@@ -92,6 +92,12 @@ export default {
   SECURITY_GROUP_CREATE_BTN: 'security-group-create-btn', // 创建
   SECURITY_GROUP_EDIT_BTN: 'security-group-edit-btn', // 修改
   SECURITY_GROUP_DELETE_BTN: 'security-group-delete-btn', // 删除
+
+  SECURITY_RULE_REFRESH_BTN: 'security-rule-refresh-btn', // 安全组规则刷新
+  SECURITY_RULE_CREATE_BTN: 'security-rule-create-btn', // 安全组规则创建
+  SECURITY_RULE_DELETE_BTN: 'security-rule-delete-btn', // 安全组规则删除
+  SECURITY_RULE_EDIT_BTN: 'security-rule-edit-btn', // 安全组规则修改
+  SECURITY_RULE_COPY_BTN: 'security-rule-copy-btn', // 安全组规则复制
   // 角色管理 user-manage
   USER_MANAGE_REFRESH_BTN: 'user-manage-refresh-btn', // 刷新
   USER_MANAGE_CREATE_BTN: 'user-manage-create-btn', // 创建

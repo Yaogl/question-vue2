@@ -5,6 +5,12 @@ const routers = [{
     title: '安全组'
   }
 }, {
+  path: '/security/security-group-info',
+  component: () => import('@/views/security/security-group/info'),
+  meta: {
+    title: '安全组详情'
+  }
+}, {
   path: '/security/firewall-list',
   component: () => import('@/views/security/firewall/list'),
   meta: {

@@ -60,6 +60,15 @@ export const getSecurityGroupList = params => {
     params
   })
 }
+// 获取安全组规则列表
+export const getSecurityRuleList = params => {
+  return request({
+    url: '/api/network/securityGroup/rule/list/v1',
+    method: 'get',
+    params
+  })
+}
+
 // 获取防火墙列表
 export const getFirewallList = params => {
   return request({
