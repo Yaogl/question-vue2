@@ -1,11 +1,11 @@
 <template lang="html">
   <div class="subnet-list-com">
     <el-card shadow="never" class="mgb20">
-      <el-form label-width="100px">
+      <el-form label-width="100px" @submit.native.prevent>
         <el-row>
           <el-col :span="12">
             <el-form-item label="" label-width="0">
-              <el-button @click="addSubnet">创建子网</el-button>
+              <el-button @click="addSubnet" v-if="authBtns.SUB_NETWORK_CREATE_BTN">创建子网</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="12" align="right">
@@ -26,7 +26,7 @@
         style="width: 100%">
         <el-table-column prop="name" label="名称">
           <template slot-scope="scope">
-            <el-button type="text" @click="toSubInfo(scope.row)">{{ scope.row.name }}</el-button>
+            <el-button type="text" :disabled="!authBtns.SUB_NETWORK_INFO_BTN" @click="toSubInfo(scope.row)">{{ scope.row.name }}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="" label="状态" />
@@ -41,8 +41,8 @@
         <el-table-column prop="created_at" label="创建时间" />
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text">修改</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" v-if="authBtns.SUB_NETWORK_EDIT_BTN">修改</el-button>
+            <el-button type="text" v-if="authBtns.SUB_NETWORK_DELETE_BTN">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -80,7 +80,8 @@ export default {
   extends: List,
   computed: {
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   data() {

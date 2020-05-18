@@ -86,11 +86,6 @@ export default {
     confirm() {
       // 获取所有选中节点id
       let resources = this.$refs.dividetree.getCheckedKeys()
-
-      if (!resources.length) {
-        this.$message.warning('请选择需要分配的资源')
-        return
-      }
       setRoleResource(this.roleInfo.id, resources).then(res => {
         if (res.code === 200) {
           this.$message.success('操作成功')

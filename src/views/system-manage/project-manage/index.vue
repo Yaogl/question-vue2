@@ -2,12 +2,12 @@
   <div class="project-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.PROJECT_MANAGE_REFRESH_BTN">
           <i class="el-icon-refresh-right"></i>
           刷新
         </el-button>
-        <el-button type="primary" @click="addNewProject">新增项目</el-button>
-        <el-button type="primary" @click="deleteProjects">删除</el-button>
+        <el-button type="primary" v-if="authBtns.PROJECT_MANAGE_CREATE_BTN" @click="addNewProject">新增项目</el-button>
+        <el-button type="primary" v-if="authBtns.PROJECT_MANAGE_DELETE_BTN" @click="deleteProjects">删除</el-button>
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -43,9 +43,9 @@
         <el-table-column label="创建时间" prop="createAt" />
         <el-table-column label="操作" prop="name">
           <template slot-scope="scope">
-            <el-button type="text" @click="divideUser(scope.row)">分配用户</el-button>
-            <el-button type="text" @click="delProject([scope.row.id])">删除</el-button>
-            <el-button type="text" @click="editProject(scope.row)">编辑</el-button>
+            <el-button type="text" v-if="authBtns.PROJECT_MANAGE_USER_BTN" @click="divideUser(scope.row)">分配用户</el-button>
+            <el-button type="text" v-if="authBtns.PROJECT_MANAGE_DELETE_BTN" @click="delProject([scope.row.id])">删除</el-button>
+            <el-button type="text" v-if="authBtns.PROJECT_MANAGE_EDIT_BTN" @click="editProject(scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -102,7 +102,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   created() {

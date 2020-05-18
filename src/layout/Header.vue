@@ -66,6 +66,7 @@ export default {
       if (command == 'loginout') {
         this.loginOut()
         this.$router.push('/login');
+        location.reload()
       }
     },
     // 全屏事件

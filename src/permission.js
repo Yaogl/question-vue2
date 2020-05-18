@@ -13,7 +13,7 @@ const whiteList = ['/login', '/403', '/403']
 router.beforeEach((to, from, next) => {
   NProgress.start()
   const token = getToken()
-  if (token ) { // 如果有token 已经登录
+  if (token && store.getters.userInfo.userName) { // 如果有token 已经登录
     if (to.path === '/login') {
       next('/')
       NProgress.done()

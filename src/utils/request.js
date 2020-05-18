@@ -32,13 +32,14 @@ service.interceptors.response.use(
 
     if (res.code === 100404) { // 登录超时
       Message({
-        message: res.msg,
+        message: res.resultMsg,
         type: 'error'
       })
       return store.dispatch('loginOut')
+      location.reload()
     }
 
-    if (res.ret_code === 200 || res.code === 200 || res.code === 200002) {
+    if (res.code === 200 || res.code === 200002) {
       return Promise.resolve(res)
     } else {
       if (res.resultMsg) {

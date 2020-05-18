@@ -29,8 +29,11 @@ export const randomId = () => {
   }
   return id;
 }
-export const getIdsStr = (list) => {
-  let str = ''
+export const getIdsStr = (list, prev) => {
+  if (!list.length) {
+    return ''
+  }
+  let str = prev || ''
   list.forEach((id, index) => {
     str+= ('ids=' + id)
     if (index !== (list.length - 1)) str+='&'

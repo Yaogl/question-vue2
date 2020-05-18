@@ -1,11 +1,11 @@
 <template lang="html">
   <div class="cloud-host-sub-com">
     <el-card shadow="never" class="mgb20">
-      <el-form label-width="100px">
+      <el-form label-width="100px" @submit.native.prevent>
         <el-row>
           <el-col :span="12">
             <el-form-item label="" label-width="0">
-              <el-button @click="addVirtualIp">创建虚拟IP</el-button>
+              <el-button v-if="authBtns.SUB_NETWORK_IP_CREATE_BTN" @click="addVirtualIp">创建虚拟IP</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="12" align="right">
@@ -79,7 +79,8 @@ export default {
   extends: List,
   computed: {
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   data() {
@@ -90,9 +91,6 @@ export default {
         page: 1,
         size: 10
       },
-      tableList: [
-        { name: 1 }
-      ],
       dialogName: '',
       visible: false,
       curRow: {} // 当前编辑行数据

@@ -2,15 +2,16 @@
   <div class="disaster-tolerance-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.SERVER_GROUP_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" @click="createSecret('add')">创建容灾组</el-button>
-        <el-button type="primary">删除</el-button>
+        <el-button type="primary" v-if="authBtns.SERVER_GROUP_CREATE_BTN" @click="createSecret('add')">创建容灾组</el-button>
+        <el-button type="primary" v-if="authBtns.SERVER_GROUP_DELETE_BTN">删除</el-button>
+        <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right">
-        <el-button type="primary">
+        <el-button type="primary" v-if="authBtns.SERVER_GROUP_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
         </el-button>
       </el-col>
@@ -83,7 +84,7 @@
         <el-table-column prop="" label="创建时间"></el-table-column>
         <el-table-column prop="" label="操作">
           <template slot-scope="scope">
-            <el-button type="text">删除</el-button>
+            <el-button type="text" v-if="authBtns.SERVER_GROUP_DELETE_BTN">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -123,7 +124,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   data() {

@@ -1,6 +1,5 @@
 import * as types from '../mutation-types.js'
 import menuList from '@/layout/menuList'
-import { getAllUser } from '@/api/system-manage'
 
 const getBreadcrumb = (list, path) => {
   for (var i in list) {
@@ -22,7 +21,6 @@ const state = {
   isFullScreen: false, // 是否全屏显示
   breadcrumbList: [], // 面包屑导航列表
   pageList: [5, 10, 20, 30, 50, 100], // 整站分页条数列表
-  allUserList: [] // 系统所有用户
 }
 
 const getters = {
@@ -30,8 +28,7 @@ const getters = {
   sideBarCollapse: state => state.sideBarCollapse,
   isFullScreen: state => state.isFullScreen,
   pageList: state => state.pageList,
-  breadcrumbList: state => state.breadcrumbList,
-  allUserList: state => state.allUserList
+  breadcrumbList: state => state.breadcrumbList
 }
 
 const mutations = {
@@ -56,14 +53,6 @@ const mutations = {
     } else {
       state.breadcrumbList.push(item)
     }
-  },
-  [types.SET_ALLUSER_LIST](state, list) {
-    // 穿梭框需绑定key值 保证唯一
-    list.map((item, index) => {
-      item.index = index + 1
-      item.key = item.id
-    })
-    state.allUserList = list
   }
 }
 
@@ -79,15 +68,6 @@ const actions = {
   },
   pushTagsItem({ commit }, item) {
     commit(types.SET_TAGS_LIST, item)
-  },
-  setAllUserList({ commit, state }, item) {
-    if (state.allUserList.length) return Promise.resolve(true)
-    return new Promise((resolve) => {
-      getAllUser({pageNum: 1, pageSize: 100000}).then(res => {
-        commit(types.SET_ALLUSER_LIST, res.result.list)
-        resolve(true)
-      })
-    })
   },
   setBreadcrumbList({ commit }, router) {
     let list = getBreadcrumb(menuList, router.path)

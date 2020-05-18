@@ -2,15 +2,16 @@
   <div class="cloud-host-container">
     <el-row class="batch-handle-row mgb20">
       <el-col :span="16">
-        <el-button type="ghost" class="mgr20" @click="clearQuery">
+        <el-button type="ghost" class="mgr20" v-if="authBtns.INSTANCE_REFRESH_BTN" @click="clearQuery">
           <i class="el-icon-refresh-right"></i>
           刷新
         </el-button>
-        <el-button type="primary" class="mgr20" @click="jumpToCreate">创建云主机</el-button>
-        <el-button type="primary" :disabled="openDisabled" @click="changeStatus('open')">开机</el-button>
-        <el-button type="primary" :disabled="closeDisabled" @click="changeStatus('close')">关机</el-button>
-        <el-button type="primary" @click="restart">重启</el-button>
-
+        <el-button type="primary" v-if="authBtns.INSTANCE_CREATE_BTN" class="mgr20" @click="jumpToCreate">创建云主机</el-button>
+        <el-button type="primary" v-if="authBtns.INSTANCE_START_BTN" :disabled="openDisabled" @click="changeStatus('open')">开机</el-button>
+        <el-button type="primary" v-if="authBtns.INSTANCE_STOP_BTN" :disabled="closeDisabled" @click="changeStatus('close')">关机</el-button>
+        <el-button type="primary" v-if="authBtns.INSTANCE_RESTART_BTN" @click="restart">重启</el-button>
+        <!-- 占位放置没有权限，布局错乱 -->
+        <span>&nbsp;</span>
         <!-- <el-dropdown placement="bottom-start" class="mgr20">
           <el-button class="el-dropdown-link">
             更多操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -25,7 +26,7 @@
       </el-col>
       <el-col :span="8" align="right">
         <!-- 标签管理 -->
-        <tags-manage v-model="query.tag" />
+        <tags-manage v-model="query.tag" v-if="authBtns.INSTANCE_TAGS_BTN"/>
         <el-select
           v-model="showList"
           multiple
@@ -46,7 +47,7 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary" @click="downLoad">
+        <el-button type="primary" @click="downLoad" v-if="authBtns.INSTANCE_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
         </el-button>
       </el-col>
@@ -141,7 +142,7 @@
 
           <template slot-scope="scope">
             <div class="flex">
-              <el-button type="text" :loading="scope.row.openVnc">
+              <el-button type="text" v-if="authBtns.INSTANCE_VNC_BTN" :loading="scope.row.openVnc">
                 <i class="iconfont" @click="getOperateUrl(scope.row)">&#xe621;</i>
               </el-button>
               <el-dropdown placement="bottom-start" trigger="click">
@@ -149,31 +150,29 @@
                   更多操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown" class="operate-dropdown">
-                  <!-- <el-dropdown-item v-for="item in listMoreOperate"
-                    @click.stop.native="clickOperate(item, scope.row)"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">{{ item.label }}</el-dropdown-item> -->
-                  <!-- 暂时不用循环，各种循环的disabled取值并不相同 -->
                   <el-dropdown-item
+                    v-if="authBtns.INSTANCE_START_BTN"
                     @click.stop.native="clickOperate({label: '开机'}, scope.row)"
                     :disabled="scope.row.moreOperateLoading || scope.row.status === 'ACTIVE'"
                   >
                     <p style="min-width: 80px;">开机</p>
                   </el-dropdown-item>
                   <el-dropdown-item
+                    v-if="authBtns.INSTANCE_STOP_BTN"
                     @click.stop.native="clickOperate({label: '关机'}, scope.row)"
                     :disabled="scope.row.moreOperateLoading || scope.row.status !== 'ACTIVE'"
                   >
                     <p>关机</p>
                   </el-dropdown-item>
                   <el-dropdown-item
+                    v-if="authBtns.INSTANCE_RESTART_BTN"
                     @click.stop.native="restartOne(scope.row, 'SOFT')"
                     :disabled="scope.row.moreOperateLoading || scope.row.status !== 'ACTIVE'"
                   >
                     <p>软重启</p>
                   </el-dropdown-item>
                   <el-dropdown-item
+                    v-if="authBtns.INSTANCE_RESTART_BTN"
                     @click.stop.native="restartOne(scope.row, 'HARD')"
                     :disabled="scope.row.moreOperateLoading || scope.row.status !== 'ACTIVE'"
                   >
@@ -241,7 +240,8 @@ export default {
       return this.headerList.filter(item => this.showList.includes(item.value))
     },
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ]),
     openDisabled() {
       let list = this.selectedItems.filter(item => item.status === 'ACTIVE')

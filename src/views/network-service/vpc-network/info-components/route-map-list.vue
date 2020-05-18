@@ -1,11 +1,11 @@
 <template lang="html">
   <div class="route-map-list-com">
     <el-card shadow="never" class="mgb20">
-      <el-form label-width="100px">
+      <el-form label-width="100px" @submit.native.prevent>
         <el-row>
           <el-col :span="12">
             <el-form-item label="" label-width="0">
-              <el-button @click="addRoute">添加路由</el-button>
+              <el-button v-if="authBtns.SUB_NETWORK_ROUTE_CREATE_BTN" @click="addRoute">添加路由</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="12" align="right">
@@ -51,15 +51,21 @@
 <script>
 import List from '@/components/list'
 import CreateRoute from './create-route.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     CreateRoute
   },
   extends: List,
+  computed: {
+    ...mapGetters([
+      'pageList',
+      'authBtns'
+    ])
+  },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
       createdSearch: false,
       tableList: [
         { name: 1111, data: '2019-01-01' },

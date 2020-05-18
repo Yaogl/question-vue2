@@ -2,15 +2,16 @@
   <div class="secret-key-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.SSHKEY_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" @click="createSecret('add')">创建秘钥对</el-button>
-        <el-button type="primary" @click="createSecret('export')">导入秘钥对</el-button>
-        <el-button type="primary">删除</el-button>
+        <el-button type="primary" v-if="authBtns.SSHKEY_CREATE_BTN" @click="createSecret('add')">创建秘钥对</el-button>
+        <el-button type="primary" v-if="authBtns.SSHKEY_IMPORT_BTN" @click="createSecret('export')">导入秘钥对</el-button>
+        <el-button type="primary" v-if="authBtns.SSHKEY_DELETE_BTN">删除</el-button>
+        <span>&nbsp;</span>
       </el-col>
-      <el-col :span="12" align="right">
+      <el-col :span="12" align="right" v-if="authBtns.SSHKEY_EXPORT_BTN">
         <el-button type="primary">
           <i class="el-icon-bottom"></i>
         </el-button>
@@ -73,7 +74,7 @@
         </el-table-column>
         <el-table-column prop="name" label="操作" width="120">
           <template slot-scope="scope">
-            <el-button type="text">删除</el-button>
+            <el-button type="text" v-if="authBtns.SSHKEY_DELETE_BTN">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -111,7 +112,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   data() {

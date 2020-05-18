@@ -19,7 +19,18 @@
         v-loading="loading"
         style="width: 100%">
         <el-table-column prop="name" label="名称" />
-        <el-table-column prop="status" label="状态" />
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <div>
+              <p v-if="scope.row.status === 'ACTIVE'" class="circle-before green">
+                运行中
+              </p>
+              <p v-else class="circle-before gray">
+                关闭
+              </p>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="fixed_ips" label="IP地址">
           <template slot-scope="scope">
             <p v-for="(item, index) in scope.row.fixed_ips" :key="index">{{ item.ip_address }}</p>

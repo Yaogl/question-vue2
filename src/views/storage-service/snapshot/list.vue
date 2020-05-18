@@ -2,11 +2,11 @@
   <div class="block-storage-list-container">
     <el-row>
       <el-col :span="24">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.SNAPSHOT_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary">删除</el-button>
+        <el-button type="primary" v-if="authBtns.SNAPSHOT_DELETE_BTN">删除</el-button>
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -69,15 +69,21 @@
 <script>
 import List from '@/components/list'
 import RollBack from './list-components/roll-back.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     RollBack
   },
   extends: List,
+  computed: {
+    ...mapGetters([
+      'pageList',
+      'authBtns'
+    ])
+  },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
       createdSearch: false,
       query: {
         name: '',

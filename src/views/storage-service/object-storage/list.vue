@@ -2,12 +2,12 @@
   <div class="object-storage-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.OBJECT_STORAGE_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" @click="createSecret()">创建存储桶</el-button>
-        <el-button type="primary">删除</el-button>
+        <el-button type="primary" v-if="authBtns.OBJECT_STORAGE_CREATE_BTN" @click="createSecret()">创建存储桶</el-button>
+        <el-button type="primary" v-if="authBtns.OBJECT_STORAGE_DELETE_BTN">删除</el-button>
         <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
             更多操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -87,6 +87,7 @@
 <script>
 import List from '@/components/list'
 import CreateBucket from './list-components/create-bucket.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   extends: List,
@@ -95,7 +96,6 @@ export default {
   },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
       createdSearch: false,
       query: {
         name: '',
@@ -103,10 +103,6 @@ export default {
         page: 1,
         size: 10
       },
-      tableList: [
-        { name: 11222 },
-        { name: 11222 }
-      ],
       listMoreOperate: [
         { label: '编辑标签', value: 1 },
         { label: '同步状态', value: 2 },
@@ -132,7 +128,11 @@ export default {
   computed: {
     showedHeaderList() {
       return this.headerList.filter(item => this.showList.includes(item.value))
-    }
+    },
+    ...mapGetters([
+      'authBtns',
+      'pageList'
+    ])
   },
   methods: {
     search() {

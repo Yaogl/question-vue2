@@ -120,9 +120,11 @@ export default {
           // clone.userPwd = MD5(clone.userPwd)
           clone.verifyToken = this.verifyInfo.cToken
           authLogin(clone).then(res => {
-            this.$message.success('登录成功')
-            this.setUserInfo(this.loginFormData)
-            this.$router.push('/')
+            if (res.code === 200002) {
+              this.$message.success('登录成功')
+              this.setUserInfo(this.loginFormData)
+              this.$router.push('/')
+            }
           })
         }
       })

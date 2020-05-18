@@ -2,12 +2,13 @@
   <div class="mirror-image-pub-components">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.IMAGE_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
+        <span>&nbsp;</span>
       </el-col>
-      <el-col :span="12" align="right">
+      <el-col :span="12" align="right" v-if="authBtns.IMAGE_EXPORT_BTN">
         <el-button type="primary">
           <i class="el-icon-bottom"></i>
         </el-button>
@@ -91,13 +92,19 @@
 import List from '@/components/list'
 import { getImageList } from '@/api/cloud-host'
 import { dateFormat } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   extends: List,
+  computed: {
+    ...mapGetters([
+      'pageList',
+      'authBtns'
+    ])
+  },
   data() {
     return {
       tableRefs: 'pub-list',
-      pageList: [5, 10, 15, 20, 40, 100],
       query: {
         name: '',
         visibility: 'public, shared',

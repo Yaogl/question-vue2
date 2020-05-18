@@ -2,12 +2,12 @@
   <div class="user-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.USER_MANAGE_REFRESH_BTN">
           <i class="el-icon-refresh-right"></i>
           刷新
         </el-button>
-        <el-button type="primary" @click="addNewUser">新增角色</el-button>
-        <el-button type="primary" @click="deleteRoles">删除</el-button>
+        <el-button type="primary" v-if="authBtns.USER_MANAGE_CREATE_BTN" @click="addNewUser">新增角色</el-button>
+        <el-button type="primary" v-if="authBtns.USER_MANAGE_DELETE_BTN" @click="deleteRoles">删除</el-button>
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -44,10 +44,10 @@
         <el-table-column label="创建时间" prop="createAt" />
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="resources(scope.row)">分配资源</el-button>
-            <el-button type="text" @click="divideUser(scope.row)">分配用户</el-button>
-            <el-button type="text" @click="editRole(scope.row)">修改</el-button>
-            <el-button type="text" @click="delRole([scope.row.id])">删除</el-button>
+            <el-button v-if="authBtns.USER_MANAGE_RESOURCE_BTN" type="text" @click="resources(scope.row)">分配资源</el-button>
+            <el-button v-if="authBtns.USER_MANAGE_USER_BTN" type="text" @click="divideUser(scope.row)">分配用户</el-button>
+            <el-button v-if="authBtns.USER_MANAGE_EDIT_BTN" type="text" @click="editRole(scope.row)">修改</el-button>
+            <el-button v-if="authBtns.USER_MANAGE_DELETE_BTN" type="text" @click="delRole([scope.row.id])">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,7 +69,7 @@
     </el-row>
     <divide-resources :visible.sync="resourcesVisible" :roleInfo="curRow" :resourceList="resourceList"/>
     <divide-user :visible.sync="userVisible" :userIds="curUserIds" :roleId="curRow.id" />
-    <create-user :visible.sync="visible" :roleInfo="curRow"/>
+    <create-user :visible.sync="visible" :roleInfo="curRow" @confirm="search"/>
   </div>
 </template>
 
@@ -108,7 +108,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   created() {
@@ -137,7 +138,7 @@ export default {
       this.delRole(this.selectIds)
     },
     delRole(list) {
-      this.$confirm('确定要删除项目吗？', '提示', {
+      this.$confirm('确定要删除角色吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

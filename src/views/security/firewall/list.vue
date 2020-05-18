@@ -2,37 +2,12 @@
   <div class="firewall-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.FIREWALL_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary">创建防火墙</el-button>
-        <el-button type="primary">删除</el-button>
-      </el-col>
-      <el-col :span="12" align="right">
-        <el-select
-          v-model="showList"
-          multiple
-          collapse-tags
-          class="no-select-header"
-          style="margin-left: 20px;width: 150px;"
-          placeholder="请选择">
-          <template slot="prefix">
-            <el-button type="primary">
-              <i class="iconfont">&#xe62b;</i>
-            </el-button>
-          </template>
-          <el-option
-            v-for="item in headerList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-
-        <el-button type="primary">
-          <i class="el-icon-bottom"></i>
-        </el-button>
+        <el-button type="primary" v-if="authBtns.FIREWALL_CREATE_BTN">创建防火墙</el-button>
+        <el-button type="primary" v-if="authBtns.FIREWALL_DELETE_BTN">删除</el-button>
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -63,25 +38,18 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="名称" prop="name" v-if="showList.includes('1')" />
-        <el-table-column label="状态" prop="name" v-if="showList.includes('2')">
+        <el-table-column label="名称" prop="name" />
+        <el-table-column label="状态" prop="name" >
           <template slot-scope="scope">
             {{ scope.row.status === 'ACTIVE' ? '可用' : '不可用' }}
           </template>
         </el-table-column>
-        <el-table-column label="关联子网数量" prop="port_num" v-if="showList.includes('3')" />
-
-        <!-- <el-table-column label="平台-地区" prop="subnet_num" v-if="showList.includes('4')">
-          <template slot-scope="scope">
-            OPS-保定
-          </template>
-        </el-table-column> -->
-        <el-table-column label="项目" prop="project_name" v-if="showList.includes('5')" />
-        <!-- <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('6')" /> -->
+        <el-table-column label="关联子网数量" prop="port_num" />
+        <el-table-column label="项目" prop="project_name" />
         <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
-            <el-button type="text">修改</el-button>
-            <el-button type="text">删除</el-button>
+            <el-button type="text" v-if="authBtns.FIREWALL_EDIT_BTN">修改</el-button>
+            <el-button type="text" v-if="authBtns.FIREWALL_DELETE_BTN">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -133,26 +101,15 @@ export default {
         { label: '设置删除保护', value: 4 },
         { label: '删除', value: 5 }
       ],
-      headerList: [
-        { label: '名称', value: '1', key: 'name' },
-        { label: '状态', value: '2', key: 'mtu' },
-        { label: '关联子网数量', value: '3', key: 'availability_zone' },
-        // { label: '平台-地区', value: '4', key: 'flavor' },
-        { label: '项目', value: '5', key: 'project_name' },
-        // { label: '创建时间', value: '6', key: 'created_at' }
-      ],
-      showList: ['1', '2', '3', '4', '5', '6'],
       visible: false,
       curRow: {}, // 点击的当前行数据
       componentName: ''
     }
   },
   computed: {
-    showedHeaderList() {
-      return this.headerList.filter(item => this.showList.includes(item.value))
-    },
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   methods: {

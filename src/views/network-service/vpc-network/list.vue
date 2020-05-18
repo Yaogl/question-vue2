@@ -2,28 +2,15 @@
   <div class="vpc-network-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.NETWORK_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" @click="createSecret('add')">创建VPC</el-button>
-        <el-button type="primary">删除</el-button>
-        <!-- <el-dropdown placement="bottom-start" trigger="click">
-          <el-button class="el-dropdown-link">
-            更多操作<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown" class="operate-dropdown">
-            <el-dropdown-item v-for="item in listMoreOperate"
-              @click.stop.native="clickOperate(item)"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">{{ item.label }}</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown> -->
+        <el-button v-if="authBtns.NETWORK_CREATE_BTN" type="primary" @click="createSecret('add')">创建VPC</el-button>
+        <el-button v-if="authBtns.NETWORK_DELETE_BTN" type="primary">删除</el-button>
+        <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right">
-        <!-- <tags-manage v-model="query.tag"/> -->
-
         <el-select
           v-model="showList"
           multiple
@@ -44,7 +31,7 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary">
+        <el-button type="primary" v-if="authBtns.NETWORK_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
         </el-button>
       </el-col>
@@ -80,7 +67,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="名称" prop="name" min-width="30%" v-if="showList.includes('1')">
           <template slot-scope="scope">
-            <el-button type="text" @click="toSubInfo(scope.row)">{{ scope.row.name }}</el-button>
+            <el-button type="text" :disabled="!authBtns.NETWORK_TO_INFO_BTN" @click="toSubInfo(scope.row)">{{ scope.row.name }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="所在区域" prop="availability_zone" min-width="30%" v-if="showList.includes('2')" />
@@ -90,16 +77,8 @@
           </template>
         </el-table-column>
         <el-table-column label="子网数量" prop="subnet_num" min-width="30%" v-if="showList.includes('4')" />
-        <el-table-column label="网卡数量" prop="mtu" min-width="30%" v-if="showList.includes('5')" />
         <el-table-column label="项目" prop="project_name" min-width="30%" v-if="showList.includes('6')" />
         <el-table-column label="创建时间" prop="created_at" min-width="30%" v-if="showList.includes('7')" />
-        <!-- <el-table-column label="操作">
-          <template lang="html" slot-scope="scope">
-            <el-button type="text" @click="editCur(scope.row, 'edit-vpc')">修改</el-button>
-            <el-button type="text" @click="editCur(scope.row, 'bind-tags')">标签</el-button>
-            <el-button type="text">删除</el-button>
-          </template>
-        </el-table-column> -->
       </el-table>
     </el-card>
     <el-row style="margin: 20px;">
@@ -158,22 +137,19 @@ export default {
         { label: '所在区域', value: '2', key: 'availability_zone' },
         { label: '状态', value: '3', key: 'flavor' },
         { label: '子网数量', value: '4', key: 'subnet_num' },
-        { label: '网卡数量', value: '5', key: 'mtu' },
         { label: '项目', value: '6', key: 'project_name' },
         { label: '创建时间', value: '7', key: 'created_at' }
       ],
-      showList: ['1', '2', '3', '4', '5', '6', '7'],
+      showList: ['1', '2', '3', '4', '6', '7'],
       visible: false,
       curRow: {}, // 点击的当前行数据
       componentName: ''
     }
   },
   computed: {
-    showedHeaderList() {
-      return this.headerList.filter(item => this.showList.includes(item.value))
-    },
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   methods: {

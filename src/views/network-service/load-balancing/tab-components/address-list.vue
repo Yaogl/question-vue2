@@ -2,11 +2,12 @@
   <div class="IP-address-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="ghost" v-if="authBtns.ADDRESS_POOL_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
-        <el-button type="primary">创建地址池</el-button>
-        <el-button type="primary">删除</el-button>
+        <el-button type="primary" v-if="authBtns.ADDRESS_POOL_CREATE_BTN">创建地址池</el-button>
+        <el-button type="primary" v-if="authBtns.ADDRESS_POOL_DELETE_BTN">删除</el-button>
         <!-- <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
             更多操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -43,7 +44,7 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary">
+        <el-button type="primary" v-if="authBtns.ADDRESS_POOL_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
         </el-button>
       </el-col>
@@ -154,11 +155,9 @@ export default {
     }
   },
   computed: {
-    showedHeaderList() {
-      return this.headerList.filter(item => this.showList.includes(item.value))
-    },
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   methods: {

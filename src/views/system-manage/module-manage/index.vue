@@ -7,9 +7,9 @@
       <el-col :span="19">
         <el-alert class="mgb20" @close="clearNode" style="height: 40px;" :title="'当前节点：' + curNode.resourceName" v-if="curNode.id"/>
         <div class="mgb20">
-          <el-button type="primary" @click="add">添加</el-button>
-          <el-button type="primary" @click="editRow">修改</el-button>
-          <el-button type="primary" @click="deleteNode">删除</el-button>
+          <el-button type="primary" v-if="authBtns.MODULE_MANAGE_CREATE_BTN" @click="add">添加</el-button>
+          <el-button type="primary" v-if="authBtns.MODULE_MANAGE_EDIT_BTN" @click="editRow">修改</el-button>
+          <el-button type="primary" v-if="authBtns.MODULE_MANAGE_DELETE_BTN" @click="deleteNode">删除</el-button>
         </div>
 
         <el-table
@@ -28,8 +28,8 @@
           <el-table-column prop="description" label="节点描述"/>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" @click="editTreeNode(scope.row)">编辑</el-button>
-              <el-button type="text" @click="delTreeNode([scope.row.id])">删除</el-button>
+              <el-button type="text" v-if="authBtns.MODULE_MANAGE_EDIT_BTN" @click="editTreeNode(scope.row)">编辑</el-button>
+              <el-button type="text" v-if="authBtns.MODULE_MANAGE_DELETE_BTN" @click="delTreeNode([scope.row.id])">删除</el-button>
             </template>
           </el-table-column>
 
@@ -70,7 +70,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   data() {
@@ -216,14 +217,13 @@ export default {
       }
     },
     addTreeNode(data) {
-      // if (this.curNode.id && data.id) { // 如果有父节点信息，刷新一下列表
-      //   this.search()
-      //   this.updateTreeNode(this.tdata, data)
-      // } else {
-      //
-      // }
-      this.search()
-      this.initTree()
+      if (this.curNode.id && data.id) { // 如果有父节点信息，刷新一下列表
+        this.search()
+        this.updateTreeNode(this.tdata, data)
+      } else {
+        this.search()
+        this.initTree()
+      }
     }
   }
 }

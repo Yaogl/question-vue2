@@ -2,27 +2,15 @@
   <div class="load-balancing-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="primary">
+        <el-button type="ghost" v-if="authBtns.LOAD_BALANCING_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
+          刷新
         </el-button>
-        <el-button type="primary">创建负载均衡</el-button>
-        <el-button type="primary">删除</el-button>
-        <!-- <el-dropdown placement="bottom-start" trigger="click">
-          <el-button class="el-dropdown-link">
-            更多操作<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown" class="operate-dropdown">
-            <el-dropdown-item v-for="item in listMoreOperate"
-              @click.stop.native="clickOperate(item)"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">{{ item.label }}</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown> -->
+        <el-button type="primary" v-if="authBtns.LOAD_BALANCING_CREATE_BTN">创建负载均衡</el-button>
+        <el-button type="primary" v-if="authBtns.LOAD_BALANCING_DELETE_BTN">删除</el-button>
+        <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right">
-        <!-- <tags-manage v-model="query.tag"/> -->
-
         <el-select
           v-model="showList"
           multiple
@@ -43,7 +31,7 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary">
+        <el-button type="primary" v-if="authBtns.LOAD_BALANCING_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
         </el-button>
       </el-col>
@@ -87,13 +75,6 @@
         <el-table-column label="IP地址"  v-if="showList.includes('5')" />
         <el-table-column label="计费方式" prop="project_name" v-if="showList.includes('6')" />
         <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('7')" />
-        <!-- <el-table-column label="操作">
-          <template lang="html" slot-scope="scope">
-            <el-button type="text" @click="editCur(scope.row, 'edit-vpc')">修改</el-button>
-            <el-button type="text" @click="editCur(scope.row, 'bind-tags')">标签</el-button>
-            <el-button type="text">删除</el-button>
-          </template>
-        </el-table-column> -->
       </el-table>
     </el-card>
     <el-row style="margin: 20px;">
@@ -159,11 +140,9 @@ export default {
     }
   },
   computed: {
-    showedHeaderList() {
-      return this.headerList.filter(item => this.showList.includes(item.value))
-    },
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   methods: {

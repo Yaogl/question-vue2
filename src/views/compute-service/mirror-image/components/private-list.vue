@@ -2,13 +2,14 @@
   <div class="mirror-image-private-components">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.IMAGE_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary">删除</el-button>
-        <el-button type="primary">共享</el-button>
-        <el-button type="primary">跨区复制</el-button>
+        <el-button type="primary" v-if="authBtns.IMAGE_PRIVATE_DELETE_BTN">删除</el-button>
+        <el-button type="primary" v-if="authBtns.IMAGE_PRIVATE_SHARE_BTN">共享</el-button>
+        <el-button type="primary" v-if="authBtns.IMAGE_PRIVATE_COPY_BTN">跨区复制</el-button>
+        <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right">
         <el-select
@@ -30,7 +31,7 @@
             :value="item.value">
           </el-option>
         </el-select>
-        <el-button type="primary">
+        <el-button type="primary" v-if="authBtns.IMAGE_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
         </el-button>
       </el-col>
@@ -93,35 +94,6 @@
           </template>
         </el-table-column>
         <el-table-column prop="created_at" width="160" label="创建时间" v-if="showList.includes('7')"/>
-
-
-        <!-- <el-table-column prop="date" label="操作" width="230">
-          <template slot-scope="scope">
-            <el-button type="text" @click="createInstance">创建虚拟机</el-button>
-            <el-dropdown placement="bottom-start" trigger="click">
-              <el-button class="el-dropdown-link">
-                更多操作<i class="el-icon-arrow-down el-icon--right"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown" class="operate-dropdown">
-                <el-dropdown-item>
-                  <p style="min-width: 80px;">更新</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>跨区拷贝</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>分享</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>删除</p>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <p>设置删除保护</p>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </template>
-        </el-table-column> -->
       </el-table>
     </el-card>
     <el-row>
@@ -146,12 +118,18 @@
 import List from '@/components/list'
 import { getImageList } from '@/api/cloud-host'
 import { dateFormat } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   extends: List,
+  computed: {
+    ...mapGetters([
+      'authBtns',
+      'pageList'
+    ])
+  },
   data() {
     return {
-      pageList: [5, 10, 15, 20, 40, 100],
       tableRefs: 'private-list',
       query: {
         name: '',
@@ -167,10 +145,7 @@ export default {
         { label: '镜像大小', value: '4' },
         { label: '状态', value: '5' },
         { label: '项目', value: '6' },
-        { label: '创建时间', value: '7' },
-        // { label: '删除保护', value: '9' },
-        // { label: '平台', value: '10' },
-        // { label: '区域', value: '11' }
+        { label: '创建时间', value: '7' }
       ]
     }
   },

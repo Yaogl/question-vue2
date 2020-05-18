@@ -2,12 +2,12 @@
   <div class="block-storage-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" @click="clearQuery">
+        <el-button type="ghost" @click="clearQuery" v-if="authBtns.VOLUME_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" @click="createSecret('add')">创建云硬盘</el-button>
-        <el-button type="primary">删除</el-button>
+        <el-button type="primary" v-if="authBtns.VOLUME_CREATE_BTN" @click="createSecret('add')">创建云硬盘</el-button>
+        <el-button type="primary" v-if="authBtns.VOLUME_DELETE_BTN">删除</el-button>
         <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
             更多操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -44,7 +44,7 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary" @click="downLoad">
+        <el-button type="primary" @click="downLoad" v-if="authBtns.VOLUME_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
         </el-button>
       </el-col>
@@ -80,7 +80,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="名称" prop="name" v-if="showList.includes('1')" >
           <template slot-scope="scope">
-            <el-button type="text" @click="toDetail(scope.row)">{{ scope.row.name }}</el-button>
+            <el-button type="text" :disabled="!authBtns.VOLUME_INFO_BTN" @click="toDetail(scope.row)">{{ scope.row.name }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="类型" prop="volume_type" v-if="showList.includes('2')" />
@@ -109,9 +109,9 @@
 
         <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('7')" />
 
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="100">
           <template lang="html" slot-scope="scope">
-            <el-button type="text" @click.stop="editCur(scope.row, 'edit-vpc')">挂载</el-button>
+            <el-button type="text" v-if="authBtns.VOLUME_MOUNT_BTN" @click.stop="editCur(scope.row, 'edit-vpc')">挂载</el-button>
             <!-- <el-dropdown placement="bottom-start" trigger="click">
               <el-button class="el-dropdown-link">
                 更多操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -196,11 +196,9 @@ export default {
     }
   },
   computed: {
-    showedHeaderList() {
-      return this.headerList.filter(item => this.showList.includes(item.value))
-    },
     ...mapGetters([
-      'pageList'
+      'pageList',
+      'authBtns'
     ])
   },
   methods: {
