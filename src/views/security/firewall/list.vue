@@ -33,6 +33,7 @@
         :ref="tableRefs"
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
+        v-loading="loading"
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"

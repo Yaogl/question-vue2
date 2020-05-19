@@ -7,7 +7,7 @@
       <el-col :span="19">
         <el-alert class="mgb20" @close="clearNode" style="height: 40px;" :title="'当前节点：' + curNode.resourceName" v-if="curNode.id"/>
         <div class="mgb20">
-          <el-button type="primary" v-if="authBtns.MODULE_MANAGE_CREATE_BTN" @click="add">添加</el-button>
+          <el-button type="primary" v-if="authBtns.MODULE_MANAGE_CREATE_BTN" @click="addNode">添加</el-button>
           <el-button type="primary" v-if="authBtns.MODULE_MANAGE_EDIT_BTN" @click="editRow">修改</el-button>
           <el-button type="primary" v-if="authBtns.MODULE_MANAGE_DELETE_BTN" @click="deleteNode">删除</el-button>
         </div>
@@ -122,11 +122,15 @@ export default {
     },
     editRow() {
       if (this.selectedItems.length > 1) {
-        this.$message.warning('只能选择一个需要编辑的节点')
+        this.$message.warning('只能选择一个需要编辑的资源')
         return
       }
       if (!this.selectedItems.length) {
-        this.treeNodeInfo = this.curNode
+        if (!this.curNode.id) {
+          this.$message.warning('请选择需要编辑的资源')
+          return
+        }
+        this.treeNodeInfo = JSON.parse(JSON.stringify(this.curNode))
         this.visible = true
         return
       }
@@ -136,7 +140,10 @@ export default {
         return
       }
     },
-    add() {
+    addNode() {
+      if (this.curNode && this.curNode.type === 'button') {
+        return this.$message.warning('按钮资源不允许创建子节点')
+      }
       this.treeNodeInfo = {}
       this.visible = true
     },

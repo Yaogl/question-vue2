@@ -7,9 +7,9 @@
           刷新
         </el-button>
         <el-button type="primary" v-if="authBtns.INSTANCE_CREATE_BTN" class="mgr20" @click="jumpToCreate">创建云主机</el-button>
-        <el-button type="primary" v-if="authBtns.INSTANCE_START_BTN" :disabled="openDisabled" @click="changeStatus('open')">开机</el-button>
-        <el-button type="primary" v-if="authBtns.INSTANCE_STOP_BTN" :disabled="closeDisabled" @click="changeStatus('close')">关机</el-button>
-        <el-button type="primary" v-if="authBtns.INSTANCE_RESTART_BTN" @click="restart">重启</el-button>
+        <el-button type="primary" v-if="authBtns.INSTANCE_START_BTN" :disabled="btnLoading || openDisabled" @click="changeStatus('open')">开机</el-button>
+        <el-button type="primary" v-if="authBtns.INSTANCE_STOP_BTN" :disabled="btnLoading || closeDisabled" @click="changeStatus('close')">关机</el-button>
+        <el-button type="primary" v-if="authBtns.INSTANCE_RESTART_BTN" :disabled="btnLoading" @click="restart">重启</el-button>
         <!-- 占位放置没有权限，布局错乱 -->
         <span>&nbsp;</span>
         <!-- <el-dropdown placement="bottom-start" class="mgr20">
@@ -142,8 +142,12 @@
 
           <template slot-scope="scope">
             <div class="flex">
-              <el-button type="text" v-if="authBtns.INSTANCE_VNC_BTN" :loading="scope.row.openVnc">
-                <i class="iconfont" @click="getOperateUrl(scope.row)">&#xe621;</i>
+              <el-button type="text"
+                @click="getOperateUrl(scope.row)"
+                :disabled="scope.row.status !== 'ACTIVE'"
+                v-if="authBtns.INSTANCE_VNC_BTN"
+                :loading="scope.row.openVnc">
+                <i class="iconfont">&#xe621;</i>
               </el-button>
               <el-dropdown placement="bottom-start" trigger="click">
                 <el-button class="el-dropdown-link">
@@ -167,16 +171,22 @@
                   <el-dropdown-item
                     v-if="authBtns.INSTANCE_RESTART_BTN"
                     @click.stop.native="restartOne(scope.row, 'SOFT')"
-                    :disabled="scope.row.moreOperateLoading || scope.row.status !== 'ACTIVE'"
+                    :disabled="scope.row.moreOperateLoading"
                   >
                     <p>软重启</p>
                   </el-dropdown-item>
                   <el-dropdown-item
                     v-if="authBtns.INSTANCE_RESTART_BTN"
                     @click.stop.native="restartOne(scope.row, 'HARD')"
-                    :disabled="scope.row.moreOperateLoading || scope.row.status !== 'ACTIVE'"
+                    :disabled="scope.row.moreOperateLoading"
                   >
                     <p>硬重启</p>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    @click.stop.native="deleteInstance(scope.row)"
+                    :disabled="scope.row.moreOperateLoading"
+                  >
+                    <p>删除</p>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -277,7 +287,8 @@ export default {
       dialogName: '', // 弹窗组件过多，通过name区分需要点击显示某一个弹窗
       operateList: [], // 操作的列表,防止selecteditems报错情况出现
       curRow: {},
-      polling: false // 轮询开关，禁止页面其他操作
+      polling: false, // 轮询开关，禁止页面其他操作
+      btnLoading: false
     }
   },
   methods: {
@@ -290,6 +301,10 @@ export default {
         }
       })
     },
+    deleteInstance(row) {
+      console.log(row);
+      instanceApi.deleteInstance(row.uuid)
+    },
     restartOne(row, restart_flag) {
       row.moreOperateLoading = true
       instanceApi.restartInstance({ uuid: row.uuid, restart_flag }).then(res => {
@@ -299,9 +314,12 @@ export default {
           this.$message.error('操作失败，请稍后重试')
         }
         row.moreOperateLoading = false
+      }).catch(err => {
+        row.moreOperateLoading = false
       })
     },
     restart() { // 批量重启
+      this.btnLoading = true
       if (!this.selectedItems.length) {
         this.$message.warning('请选择需要操作的虚拟机！')
         return
@@ -317,6 +335,7 @@ export default {
       })
       Promise.all(proAll).then(res => {
         this.clearSelection()
+        this.btnLoading = false
         this.$message.success(`操作完成，正在为您重启`)
       })
     },
@@ -331,6 +350,7 @@ export default {
     batchOperate(list, operate) {
       const methods = operate === 'close' ? instanceApi.stopInstance : instanceApi.startInstance
       this.polling = true
+      this.btnLoading = true
       let proAll = []
       list.map(item => {
         let pro = new Promise(resolve => [
@@ -345,6 +365,7 @@ export default {
       })
       Promise.all(proAll).then(res => {
         this.clearSelection()
+        this.btnLoading = false
         this.$message.success(`操作完成，正在为您${operate === 'close' ? '关机' : '开机'}`)
         this.queryInfo()
       })
@@ -357,7 +378,7 @@ export default {
         return
       }
       if (this.polling) {
-        // 如果有正在进行中的，暂时不允许其他操作
+        // 正在轮询
         this.$message.warning('关机或开机中，请稍后')
         return
       }

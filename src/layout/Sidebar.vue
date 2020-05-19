@@ -1,7 +1,7 @@
 <template>
 <div class="sidebar">
   <div class="title-row">
-    <i @click="collapseChage" class="iconfont">&#xe665;</i>
+    <i class="iconfont">&#xe665;</i>
     <span v-if="!sideBarCollapse" class="title">长城云服务平台</span>
   </div>
   <el-menu class="sidebar-el-menu" @select="menuSelect" :default-active="onRoutes" :collapse="sideBarCollapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -55,15 +55,9 @@ export default {
     ])
   },
   methods: {
-    ...mapActions([
-      'setSideBarCollapse'
-    ]),
     menuSelect(path) {
       if (this.onRoutes === path) return
       this.$router.push(path)
-    },
-    collapseChage() {
-      this.setSideBarCollapse(!this.sideBarCollapse)
     }
   }
 }

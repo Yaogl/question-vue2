@@ -67,7 +67,9 @@ export default {
       if (!val) {
         Object.assign(this.$data, this.$options.data())
         setTimeout(() => {
-          this.$refs['add-node-form'].resetFields()
+
+          this.$refs['add-node-form'].clearValidate()
+          console.log(JSON.stringify(this.formData, 2, 2));
         }, 0)
       } else {
         this.resetWith()

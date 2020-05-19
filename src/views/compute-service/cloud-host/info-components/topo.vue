@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="tree">
+  <div id="topo-container">
     <v-stage :config="configKonva">
       <v-layer>
         <v-image :config="{ x: 100, y: 100, image: image1 }"></v-image>
@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       configKonva: {
-        width: 500,
+        width: 300,
         height: 1000
       },
       configCircle: {
@@ -48,9 +48,10 @@ export default {
   methods: {
 
   },
-  created() {
+  mounted() {
+    console.log(document.getElementById('topo-container').offsetWidth)
     const image = new Image()
-    image.src = require('../../assets/img/1.png')
+    image.src = require('@/assets/img/1.png')
     image.onload = () => {
       // set image only when it is loaded
       this.image1 = image;

@@ -1,99 +1,99 @@
 <template lang="html">
   <div class="create-cloud-host-container">
-    <el-form :model="formData" ref="numberValidateForm" label-width="140px">
+    <el-form :model="formData" :rules="rules" ref="create_instance" label-width="140px">
       <el-card shadow="never">
         <p class="header-title">费用和地域</p>
-        <el-form-item label="计费方式：" prop="age">
-          <el-radio-group v-model="formData.radio1">
-            <el-radio-button label="包年包月"></el-radio-button>
-            <el-radio-button label="按量付费"></el-radio-button>
-          </el-radio-group>
-        </el-form-item>
         <el-form-item label="所属项目：" prop="age">
           开发项目
         </el-form-item>
-        <el-form-item label="云提供商：" prop="age">
-          <el-select v-model="formData.radio" placeholder="请选择云提供商">
-            <el-option label="OpenStack" value="1"></el-option>
-            <el-option label="金山云" value="2"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="地域和可用区：" prop="age">
-          <el-select v-model="formData.radio" placeholder="请选择地域">
+        <el-form-item label="地域和可用区：" prop="availability_zone">
+          <el-select v-model="otherParams.zone" placeholder="请选择地域">
             <el-option label="保定" value="1"></el-option>
-            <el-option label="天津" value="2"></el-option>
-            <el-option label="徐水" value="3"></el-option>
           </el-select>
-          <el-select v-model="formData.radio" placeholder="请选择可用区">
-            <el-option label="Nova" value="1"></el-option>
-            <el-option label="LVM" value="2"></el-option>
+          <el-select v-model="formData.availability_zone" placeholder="请选择可用区">
+            <el-option label="LVM" value="lvm"></el-option>
           </el-select>
         </el-form-item>
       </el-card>
 
       <el-card shadow="never">
         <p class="header-title">基本配置（容灾组）</p>
-        <el-form-item label="类型：" prop="age">
-          <el-radio-group v-model="formData.radio1">
-            <el-radio-button label="云主机"></el-radio-button>
-            <el-radio-button label="GPU服务器"></el-radio-button>
+        <el-form-item label="类型：">
+          <el-radio-group v-model="otherParams.group_type">
+            <el-radio-button label="1">云主机</el-radio-button>
+            <el-radio-button disabled label="2">GPU服务器</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="配置：" prop="age">
-          <el-radio-group v-model="formData.radio1" class="mgb20">
-            <el-radio-button label="通用型"></el-radio-button>
-            <el-radio-button label="计算型"></el-radio-button>
-            <el-radio-button label="内存型"></el-radio-button>
-            <el-radio-button label="高主频型"></el-radio-button>
+        <el-form-item label="配置：" prop="flavor">
+          <el-radio-group v-model="otherParams.group_type" class="mgb20">
+            <el-radio-button label="1">通用型</el-radio-button>
+            <el-radio-button disabled label="2">计算型</el-radio-button>
+            <el-radio-button disabled label="3">内存型</el-radio-button>
+            <el-radio-button disabled label="4">高主频型</el-radio-button>
           </el-radio-group>
+          <br />
+          <el-radio-group v-model="formData.flavor" style="width: 100%;">
+            <el-table
+              :row-style="{height: '45px'}"
+              :header-row-style="{height: '45px'}"
+              :data="flavorList"
+              style="width: 100%">
+              <el-table-column label="选择" align="center" width="80">
+                <template slot-scope="scope">
+                  <el-radio :label="scope.row.id">&nbsp;</el-radio>
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="名称" />
+              <el-table-column label="内存">
+                <template slot-scope="scope">
+                  {{ scope.row.ram }} MB
+                </template>
+              </el-table-column>
+              <el-table-column prop="vcpus" label="CPU" >
+                <template slot-scope="scope">
+                  {{ scope.row.vcpus }} 核
+                </template>
+              </el-table-column>
+              <el-table-column prop="disk" label="系统盘">
+                <template slot-scope="scope">
+                  {{ scope.row.disk }} GB
+                </template>
+              </el-table-column>
+              <el-table-column label="CPU型号">
+                <template slot-scope="scope">
+                  Intel Xeon E5-2620
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-radio-group>
+        </el-form-item>
 
-          <el-table
-            :row-style="{height: '45px'}"
-            :header-row-style="{height: '45px'}"
-            :data="tableList"
-            style="width: 100%">
-            <el-table-column type="selection" width="55" />
-            <el-table-column prop="name" label="名称" />
-            <el-table-column prop="date" label="内存" />
-            <el-table-column prop="date" label="CPU" />
-            <el-table-column prop="date" label="系统盘" />
-            <el-table-column prop="date" label="CPU型号" />
-          </el-table>
-        </el-form-item>
-        <el-form-item label="系统镜像：" prop="age">
-          <el-radio-group v-model="formData.radio1">
-            <el-radio-button label="公共镜像"></el-radio-button>
-            <el-radio-button label="私有镜像"></el-radio-button>
+        <el-form-item label="系统镜像：" prop="image">
+          <el-radio-group v-model="otherParams.image_type" class="mgb20">
+            <el-radio-button label="1">公共镜像</el-radio-button>
+            <el-radio-button label="2">私有镜像</el-radio-button>
           </el-radio-group>
-        </el-form-item>
-        <el-row>
-          <el-col :span="6">
-            <el-form-item label="" prop="age">
-              <el-select v-model="formData.radio" class="mgr20" placeholder="请选择容灾组">
-                <el-option label="容灾组1" value="1"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="" label-width="0">
-              <el-select v-model="formData.radio" class="mgr20" placeholder="请选择容灾组">
-                <el-option label="容灾组1" value="1"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="容灾组：" prop="age">
-          <el-select v-model="formData.radio" class="mgr20" placeholder="请选择容灾组">
-            <el-option label="容灾组1" value="1"></el-option>
+          <br/>
+          <el-select v-model="otherParams.system" class="mgr20" placeholder="请选择系统">
+            <el-option label="windows" value="1"></el-option>
+            <el-option label="linux" value="2"></el-option>
           </el-select>
-          <el-button type="text" @click="createRecovery">
+          <el-select v-model="formData.image" class="mgr20" placeholder="请选择镜像">
+            <el-option v-for="(item, index) in computedImageList" :key="item.uuid" :label="item.name" :value="item.uuid"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="容灾组：">
+          <el-select v-model="formData.server_group" class="mgr20" placeholder="请选择容灾组">
+            <el-option v-for="item in serverGroupList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+          <!-- <el-button type="text" @click="createRecovery">
             点击创建
             <i class="el-icon-d-arrow-right"></i>
-          </el-button>
+          </el-button> -->
         </el-form-item>
       </el-card>
 
-      <el-card shadow="never">
+      <!-- <el-card shadow="never">
         <p class="header-title">存储</p>
         <el-form-item label="数据盘：" prop="age">
           <div v-for="(item, index) in formData.storage" :key="index">
@@ -109,37 +109,37 @@
             您还可以添加{{ 6 - formData.storage.length }}块
           </div>
         </el-form-item>
-      </el-card>
+      </el-card> -->
 
       <el-card shadow="never">
         <p class="header-title">网络</p>
-        <el-form-item label="VPC网络：" prop="age">
+        <el-form-item label="VPC网络：" prop="network_id">
+          <el-select v-model="formData.network_id" class="mgr20" placeholder="请选择网络">
+            <el-option v-for="item in netWorkList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <el-form-item label="选择子网：" prop="age">
           <el-select v-model="formData.radio" class="mgr20" placeholder="请选择容灾组">
             <el-option label="容灾组1" value="1"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="选择子网：" prop="age">
-          <el-select v-model="formData.radio" class="mgr20" placeholder="请选择容灾组">
-            <el-option label="容灾组1" value="1"></el-option>
-          </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="IPV4地址：" prop="age">
           <div style="display: flex; ">
-            <el-radio-group v-model="formData.radio1">
-              <el-radio-button label="自动分配"></el-radio-button>
-              <el-radio-button label="指定IP"></el-radio-button>
+            <el-radio-group v-model="otherParams.ip_type">
+              <el-radio-button label="1">自动分配</el-radio-button>
+              <!-- <el-radio-button disabled label="2">指定IP</el-radio-button> -->
             </el-radio-group>
-            <ip-input v-model="formData.ipv4" format="ipv4" maxWidth="320" />
+            <ip-input v-if="otherParams.ip_type === '2'" format="ipv4" maxWidth="320" />
           </div>
         </el-form-item>
         <el-form-item label="安全组：" prop="age">
-          <el-select v-model="formData.radio" class="mgr20" placeholder="请选择容灾组">
-            <el-option label="容灾组1" value="1"></el-option>
+          <el-select v-model="formData.security_groups" class="input-width-4" multiple placeholder="请选择安全组">
+            <el-option v-for="item in securityGroupList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
       </el-card>
 
-      <el-card shadow="never">
+      <!-- <el-card shadow="never">
         <p class="header-title">弹性ip</p>
         <el-form-item label="弹性ip地址：" prop="age">
           <el-radio-group v-model="formData.age">
@@ -174,93 +174,53 @@
         <el-form-item label="购买时长：" prop="age">
           <el-radio-group v-model="formData.radio1">
             <el-radio-button label="1月"></el-radio-button>
-            <el-radio-button label="2月"></el-radio-button>
-            <el-radio-button label="3月"></el-radio-button>
-            <el-radio-button label="4月"></el-radio-button>
-            <el-radio-button label="5月"></el-radio-button>
-            <el-radio-button label="6月"></el-radio-button>
-            <el-radio-button label="7月"></el-radio-button>
-            <el-radio-button label="8月"></el-radio-button>
-            <el-radio-button label="9月"></el-radio-button>
-            <el-radio-button label="10月"></el-radio-button>
-            <el-radio-button label="11月"></el-radio-button>
-            <el-radio-button label="1年"></el-radio-button>
-            <el-radio-button label="2年"></el-radio-button>
-            <el-radio-button label="3年"></el-radio-button>
           </el-radio-group>
         </el-form-item>
-      </el-card>
+      </el-card> -->
 
       <el-card shadow="never">
         <p class="header-title">系统信息</p>
-        <el-form-item label="云主机名称：" prop="age">
-          <el-input placeholder="请输入云主机名称" v-model="formData.age" class="input-width-2"></el-input>
-        </el-form-item>
-        <el-form-item label="系统用户：" prop="age">
-          root
+        <el-form-item label="云主机名称：" prop="name">
+          <el-input placeholder="请输入云主机名称" v-model.trim="formData.name" class="input-width-2"></el-input>
         </el-form-item>
         <el-form-item label="管理员密码：" prop="age">
-          <el-radio-group v-model="formData.radio1">
-            <el-radio-button label="密码"></el-radio-button>
-            <el-radio-button label="秘钥"></el-radio-button>
+          <el-radio-group v-model="otherParams.key_type" @change="changePassType">
+            <el-radio-button label="1">密码</el-radio-button>
+            <el-radio-button label="2">秘钥</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="">
-          <el-input class="input-width-2" placeholder="请输入密码" v-model="formData.radio1"></el-input>
+        <el-form-item label="" v-if="otherParams.key_type === '1'">
+          <el-input class="input-width-2" show-password placeholder="请输入密码" v-model.trim="formData.adminPass"></el-input>
         </el-form-item>
-        <el-form-item label="">
-          <el-input class="input-width-2" placeholder="请再次输入密码" v-model="formData.radio1"></el-input>
+        <el-form-item label="" prop="againPass" v-if="otherParams.key_type === '1'">
+          <el-input class="input-width-2" show-password placeholder="请再次输入密码" v-model.trim="formData.againPass"></el-input>
         </el-form-item>
 
-        <el-form-item label="" prop="age">
-          <el-select v-model="formData.radio" class="mgr20 input-width-2" placeholder="请选择秘钥对">
-            <el-option label="秘钥对1" value="1"></el-option>
+        <el-form-item label="" prop="age" v-if="otherParams.key_type === '2'">
+          <el-select v-model="formData.key_name" class="mgr20 input-width-2" placeholder="请选择秘钥对">
+            <el-option v-for="(item, index) in secretkeyList" :key="index" :label="item.keypair.name" :value="item.keypair.name"></el-option>
           </el-select>
-          <el-button type="text">创建密钥对</el-button>
         </el-form-item>
       </el-card>
 
-      <el-card shadow="never">
+      <!-- <el-card shadow="never">
         <p class="header-title">购买信息</p>
         <el-form-item label="购买时长：" prop="age">
           <el-radio-group v-model="formData.radio1">
             <el-radio-button label="1月"></el-radio-button>
             <el-radio-button label="2月"></el-radio-button>
-            <el-radio-button label="3月"></el-radio-button>
-            <el-radio-button label="4月"></el-radio-button>
-            <el-radio-button label="5月"></el-radio-button>
-            <el-radio-button label="6月"></el-radio-button>
-            <el-radio-button label="7月"></el-radio-button>
-            <el-radio-button label="8月"></el-radio-button>
-            <el-radio-button label="9月"></el-radio-button>
-            <el-radio-button label="10月"></el-radio-button>
-            <el-radio-button label="11月"></el-radio-button>
-            <el-radio-button label="1年"></el-radio-button>
-            <el-radio-button label="2年"></el-radio-button>
-            <el-radio-button label="3年"></el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="购买数量：" prop="age">
           <el-input-number v-model="formData.num" :min="1" :max="10" label="描述文字"></el-input-number>
         </el-form-item>
-      </el-card>
+      </el-card> -->
     </el-form>
 
     <el-card shadow="never" class="computed-info">
       <el-row>
-        <el-col :span="8">
-          <p>云服务器</p>
-          <p>北京6区（可用区A），计费方式：预付费（包年包月）</p>
-          <p>配置：1核2GB（标准型S3）磁盘：1块本地SSD系统盘</p>
-          <p>镜像：Centos7.6.64位 购买量：1个月 * 1</p>
-        </el-col>
-        <el-col :span="8">
-          <p>弹性ip</p>
-          <p>计费方式：预付费 配置：BGP 10Mbps</p>
-          <p>购买量：1个月 * 1</p>
-        </el-col>
-        <el-col :span="8">
-          <p>预估费用： 1010</p>
+        <el-col :span="23" align="right">
+          <el-button :loading="loading" @click="submitInstance" type="primary" style="padding: 12px 30px;">创 建</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -271,51 +231,99 @@
 <script>
 import CreateRecoveryDialog from './create-components/create-recovery-dialog.vue'
 import IpInput from '@/components/ip-input'
+import { mapGetters, mapActions } from 'vuex'
+import { createInstance } from '@/api/cloud-host'
+import * as Config from './config'
 
 export default {
   components: {
     CreateRecoveryDialog,
     IpInput
   },
+  computed: {
+    ...mapGetters([
+      'imageList',
+      'securityGroupList',
+      'secretkeyList',
+      'netWorkList',
+      'serverGroupList',
+      'flavorList',
+      'instanceStored'
+    ]),
+    computedImageList() {
+      if (this.otherParams.image_type === '2') {
+        return this.imageList.filter(item => item.visibility === 'private')
+      } else {
+        return this.imageList.filter(item => item.visibility !== 'private')
+      }
+    }
+  },
   data() {
     return {
       formData: {
-        project_id: 'admin', // 所属项目
-        user_id: 'admin', // 创建主机的用户id
-
-        age: 1,
-        radio1: '',
-        radio: '',
-        storage: [{
-          value: 10
-        }],
-        ipv4: '',
-        value4: 0,
-        num: 1
+        name: '',
+        image: '',
+        flavor: '',
+        security_groups: [],
+        adminPass: '',
+        againPass: '',
+        key_name: '',
+        availability_zone: '',
+        network_id: '',
+        server_group: ''
       },
-      tableList: [
-        { name: 2333 }
-      ],
+      rules: Config.instanceRules(this),
+      otherParams: { // 未完成前，控制一些参数
+        zone: '1',
+        group_type: '1',
+        image_type: '1',
+        system: '1',
+        ip_type: '1',
+        key_type: '1'
+      },
+      loading: false,
       showRecovery: false
     }
   },
+  created() {
+    !this.instanceStored && this.createInstanceInit()
+  },
   methods: {
+    ...mapActions([
+      'createInstanceInit'
+    ]),
     formatTooltip(val) {
       return val * 2 + 'Mbps';
     },
     createRecovery() {
       this.showRecovery = true
     },
-    statusSay(val) {
-      console.log(val);
+    submitInstance() {
+      this.$refs.create_instance.validate(valid => {
+        if (valid) {
+          this.loading = true
+          const clone = JSON.parse(JSON.stringify(this.formData))
+          delete clone.againPass
+          createInstance(clone).then(res => {
+            if (res.code === 200) {
+              this.$message.success('保存成功')
+              this.$router.push('/compute-service/cloud-host-list')
+            }
+            this.loading = false
+          }).catch(err => {
+            this.loading = false
+          })
+        }
+      })
     },
-    inputTest() {
-        // this.ipv4Model = this.ipv4;
-        console.log(this.formData.ipv4);
+    changePassType(type) {
+      if (type === '1') {
+        this.formData.key_name = ''
+      } else {
+        this.formData.adminPass = ''
+        this.formData.againPass = ''
+      }
     },
-    error(ip) {
-            // console.log('error', ip)
-      },
     changeStorage(operate, index) {
       if (operate === 'add') {
         this.formData.storage.push({ value: 10 })

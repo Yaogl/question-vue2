@@ -7,6 +7,32 @@ export const getInstanceList = data => {
     method: 'get'
   })
 }
+// 创建虚拟机
+export const createInstance = data => {
+  return request({
+    url: '/api/instance/create/v1',
+    method: 'post',
+    data
+  })
+}
+// 云主机类型接口
+export const instanceFlavor = params => {
+  return request({
+    url: '/api/instance/flavor/list/v1',
+    method: 'get',
+    params
+  })
+}
+// 删除虚拟机
+export const deleteInstance = (id) => {
+  return request({
+    url: '/api/instance/delete/v1',
+    method: 'post',
+    data: {
+      uuid: id
+    }
+  })
+}
 // 启动虚拟机 {uuid: ''}
 export const startInstance = data => {
   return request({

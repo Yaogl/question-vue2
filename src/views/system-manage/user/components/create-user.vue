@@ -102,6 +102,8 @@ export default {
               this.handleClose()
               this.loading = false
             }, 0)
+          }).catch(err => {
+            this.loading = false
           })
         }
       })

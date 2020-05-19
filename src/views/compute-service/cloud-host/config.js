@@ -33,3 +33,37 @@ export const listMoreOperate = [
   { label: '设置删除保护', value: 20, componentName: '' },
   { label: '删除', value: 21, componentName: '' }
 ]
+// 创建云主机规则
+export const instanceRules = (context) => {
+  return {
+    name: [
+      { required: true, message: '请输入虚拟机名称', trigger: 'change' },
+      { max: 200, message: '长度超出限制，请重新输入', trigger: 'change' }
+    ],
+    image: [
+      { required: true, message: '请选择镜像', trigger: 'change' }
+    ],
+    flavor: [
+      { required: true, message: '请选择虚拟机类型', trigger: 'change' }
+    ],
+    key_name: [
+      { required: true, message: '请选择密钥对', trigger: 'change' }
+    ],
+    availability_zone: [
+      { required: true, message: '请选择区域', trigger: 'change' }
+    ],
+    network_id: [
+      { required: true, message: '请选择网络', trigger: 'change' }
+    ],
+    againPass: [
+      { validator: validatePass(context), trigger: 'blur' }
+    ]
+  }
+}
+const validatePass = (context) => (rule, value, callback) => {
+  if (context.formData.adminPass !== context.formData.againPass) {
+    return callback('两次输入密码不一致')
+  } else {
+    return callback()  
+  }
+}

@@ -26,7 +26,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handleClose">取 消</el-button>
-      <el-button type="primary" @click="confirm">确 定</el-button>
+      <el-button type="primary" :loading="operateLoading" @click="confirm">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -73,7 +73,8 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'title'
-      }
+      },
+      operateLoading: false
     }
   },
   methods: {
@@ -85,12 +86,16 @@ export default {
     },
     confirm() {
       // 获取所有选中节点id
+      this.operateLoading = true
       let resources = this.$refs.dividetree.getCheckedKeys()
       setRoleResource(this.roleInfo.id, resources).then(res => {
         if (res.code === 200) {
           this.$message.success('操作成功')
           this.handleClose()
         }
+        this.operateLoading = false
+      }).catch(err => {
+        this.operateLoading = false
       })
     }
   }

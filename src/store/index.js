@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import common from './common'
 import user from './user'
 import auth from './auth'
+import instance from './instance'
 import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
   modules: {
     common,
     user,
-    auth
+    auth,
+    instance
   }
 })

@@ -56,11 +56,10 @@ export const projectList = (params) => {
   })
 }
 // 获取项目详情
-export const getProjectInfo = params => {
+export const getProjectInfo = id => {
   return request({
-    url: '/api/project/get/info',
-    method: 'get',
-    params
+    url: '/api/project/get/info?id=' + id,
+    method: 'get'
   })
 }
 // 删除项目

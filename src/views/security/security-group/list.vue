@@ -35,6 +35,7 @@
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
+        v-loading="loading"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">

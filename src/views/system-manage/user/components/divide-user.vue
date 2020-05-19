@@ -18,7 +18,7 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handleClose">取 消</el-button>
-      <el-button type="primary" @click="confirm">确 定</el-button>
+      <el-button type="primary" :loading="loading" @click="confirm">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -60,6 +60,7 @@ export default {
   data() {
     return {
       userArr: [],
+      loading: false,
       renderFunc(h, option) {
         return <span>{ option.index } - { option.uname }</span>
       },
@@ -77,11 +78,15 @@ export default {
       console.log(value, direction, movedKeys);
     },
     confirm() {
+      this.loading = true
       setRoleUser(this.roleId, this.userArr ).then(res => {
         this.$message.success('分配成功')
         setTimeout(() => {
           this.handleClose()
         }, 0)
+        this.loading = false
+      }).catch(err => {
+        this.loading = false
       })
     }
   }

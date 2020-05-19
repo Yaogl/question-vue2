@@ -22,3 +22,10 @@ export const getSubnetListInfo = params => {
     params
   })
 }
+export const getSnapshotList = params => {
+  return request({
+    url: '/api/store/snapshot/list/v1',
+    method: 'get',
+    params
+  })
+}

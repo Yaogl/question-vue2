@@ -1,5 +1,8 @@
 <template>
 <div class="header">
+  <div class="header-left">
+    <i :class="sideBarCollapse ? 'el-icon-s-unfold pointer' : 'el-icon-s-fold pointer'" @click="collapseChage"></i>
+  </div>
   <div class="header-right">
     <div class="header-user-con">
       <!-- 全屏显示 -->
@@ -8,15 +11,6 @@
           <i class="el-icon-rank"></i>
         </el-tooltip>
       </div>
-      <!-- 消息中心 -->
-      <!-- <div class="btn-bell">
-        <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-          <router-link to="/tabs">
-            <i class="el-icon-bell"></i>
-          </router-link>
-        </el-tooltip>
-        <span class="btn-bell-badge" v-if="message"></span>
-      </div> -->
       <!-- 用户头像 -->
       <div class="user-avator">
         <img src="../assets/img/img.jpg" />
@@ -69,6 +63,9 @@ export default {
         location.reload()
       }
     },
+    collapseChage() {
+      this.setSideBarCollapse(!this.sideBarCollapse)
+    },
     // 全屏事件
     handleFullScreen() {
       let element = document.documentElement;
@@ -110,7 +107,13 @@ export default {
   background: #fff;
   border-bottom: 1px solid #ccc;
 }
-
+.header-left{
+  float: left;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  height: 60px;
+}
 .header-right {
   float: right;
   padding-right: 50px;
@@ -136,16 +139,6 @@ export default {
   text-align: center;
   border-radius: 15px;
   cursor: pointer;
-}
-
-.btn-bell-badge {
-  position: absolute;
-  right: 0;
-  top: -2px;
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background: #f56c6c;
 }
 
 .user-name {

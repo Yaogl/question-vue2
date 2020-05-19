@@ -31,36 +31,47 @@
       <el-table
         :ref="tableRefs"
         :row-style="{height: '40px'}"
+        v-loading="loading"
         :header-row-style="{height: '50px'}"
         :data="tableList"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
+        <el-table-column label="名称" prop="name" />
+        <el-table-column label="状态" prop="status" />
+        <el-table-column label="容量" prop="size">
+          <template slot-scope="scope">
+            {{ scope.row.size }} GB
+          </template>
+        </el-table-column>
+        <el-table-column label="描述" prop="description" />
+        <el-table-column label="磁盘名称" prop="volume_name" />
+        <el-table-column label="创建时间" prop="created_at" />
         <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
-            <el-button type="text" @click="rollBack">回滚</el-button>
             <el-button type="text" @click="createDisk">创建硬盘</el-button>
             <el-button type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
-    <el-row>
-      <el-col :span="12">
-        <p>第{{ query.page }}页，共10页，共2344条</p>
+    <el-row style="margin: 20px;">
+      <el-col :span="8">
+        <p>第{{ query.page }}页，共{{ Math.ceil(total/query.size) }}页，共{{ total }}条</p>
       </el-col>
-      <el-col :span="12" align="right">
+      <el-col :span="16" align="right">
         <el-pagination
           :current-page="query.page"
           :page-sizes="pageList"
-          :page-size="query['per-page']"
+          :page-size="query.size"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="changePages"
           @current-change="currentChange"/>
       </el-col>
     </el-row>
+
 
     <roll-back :visible.sync="visible" />
   </div>
@@ -70,6 +81,8 @@
 import List from '@/components/list'
 import RollBack from './list-components/roll-back.vue'
 import { mapGetters } from 'vuex'
+import { getSnapshotList } from '@/api/storage-service'
+import { dateFormat } from '@/utils'
 
 export default {
   components: {
@@ -84,25 +97,26 @@ export default {
   },
   data() {
     return {
-      createdSearch: false,
       query: {
         name: '',
         tag: [],
         page: 1,
         size: 10
       },
-      tableList: [
-        { name: 11222 }
-      ],
       visible: false,
       curRow: {}, // 点击的当前行数据
     }
   },
   methods: {
-    search() {
-    },
+    fetchApi: getSnapshotList,
     rollBack() {
       this.visible = true
+    },
+    formatData(list) {
+      list.map(item => {
+        item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
+      })
+      return list
     },
     createDisk() {
       this.$router.push('/storage-service/snapshot-create')

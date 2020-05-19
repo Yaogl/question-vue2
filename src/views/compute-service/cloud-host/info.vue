@@ -142,7 +142,7 @@
           </el-tab-pane>
           <el-tab-pane label="告警" name="second">告警</el-tab-pane>
           <el-tab-pane label="拓扑" name="third">
-            <img src="../../../assets/img/topology.jpg" style="width: 100%;" alt="">
+            <Topo />
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -153,11 +153,13 @@
 <script>
 import * as Config from './config'
 import MonitorCharts from './info-components/monitor-charts.vue'
+import Topo from './info-components/topo.vue'
 import * as instanceApi from '@/api/cloud-host'
 
 export default {
   components: {
-    MonitorCharts
+    MonitorCharts,
+    Topo
   },
   data() {
     return {

@@ -74,7 +74,7 @@
 
 <script>
 import List from '@/components/list/backup'
-import { projectList, delProjects, getResourceUser } from '@/api/system-manage'
+import { projectList, delProjects, getResourceUser, getProjectInfo } from '@/api/system-manage'
 import { mapGetters, mapActions } from 'vuex'
 import { dateFormat } from '@/utils'
 import CreateProject from './components/create-project.vue'
@@ -121,6 +121,7 @@ export default {
       this.curRow = {}
     },
     editProject(row) {
+      // getProjectInfo(row.id)
       this.visible = true
       this.curRow = row
     },
