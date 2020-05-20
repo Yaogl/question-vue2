@@ -134,7 +134,7 @@
         </el-form-item>
         <el-form-item label="安全组：" prop="age">
           <el-select v-model="formData.security_groups" class="input-width-4" multiple placeholder="请选择安全组">
-            <el-option v-for="item in securityGroupList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in securityGroupList" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
         </el-form-item>
       </el-card>
@@ -299,6 +299,8 @@ export default {
       this.showRecovery = true
     },
     submitInstance() {
+      // console.log(JSON.stringify(this.formData, null, 2))
+      // return
       this.$refs.create_instance.validate(valid => {
         if (valid) {
           this.loading = true

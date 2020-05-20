@@ -39,7 +39,11 @@
         @select="changeSelect"
         style="width: 100%">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="名称" prop="name" />
+        <el-table-column label="名称" prop="name">
+          <template slot-scope="scope">
+            <el-button type="text" @click="toDetail(scope.row)">{{ scope.row.name }}</el-button>
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="createAt" />
         <el-table-column label="操作" prop="name">
           <template slot-scope="scope">
@@ -115,6 +119,14 @@ export default {
     ...mapActions([
       'setAllUserList'
     ]),
+    toDetail(row) {
+      this.$router.push({
+        path: '/system-manage/system-manage-project-info',
+        query: {
+          id: row.id
+        }
+      })
+    },
     fetchApi: projectList,
     addNewProject() {
       this.visible = true

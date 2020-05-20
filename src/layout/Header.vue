@@ -2,6 +2,12 @@
 <div class="header">
   <div class="header-left">
     <i :class="sideBarCollapse ? 'el-icon-s-unfold pointer' : 'el-icon-s-fold pointer'" @click="collapseChage"></i>
+    <div class="project-choose">
+      <span class="label">项目：</span>
+      <el-select :value="curProjectInfo" value-key="uuid" placeholder="请选择项目" @change="updateProject">
+        <el-option v-for="(item, index) in projectList" :key="item.uuid" :label="item.name" :value="item"></el-option>
+      </el-select>
+    </div>
   </div>
   <div class="header-right">
     <div class="header-user-con">
@@ -46,49 +52,55 @@ export default {
     ...mapGetters([
       'sideBarCollapse',
       'isFullScreen',
-      'userInfo'
+      'userInfo',
+      'projectList',
+      'curProjectInfo'
     ])
   },
   methods: {
     ...mapActions([
       'setSideBarCollapse',
       'setFullScreen',
-      'loginOut'
+      'loginOut',
+      'setCurProject'
     ]),
     // 用户名下拉菜单选择事件
     handleCommand(command) {
       if (command == 'loginout') {
         this.loginOut()
-        this.$router.push('/login');
+        this.$router.push('/login')
         location.reload()
       }
     },
     collapseChage() {
       this.setSideBarCollapse(!this.sideBarCollapse)
     },
+    updateProject(project) {
+      this.setCurProject(project)
+    },
     // 全屏事件
     handleFullScreen() {
-      let element = document.documentElement;
+      let element = document.documentElement
       if (this.isFullScreen) {
         if (document.exitFullscreen) {
-          document.exitFullscreen();
+          document.exitFullscreen()
         } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
+          document.webkitCancelFullScreen()
         } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
+          document.mozCancelFullScreen()
         } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
+          document.msExitFullscreen()
         }
       } else {
         if (element.requestFullscreen) {
-          element.requestFullscreen();
+          element.requestFullscreen()
         } else if (element.webkitRequestFullScreen) {
-          element.webkitRequestFullScreen();
+          element.webkitRequestFullScreen()
         } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
+          element.mozRequestFullScreen()
         } else if (element.msRequestFullscreen) {
           // IE11
-          element.msRequestFullscreen();
+          element.msRequestFullscreen()
         }
       }
       this.setFullScreen(!this.isFullScreen)
@@ -97,7 +109,7 @@ export default {
   mounted() {}
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .header {
   position: relative;
   box-sizing: border-box;
@@ -106,61 +118,68 @@ export default {
   font-size: 22px;
   background: #fff;
   border-bottom: 1px solid #ccc;
-}
-.header-left{
-  float: left;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  height: 60px;
-}
-.header-right {
-  float: right;
-  padding-right: 50px;
-}
+  .header-left{
+    float: left;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    height: 60px;
+    .project-choose{
+      .label{
+        font-size: 14px;
+        line-height: 22px;
+        margin-left: 20px;
+      }
+    }
+  }
+  .header-right {
+    float: right;
+    padding-right: 50px;
+  }
 
-.header-user-con {
-  display: flex;
-  height: 60px;
-  align-items: center;
-}
+  .header-user-con {
+    display: flex;
+    height: 60px;
+    align-items: center;
+  }
 
-.btn-fullscreen {
-  transform: rotate(45deg);
-  margin-right: 5px;
-  font-size: 24px;
-}
+  .btn-fullscreen {
+    transform: rotate(45deg);
+    margin-right: 5px;
+    font-size: 24px;
+  }
 
-.btn-bell,
-.btn-fullscreen {
-  position: relative;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  border-radius: 15px;
-  cursor: pointer;
-}
+  .btn-bell,
+  .btn-fullscreen {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border-radius: 15px;
+    cursor: pointer;
+  }
 
-.user-name {
-  margin-left: 10px;
-}
+  .user-name {
+    margin-left: 10px;
+  }
 
-.user-avator {
-  margin-left: 20px;
-}
+  .user-avator {
+    margin-left: 20px;
+  }
 
-.user-avator img {
-  display: block;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
+  .user-avator img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
 
-.el-dropdown-link {
-  cursor: pointer;
-}
+  .el-dropdown-link {
+    cursor: pointer;
+  }
 
-.el-dropdown-menu__item {
-  text-align: center;
+  .el-dropdown-menu__item {
+    text-align: center;
+  }
 }
 </style>

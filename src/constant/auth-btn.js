@@ -9,6 +9,7 @@ export default {
   INSTANCE_TAGS_BTN: 'instance-tags-btn', // 云主机标签
   INSTANCE_VNC_BTN: 'instance-vnc-btn', // 云主机连接vnc
   INSTANCE_EXPORT_BTN: 'instance-export-btn', // 云主机导出
+  INSTANCE_DELETE_BTN: 'instance-delete-btn', // 云主机删除
   // 秘钥列表
   SSHKEY_REFRESH_BTN: 'sshkey-refresh-btn', // 秘钥刷新
   SSHKEY_CREATE_BTN: 'sshkey-create-btn', // 秘钥的创建

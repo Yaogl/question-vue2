@@ -65,6 +65,7 @@ const actions = {
       commit(types.INSTANCE_INIT_FINISH, true)
     })
   },
+  // 获取镜像列表
   initImage({ commit }) {
     return new Promise(resolve => {
       getImageList().then(res => {
@@ -73,6 +74,7 @@ const actions = {
       })
     })
   },
+  // 获取秘钥列表
   initSshkey({ commit }) {
     return new Promise(resolve => {
       getSshkeyList().then(res => {
@@ -81,6 +83,7 @@ const actions = {
       })
     })
   },
+  // 获取容灾组
   initServerGroup({ commit }) {
     return new Promise(resolve => {
       getServerGroupList().then(res => {
@@ -89,6 +92,7 @@ const actions = {
       })
     })
   },
+  // 获取云服务器类型
   initFlavor({ commit }) {
     return new Promise(resolve => {
       instanceFlavor().then(res => {
@@ -97,6 +101,7 @@ const actions = {
       })
     })
   },
+  // 获取安全组
   initSecurityGroup({ commit }) {
     return new Promise(resolve => {
       getSecurityGroupList().then(res => {
@@ -105,6 +110,7 @@ const actions = {
       })
     })
   },
+  // 获取vpc网络
   initNetwork({ commit }) {
     return new Promise(resolve => {
       getNetworkList().then(res => {

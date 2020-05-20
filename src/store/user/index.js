@@ -20,7 +20,7 @@ const mutations = {
   [types.LOGIN_OUT](state, userInfo) {
     state.userInfo = {} // 清空用户数据
     removeToken() // 清空token
-    sessionStorage.clear()
+    localStorage.clear()
     // location.reload()
   },
   [types.LOGIN_TIME](state, time) {

@@ -183,6 +183,7 @@
                     <p>硬重启</p>
                   </el-dropdown-item>
                   <el-dropdown-item
+                    v-if="authBtns.INSTANCE_DELETE_BTN"
                     @click.stop.native="deleteInstance(scope.row)"
                     :disabled="scope.row.moreOperateLoading"
                   >
@@ -269,7 +270,6 @@ export default {
         size: 10,
         name: ''
       },
-      tableRefs: 'cloud-host-table', // 列表选择用
       uniqueName: 'uuid', // 列表选择用
       moreOperate: Config.moreOperate,
       listMoreOperate: Config.listMoreOperate,
@@ -288,7 +288,7 @@ export default {
       operateList: [], // 操作的列表,防止selecteditems报错情况出现
       curRow: {},
       polling: false, // 轮询开关，禁止页面其他操作
-      btnLoading: false
+      btnLoading: false // 按钮loading控制
     }
   },
   methods: {
@@ -302,16 +302,29 @@ export default {
       })
     },
     deleteInstance(row) {
-      console.log(row);
-      instanceApi.deleteInstance(row.uuid)
+      this.$confirm('您正在进行删除操作, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        row.moreOperateLoading = true
+        instanceApi.deleteInstance(row.uuid).then(res => {
+          if (res.code === 200) {
+            this.$message.success('删除成功')          
+            this.search()
+          }
+          row.moreOperateLoading = false
+        }).catch(err => {
+          row.moreOperateLoading = false
+        })
+      }).catch((err) => {})
     },
     restartOne(row, restart_flag) {
       row.moreOperateLoading = true
       instanceApi.restartInstance({ uuid: row.uuid, restart_flag }).then(res => {
         if (res.code === 200) {
           this.$message.success('操作成功，正在为您重启')
-        } else {
-          this.$message.error('操作失败，请稍后重试')
         }
         row.moreOperateLoading = false
       }).catch(err => {
@@ -434,16 +447,12 @@ export default {
       })
       return list
     },
-    sortChange(sort) { // 监听table排序参数，例如返回prop：name,order: descending 降序 ascending 升序 null 清空
-      console.log(sort)
-    },
     getOperateUrl(row) {
       row.openVnc = true
       instanceApi.getInstanceVnc(row.uuid).then(res => {
         try {
           row.openVnc = false
           const url = res.result[0].console.url
-          // window.open(url)
           window.open (url, "newwindow", "height=500, width=800, top=20, left=30, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no")
         } catch (e) {
           console.log(e);

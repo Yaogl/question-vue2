@@ -122,7 +122,8 @@ export default {
           authLogin(clone).then(res => {
             if (res.code === 200002) {
               this.$message.success('登录成功')
-              this.setUserInfo(this.loginFormData)
+              delete clone.userPwd
+              this.setUserInfo(clone)
               this.$router.push('/')
             }
           }).catch(err => {

@@ -22,6 +22,12 @@ const routers = [{
   meta: {
     title: '项目管理'
   }
+}, {
+  path: '/system-manage/system-manage-project-info',
+  component: () => import('@/views/system-manage/project-manage/info'),
+  meta: {
+    title: '项目详情'
+  }
 }]
 
 export default routers

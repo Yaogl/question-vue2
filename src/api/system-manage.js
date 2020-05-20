@@ -55,6 +55,21 @@ export const projectList = (params) => {
     params
   })
 }
+// 获取项目配额
+export const getProjectQuota = (id) => {
+  return request({
+    url: `/api/project/get/quota?projectUuid=${id}`,
+    method: 'get'
+  })
+}
+// 更新项目配额
+export const updateQuota = (data) => {
+  return request({
+    url: `/api/project/update/quota`,
+    method: 'post',
+    data
+  })
+}
 // 获取项目详情
 export const getProjectInfo = id => {
   return request({

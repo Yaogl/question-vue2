@@ -142,7 +142,8 @@
           </el-tab-pane>
           <el-tab-pane label="告警" name="second">告警</el-tab-pane>
           <el-tab-pane label="拓扑" name="third">
-            <Topo />
+            <!-- <Topo /> -->
+            <img src="../../../assets/img/topology.jpg" alt="">
           </el-tab-pane>
         </el-tabs>
       </el-col>

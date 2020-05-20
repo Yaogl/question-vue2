@@ -9,8 +9,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   plugins: [createPersistedState({
-    storage: window.sessionStorage,
-    paths:['user', 'common'] // 需要缓存的store放置，如果需要刷新重新获取，单建文件
+    storage: window.localstorage,
+    paths:['user'] // 需要缓存的store放置，如果需要刷新重新获取，单建文件
   })],
   modules: {
     common,

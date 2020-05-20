@@ -1,11 +1,10 @@
 <template>
 <div id="app">
-
   <router-view></router-view>
 </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { getUserAuth } from '@/api/system-manage'
 
 export default {
@@ -16,12 +15,18 @@ export default {
   },
   created() {
     this.setLoginTime()
-    // getUserAuth('test1')
+    this.getProjectList()
+  },
+  computed: {
+    ...mapGetters([
+      'projectList'
+    ])
   },
   methods: {
     ...mapActions([
       'setBreadcrumbList',
-      'setLoginTime'
+      'setLoginTime',
+      'getProjectList'
     ])
   }
 }
