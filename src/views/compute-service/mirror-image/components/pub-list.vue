@@ -64,7 +64,7 @@
         </el-table-column>
         <el-table-column prop="date" label="项目">
           <template slot-scope="scope">
-            开发
+            {{ curProjectInfo.name }}
           </template>
         </el-table-column>
         <el-table-column prop="created_at" label="创建时间" width="160"/>
@@ -99,7 +99,8 @@ export default {
   computed: {
     ...mapGetters([
       'pageList',
-      'authBtns'
+      'authBtns',
+      'curProjectInfo'
     ])
   },
   data() {

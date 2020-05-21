@@ -21,6 +21,7 @@
         :row-style="{height: '50px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
+        v-loading="loading"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
@@ -93,11 +94,12 @@ export default {
       },
       dialogName: '',
       visible: false,
+      createdSearch: false,
       curRow: {} // 当前编辑行数据
     }
   },
   methods: {
-    fetchApi: getSubnetVirtualList,
+    // fetchApi: getSubnetVirtualList,
     addVirtualIp() {
       this.dialogName = 'create-virtual-ip'
       this.visible = true

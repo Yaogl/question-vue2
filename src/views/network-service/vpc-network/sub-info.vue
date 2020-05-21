@@ -11,7 +11,7 @@
               {{ subInfo.cidr }}
             </el-form-item>
             <el-form-item label="项目：">
-              开发项目
+              {{ curProjectInfo.name }}
             </el-form-item>
             <el-form-item label="网络ACL：">
             </el-form-item>
@@ -72,12 +72,18 @@ import PortList from './subinfo-components/port-list.vue'
 import CloudHostList from './subinfo-components/cloud-host-list.vue'
 import VirtualIpList from './subinfo-components/virtual-ip-list.vue'
 import { getSubnetInfo } from '@/api/network-service'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     PortList,
     CloudHostList,
     VirtualIpList
+  },
+  computed: {
+    ...mapGetters([
+      'curProjectInfo'
+    ])
   },
   data() {
     return {

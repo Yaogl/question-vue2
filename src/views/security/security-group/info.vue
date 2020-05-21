@@ -8,7 +8,7 @@
               {{ curSecurityInfo.name }}
             </el-form-item>
             <el-form-item label="项目：">
-              开发项目
+              {{ curProjectInfo.name }}
             </el-form-item>
             <el-form-item label="描述：">
               {{ curSecurityInfo.description }}
@@ -22,7 +22,6 @@
               {{ curSecurityInfo.created_at }}
             </el-form-item>
             <el-form-item label="地区：">
-              开发项目
             </el-form-item>
           </el-col>
           <el-col :span="7">
@@ -136,7 +135,8 @@ export default {
     ...mapGetters([
       'pageList',
       'authBtns',
-      'curSecurityInfo'
+      'curSecurityInfo',
+      'curProjectInfo'
     ])
   },
   methods: {

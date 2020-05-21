@@ -7,7 +7,7 @@ import { refreshTokenApi } from '@/api/login'
 
 const service = axios.create({
   baseURL: 'http://10.255.128.190:81',
-  timeout: 20000
+  timeout: 60000
 })
 
 
@@ -30,7 +30,7 @@ service.interceptors.response.use(
     }
     const res = response.data
 
-    if (res.code === 100404) { // 登录超时
+    if (res.code === 100404 || res.code === 100401) { // 登录超时
       Message({
         message: res.resultMsg,
         type: 'error'
@@ -40,7 +40,7 @@ service.interceptors.response.use(
       return
     }
 
-    if (res.code === 200 || res.code === 200002) {
+    if (res.code === 200) {
       return Promise.resolve(res)
     } else {
       if (res.resultMsg) {

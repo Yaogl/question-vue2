@@ -90,7 +90,7 @@
         </el-table-column>
         <el-table-column prop="date" label="项目" v-if="showList.includes('6')">
           <template slot-scope="scope">
-            开发
+            {{ curProjectInfo.name }}
           </template>
         </el-table-column>
         <el-table-column prop="created_at" width="160" label="创建时间" v-if="showList.includes('7')"/>
@@ -125,7 +125,8 @@ export default {
   computed: {
     ...mapGetters([
       'authBtns',
-      'pageList'
+      'pageList',
+      'curProjectInfo'
     ])
   },
   data() {

@@ -64,7 +64,7 @@
               保定-lvm
             </el-form-item>
             <el-form-item label="项目：">
-              开发项目
+              {{ curProjectInfo.name }}
             </el-form-item>
             <el-form-item label="创建时间：">
               {{ instanceInfo.created }}
@@ -162,11 +162,17 @@ import * as Config from './config'
 import MonitorCharts from './info-components/monitor-charts.vue'
 import Topo from './info-components/topo.vue'
 import * as instanceApi from '@/api/cloud-host'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     MonitorCharts,
     Topo
+  },
+  computed: {
+    ...mapGetters([
+      'curProjectInfo'
+    ])
   },
   data() {
     return {

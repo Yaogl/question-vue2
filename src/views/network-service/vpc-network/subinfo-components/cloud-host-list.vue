@@ -21,8 +21,9 @@
         <el-table-column prop="name" label="名称" />
         <el-table-column label="IP地址">
           <template slot-scope="scope">
-            <div v-if="scope.row.addresses && scope.row.addresses.t1">
-              <p v-for="(item, index) in scope.row.addresses.t1" :key="index">{{ item.addr }}</p>
+            <div v-for="(item, index) in scope.row.net_info" :key="index">
+              <!-- <p>（{{ item.name }}）</p> -->
+              <p>{{ item.value.addr }}</p>
             </div>
           </template>
         </el-table-column>
@@ -95,6 +96,14 @@ export default {
     fetchApi: getSubnetVirtualList,
     formatData(list) {
       list.map(item => {
+        let arr = []
+        Object.keys(item.addresses).map(key => {
+          arr.push({
+            name: key,
+            value: item.addresses[key][0]
+          })
+        })
+        item.net_info = arr
         item.created = dateFormat('YYYY-mm-dd HH:MM', item.created)
       })
       return list

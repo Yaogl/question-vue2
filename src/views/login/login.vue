@@ -120,9 +120,10 @@ export default {
           // clone.userPwd = MD5(clone.userPwd)
           clone.verifyToken = this.verifyInfo.cToken
           authLogin(clone).then(res => {
-            if (res.code === 200002) {
+            if (res.code === 200) {
               this.$message.success('登录成功')
               delete clone.userPwd
+              clone.name = res.result.name
               this.setUserInfo(clone)
               this.$router.push('/')
             }
@@ -153,12 +154,13 @@ export default {
     line-height: 50px;
     text-align: center;
     font-size: 20px;
-    color: #666;
+    color: #000;
     border-bottom: 1px solid #ddd;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.9);
   }
 
   .ms-login {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     position: absolute;
     left: 50%;
     top: 50%;
@@ -170,7 +172,7 @@ export default {
 
   .ms-content {
     padding: 30px 30px;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.9);
   }
 
   .login-btn {

@@ -45,7 +45,11 @@
             <el-button type="text" @click="toDetail(scope.row)">{{ scope.row.name }}</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="项目" prop="project_name" />
+        <el-table-column label="项目" prop="project_name">
+          <template lang="html" slot-scope="scope">
+            {{ curProjectInfo.name }}
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="created_at" />
         <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
@@ -110,7 +114,8 @@ export default {
   computed: {
     ...mapGetters([
       'pageList',
-      'authBtns'
+      'authBtns',
+      'curProjectInfo'
     ])
   },
   methods: {
@@ -140,7 +145,6 @@ export default {
     },
     formatData(list) {
       list.map(item => {
-        item.project_name = '开发项目'
         item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
       })
       return list

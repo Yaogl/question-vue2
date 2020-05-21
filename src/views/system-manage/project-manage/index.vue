@@ -41,7 +41,7 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="名称" prop="name">
           <template slot-scope="scope">
-            <el-button type="text" @click="toDetail(scope.row)">{{ scope.row.name }}</el-button>
+            <el-button type="text" :disabled="!authBtns.PROJECT_MANAGE_EDIT_BTN" @click="toDetail(scope.row)">{{ scope.row.name }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="创建时间" prop="createAt" />

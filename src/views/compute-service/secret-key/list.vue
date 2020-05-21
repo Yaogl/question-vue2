@@ -69,7 +69,7 @@
         </el-table-column>
         <el-table-column prop="name" label="项目">
           <template slot-scope="scope">
-            测试
+            {{ curProjectInfo.name }}
           </template>
         </el-table-column>
         <el-table-column prop="name" label="操作" width="120">
@@ -113,7 +113,8 @@ export default {
   computed: {
     ...mapGetters([
       'pageList',
-      'authBtns'
+      'authBtns',
+      'curProjectInfo'
     ])
   },
   data() {

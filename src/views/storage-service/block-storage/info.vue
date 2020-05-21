@@ -5,7 +5,7 @@
       <el-row>
         <el-col :span="5">
           <p class="item">名称：{{ blockInfo.name }}</p>
-          <p class="item">项目：开发项目</p>
+          <p class="item">项目：{{ curProjectInfo.name }}</p>
           <p class="item">地区：{{ blockInfo.availability_zone }}</p>
         </el-col>
         <el-col :span="8">
@@ -29,8 +29,14 @@
 
 <script>
 import { getBlockInfo } from '@/api/storage-service'
+import { mapGetters } from 'vuex'
 
 export default {
+  computed: {
+    ...mapGetters([
+      'curProjectInfo'
+    ])
+  },
   created() {
     this.loading = true
     getBlockInfo(this.$route.query.volume_id).then(res => {

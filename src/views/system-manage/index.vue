@@ -1,9 +1,9 @@
 <template lang="html">
-  <div class="tree">
+  <div id="topo">
     <v-stage :config="configKonva">
       <v-layer>
-        <v-image :config="{ x: 100, y: 100, image: image1 }"></v-image>
-        <!-- <v-circle :config="configCircle"></v-circle>
+        <!-- <v-image v-for="(item, index) in mockJson" :config="{ x: 100, y: 100 * (index + 1), image: item.imageObj }"></v-image> -->
+        <!-- <v-circle :config="configCircle"></v-circle> -->
         <v-line :config="{
           x: 100,
           y: 160,
@@ -12,12 +12,7 @@
           lineCap: 'round',
           lineJoin: 'round',
           stroke: 'black'
-        }"/> -->
-        <v-text :config="{
-          text: '<h1>ddddd</h1>',
-
-        fontSize: 30,
-        fontFamily: 'Calibri',}"></v-text>
+        }"/>
       </v-layer>
     </v-stage>
   </div>
@@ -27,34 +22,39 @@
 export default {
   data() {
     return {
+      mockJson: [
+        { imgUrl: '4.png', type: 'img', text: '' },
+        { imgUrl: '1.png', type: 'img', text: '' },
+        { imgUrl: '2.png', type: 'img', text: '' },
+        { imgUrl: '3.png', type: 'img', text: '' },
+      ],
       configKonva: {
         width: 500,
         height: 1000
-      },
-      configCircle: {
-        x: 100,
-        y: 100,
-        radius: 70,
-        fill: "red",
-        stroke: "black",
-        strokeWidth: 4
-      },
-      image1: '',
-      image2: '',
-      image3: '',
-      image4: ''
+      }
     }
   },
   methods: {
 
   },
+  mounted() {
+    this.configKonva.width = document.getElementById('topo').clientWidth
+  },
   created() {
-    const image = new Image()
-    image.src = require('../../assets/img/1.png')
-    image.onload = () => {
-      // set image only when it is loaded
-      this.image1 = image;
-    };
+    this.mockJson.map(async item => {
+      this.$set(item, 'imageObj', await this.imageLoaded(item.imgUrl))
+    })
+  },
+  methods: {
+    imageLoaded(name) {
+      const image = new Image()
+      image.src = require('../../assets/img/' + name)
+      return new Promise(resolve => {
+        image.onload = () => {
+          resolve(image)
+        }
+      })
+    }
   }
 }
 </script>

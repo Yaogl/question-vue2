@@ -32,7 +32,7 @@
           multiple
           collapse-tags
           class="no-select-header"
-          style="margin-left: 20px;width: 150px;"
+          style="margin-left: 20px;width: 100px;"
           placeholder="请选择">
           <template slot="prefix">
             <el-button type="primary">
@@ -106,7 +106,7 @@
         <el-table-column label="创建时间" min-width="20%" prop="create_time" v-if="showList.includes('6')"/>
         <el-table-column label="项目" prop="flavor" width="80" v-if="showList.includes('7')">
           <template slot-scope="scope">
-            开发
+            {{ curProjectInfo.name }}
           </template>
         </el-table-column>
         <el-table-column width="100">
@@ -252,7 +252,8 @@ export default {
     },
     ...mapGetters([
       'pageList',
-      'authBtns'
+      'authBtns',
+      'curProjectInfo'
     ]),
     openDisabled() {
       let list = this.selectedItems.filter(item => item.status === 'ACTIVE')
@@ -311,8 +312,8 @@ export default {
         row.moreOperateLoading = true
         instanceApi.deleteInstance(row.uuid).then(res => {
           if (res.code === 200) {
-            this.$message.success('删除成功')          
-            this.search()
+            this.$message.success('删除成功')
+            this.deleteItem(row)
           }
           row.moreOperateLoading = false
         }).catch(err => {

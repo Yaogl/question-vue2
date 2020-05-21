@@ -5,7 +5,7 @@
         <el-col :span="5">
           <p class="item">名称：{{ networkInfo.name }}</p>
           <p class="item">云主机数量：{{ networkInfo.instance_num }}</p>
-          <p class="item">项目：开发项目</p>
+          <p class="item">项目：{{ curProjectInfo.name }}</p>
         </el-col>
         <el-col :span="8">
           <p class="item">ID：{{ networkInfo.id }}</p>
@@ -46,12 +46,18 @@ import SubnetList from './info-components/subnet-list.vue'
 import RouteMapList from './info-components/route-map-list.vue'
 import Topo from './info-components/topo.vue'
 import { getVpnNetWorkInfo } from '@/api/network-service'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     SubnetList,
     RouteMapList,
     Topo
+  },
+  computed: {
+    ...mapGetters([
+      'curProjectInfo'
+    ])
   },
   data() {
     return {

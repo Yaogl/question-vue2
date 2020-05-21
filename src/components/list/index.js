@@ -69,6 +69,14 @@ export default {
       this.beforeSearch()
       this.fetchByPage(1)
     },
+    deleteItem(item) {
+      let idx = this.totalList.findIndex(i => i[this.uniqueName] == item[this.uniqueName])
+      if (idx > -1) {
+        this.totalList.splice(idx, 1)
+        this.currentChange(this.query.page)
+        this.total = this.totalList.length
+      }
+    },
     fetchByPage(page = this.query.page) {
       if (this.loading) {
         this.$message.warning('正在加载，请勿重复操作')

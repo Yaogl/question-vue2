@@ -46,7 +46,11 @@
           </template>
         </el-table-column>
         <el-table-column label="关联子网数量" prop="port_num" />
-        <el-table-column label="项目" prop="project_name" />
+        <el-table-column label="项目" prop="project_name">
+          <template lang="html" slot-scope="scope">
+            {{ curProjectInfo.name }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
             <el-button type="text" v-if="authBtns.FIREWALL_EDIT_BTN">修改</el-button>
@@ -110,7 +114,8 @@ export default {
   computed: {
     ...mapGetters([
       'pageList',
-      'authBtns'
+      'authBtns',
+      'curProjectInfo'
     ])
   },
   methods: {
@@ -125,13 +130,6 @@ export default {
       this.curRow = row
       this.componentName = name
       this.visible = true
-    },
-    formatData(list) {
-      list.map(item => {
-        item.project_name = '开发项目'
-        // item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
-      })
-      return list
     }
   }
 }

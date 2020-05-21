@@ -77,7 +77,12 @@
           </template>
         </el-table-column>
         <el-table-column label="子网数量" prop="subnet_num" min-width="30%" v-if="showList.includes('4')" />
-        <el-table-column label="项目" prop="project_name" min-width="30%" v-if="showList.includes('6')" />
+        <el-table-column label="项目" prop="project_name" min-width="30%" v-if="showList.includes('6')" >
+          <template slot-scope="scope">
+            {{ curProjectInfo.name }}
+          </template>
+        </el-table-column>
+
         <el-table-column label="创建时间" prop="created_at" min-width="30%" v-if="showList.includes('7')" />
       </el-table>
     </el-card>
@@ -149,7 +154,8 @@ export default {
   computed: {
     ...mapGetters([
       'pageList',
-      'authBtns'
+      'authBtns',
+      'curProjectInfo'
     ])
   },
   methods: {

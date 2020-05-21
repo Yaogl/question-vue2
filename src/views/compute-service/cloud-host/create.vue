@@ -4,7 +4,9 @@
       <el-card shadow="never">
         <p class="header-title">费用和地域</p>
         <el-form-item label="所属项目：" prop="age">
-          开发项目
+          <el-select v-model="otherParams.projectId" placeholder="请选择项目">
+            <el-option v-for="(item, index) in projectList" :key="item.uuid" :label="item.name" :value="item.uuid"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="地域和可用区：" prop="availability_zone">
           <el-select v-model="otherParams.zone" placeholder="请选择地域">
@@ -37,6 +39,7 @@
               :row-style="{height: '45px'}"
               :header-row-style="{height: '45px'}"
               :data="flavorList"
+              :max-height="500"
               style="width: 100%">
               <el-table-column label="选择" align="center" width="80">
                 <template slot-scope="scope">
@@ -44,17 +47,17 @@
                 </template>
               </el-table-column>
               <el-table-column prop="name" label="名称" />
-              <el-table-column label="内存">
+              <el-table-column label="内存" prop="ram" sortable>
                 <template slot-scope="scope">
                   {{ scope.row.ram }} MB
                 </template>
               </el-table-column>
-              <el-table-column prop="vcpus" label="CPU" >
+              <el-table-column prop="vcpus" label="CPU" sortable>
                 <template slot-scope="scope">
                   {{ scope.row.vcpus }} 核
                 </template>
               </el-table-column>
-              <el-table-column prop="disk" label="系统盘">
+              <el-table-column prop="disk" label="系统盘" sortable>
                 <template slot-scope="scope">
                   {{ scope.row.disk }} GB
                 </template>
@@ -248,7 +251,9 @@ export default {
       'netWorkList',
       'serverGroupList',
       'flavorList',
-      'instanceStored'
+      'instanceStored',
+      'projectList',
+      'curProjectInfo'
     ]),
     computedImageList() {
       if (this.otherParams.image_type === '2') {
@@ -279,13 +284,15 @@ export default {
         image_type: '1',
         system: '1',
         ip_type: '1',
-        key_type: '1'
+        key_type: '1',
+        projectId: ''
       },
       loading: false,
       showRecovery: false
     }
   },
   created() {
+    this.otherParams.projectId = this.curProjectInfo.uuid // 暂时取假值
     !this.instanceStored && this.createInstanceInit()
   },
   methods: {
