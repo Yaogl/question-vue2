@@ -2,6 +2,12 @@
   <div class="cloud-host-info-conotainer" v-loading="loading">
     <el-row class="batch-handle-row">
       <!-- <i class="el-icon-refresh-right mgr20"></i> -->
+      <el-button type="text"
+        @click="getOperateUrl"
+        :disabled="instanceInfo.status !== 'ACTIVE'"
+        :loading="operateLoading">
+        <i class="iconfont">&#xe621;</i>
+      </el-button>
       <el-button type="primary" :disabled="instanceInfo.status ==='ACTIVE' || polling" @click="instanceStart">开机</el-button>
       <el-button type="primary" :disabled="instanceInfo.status !=='ACTIVE' || polling" @click="instanceStop">关机</el-button>
       <el-button type="primary" @click="instanceRestart">重启</el-button>
@@ -173,7 +179,8 @@ export default {
       uuid: '',
       deleteProtect: true, // 删除保护
       instanceInfo: {},
-      polling: false // 轮询开关
+      polling: false, // 轮询开关
+      operateLoading: false
     }
   },
   created() {
@@ -188,6 +195,16 @@ export default {
           this.instanceInfo = this.format(res.result[0])
         }
         this.loading = false
+      })
+    },
+    getOperateUrl() {
+      this.operateLoading = true
+      instanceApi.getInstanceVnc(this.uuid).then(res => {
+        try {
+          const url = res.result[0].console.url
+          window.open (url, "newwindow", "height=500, width=800, top=20, left=30, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no")
+        } catch (e) {}
+        this.operateLoading = false
       })
     },
     format(info) {

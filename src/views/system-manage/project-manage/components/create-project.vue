@@ -8,7 +8,7 @@
       <span class="title">{{ projectInfo.id ? '编辑项目' : '创建项目' }}</span>
     </div>
     <div class="body">
-      <el-form label-width="120px" :model="formData" :rules="rules" ref="project-form">
+      <el-form label-width="120px" :model="formData" :rules="rules" ref="project-form" @submit.native.prevent>
         <el-form-item label="项目名称：" prop="name">
           <el-input placeholder="请输入项目名称" v-model.trim="formData.name"></el-input>
         </el-form-item>
@@ -26,6 +26,7 @@
 
 <script>
 import { projectAdd } from '@/api/system-manage'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'add-project',
@@ -73,6 +74,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getProjectList'
+    ]),
     handleClose() {
       this.$emit('update:visible', false)
     },
@@ -83,6 +87,7 @@ export default {
           projectAdd(this.formData).then(res => {
             this.$message.success('保存成功')
             this.$emit('confirm')
+            this.getProjectList()
             setTimeout(() => {
               this.loading = false
               this.handleClose()

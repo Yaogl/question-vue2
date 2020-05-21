@@ -24,7 +24,8 @@ const state = {
   pageList: [5, 10, 20, 30, 50, 100], // 整站分页条数列表
   projectList: [], // 平台项目列表
   curProjectInfo: {}, // 当前选择的项目
-  quotaList: [] // 项目配额列表
+  quotaList: [], // 项目配额列表
+  quotaLoading: false
 }
 
 const getters = {
@@ -35,7 +36,8 @@ const getters = {
   breadcrumbList: state => state.breadcrumbList,
   projectList: state => state.projectList,
   curProjectInfo: state => state.curProjectInfo,
-
+  quotaList: state => state.quotaList,
+  quotaLoading: state => state.quotaLoading
 }
 
 const mutations = {
@@ -63,6 +65,9 @@ const mutations = {
   [types.SET_QUOTA_LIST](state, list) {
     state.quotaList = list
   },
+  [types.SET_QUOTA_LOADING](state, status) {
+    state.quotaLoading = status
+  },
   [types.PUSH_BREADCRUMB_LIST](state, item) {
     if (state.breadcrumbList.length > 2) {
       state.breadcrumbList[2] = item
@@ -73,29 +78,19 @@ const mutations = {
 }
 
 const actions = {
-  setSideBarCollapse({
-    commit
-  }, status) {
+  setSideBarCollapse({ commit }, status) {
     commit(types.SET_SIDEBAR_COLLAPSE, status)
   },
-  setFullScreen({
-    commit
-  }, status) {
+  setFullScreen({ commit }, status) {
     commit(types.SET_FULL_SCREEN, status)
   },
-  deleteTagsItem({
-    commit
-  }, index) {
+  deleteTagsItem({ commit }, index) {
     commit(types.DELETE_TAGS_ITEM, index)
   },
-  pushTagsItem({
-    commit
-  }, item) {
+  pushTagsItem({ commit }, item) {
     commit(types.SET_TAGS_LIST, item)
   },
-  setBreadcrumbList({
-    commit
-  }, router) {
+  setBreadcrumbList({ commit }, router) {
     let list = getBreadcrumb(menuList, router.path)
     if (list) {
       commit(types.SET_BREADCRUMB_LIST, list)
@@ -106,10 +101,7 @@ const actions = {
       })
     }
   },
-  getProjectList({
-    commit,
-    dispatch
-  }) {
+  getProjectList({ commit, dispatch, state }) {
     projectApi.projectList({
       pageNum: 1,
       pageSize: 100000
@@ -117,26 +109,28 @@ const actions = {
       if (res.code === 200) {
         const list = res.result.list
         commit(types.SET_PROJECT_LIST, list)
-        if (list.length) {
-          dispatch('setCurProject', list[0])
+        if (state.curProjectInfo.id) {
+          let idx = list.findIndex(item => item.id == state.curProjectInfo.id)
+          idx > -1 ? '' : (list.length ? dispatch('setCurProject', list[0]) : '')
+        } else {
+          list.length ? dispatch('setCurProject', list[0]) : ''
         }
       }
     })
   },
-  setCurProject({
-    commit,
-    dispatch
-  }, project) {
+  setCurProject({ commit, dispatch }, project) {
     commit(types.SET_CUR_PROJECT, project)
     dispatch('getProjectQuota', project)
   },
-  getProjectQuota({
-    commit
-  }, project) {
+  getProjectQuota({ commit }, project) {
+    commit(types.SET_QUOTA_LOADING, true)
     projectApi.getProjectQuota(project.uuid).then(res => {
       if (res.code === 200) {
         commit(types.SET_QUOTA_LIST, res.result)
       }
+      commit(types.SET_QUOTA_LOADING, false)
+    }).catch(err => {
+      commit(types.SET_QUOTA_LOADING, false)
     })
   }
 }

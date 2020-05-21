@@ -23,10 +23,10 @@
     </el-card>
 
     <el-card class="mgb20" shadow="never" v-loading="loading">
-      <el-row>
+      <el-row v-if="quotaList.length">
         <el-col :span="12" v-for="item in quotaList" :key="item.id" style="height: 70px;">
           <el-form
-            label-width="120px"
+            label-width="130px"
             @submit.native.prevent>
             <el-form-item :label="item.resoureName + '：'">
               <div v-if="!item.isEdit">
@@ -34,7 +34,7 @@
                 <el-button style="margin-left: 20px;" type="text" @click="editQuota(item)">编辑</el-button>
               </div>
               <div v-else>
-                <el-input-number v-model="item.tempUsed" step-strictly controls-position="right" :min="0" :max="item.tempLimit"></el-input-number>
+                <el-input-number v-model="item.tempLimit" step-strictly controls-position="right" :min="item.tempUsed"></el-input-number>
                 <el-button :loading="item.loading" :disabled="item.loading" type="primary" size="mini" @click="submit(item)">保存</el-button>
                 <el-button :disabled="item.loading" type="ghost" size="mini" @click="cancel(item)">取消</el-button>
               </div>
@@ -42,70 +42,28 @@
           </el-form>
         </el-col>
       </el-row>
+      <el-row v-else class="no-quota">
+        暂无配额信息
+      </el-row>
     </el-card>
   </div>
 </template>
 
 <script>
-import {
-  getProjectInfo,
-  getProjectQuota,
-  updateQuota
-} from '@/api/system-manage'
+import { getProjectInfo, getProjectQuota, updateQuota } from '@/api/system-manage'
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
+  computed: {
+    ...mapGetters({
+      'storeQuota': 'quotaList',
+      'curProjectInfo': 'curProjectInfo'
+    })
+  },
   data() {
     return {
       projectInfo: {},
-      quotaList: [
-        {
-          "createAt": "2020-05-19 17:31:50",
-          "deleted": true,
-          "deletedAt": 1589928186000,
-          "id": 21,
-          "limit": "2",
-          "tempUsed": '',
-          "tempLimit": '',
-          "loading": false,
-          "projectId": "787036cd-e837-42a1-90f2-8eae8f901e5e",
-          "resoure": "10011001",
-          "resoureName": "虚拟机个数",
-          "updateAt": null,
-          "isEdit": false,
-          "used": "0"
-        },
-        {
-          "createAt": "2020-05-19 17:31:50",
-          "deleted": true,
-          "deletedAt": 1589928186000,
-          "id": 22,
-          "isEdit": false,
-          "tempUsed": '',
-          "tempLimit": '',
-          "limit": "4",
-          "loading": false,
-          "projectId": "787036cd-e837-42a1-90f2-8eae8f901e5e",
-          "resoure": "10011002",
-          "resoureName": "vcpu个数",
-          "updateAt": "2020-05-19 17:37:38",
-          "used": "3"
-        },
-        {
-          "createAt": "2020-05-19 17:31:50",
-          "deleted": true,
-          "deletedAt": 1589928186000,
-          "id": 24,
-          "limit": "4",
-          "isEdit": false,
-          "loading": false,
-          "tempUsed": '',
-          "tempLimit": '',
-          "projectId": "787036cd-e837-42a1-90f2-8eae8f901e5e",
-          "resoure": "10011002",
-          "resoureName": "快照个数",
-          "updateAt": "2020-05-19 17:37:38",
-          "used": "3"
-        }
-      ],
+      quotaList: [],
       loading: false
     }
   },
@@ -113,6 +71,9 @@ export default {
     this.projectInit()
   },
   methods: {
+    ...mapMutations([
+      'SET_QUOTA_LIST'
+    ]),
     editQuota(item) {
       item.tempLimit = Number(item.limit)
       item.tempUsed = Number(item.used)
@@ -123,17 +84,37 @@ export default {
     },
     submit(item) {
       item.loading = true
-      setTimeout(() => {
+      const data = { // 组织需要提交的数据
+        projectUuid: this.projectInfo.uuid,
+        quotaList: [{
+          quotaCode: item.resoure,
+          quotaVaule: item.tempLimit
+        }]
+      }
+      updateQuota(data).then(res => {
+        if (res.code === 200) {
+          item.limit = item.tempLimit // 保存成功后更新页面
+          this.$message.success('保存成功')
+          // 如果全局的项目为当前更新项目，需更新vuex里的数据
+          if (this.curProjectInfo.id == this.$route.query.id) {
+            this.SET_QUOTA_LIST(this.quotaList)
+          }
+        }
         item.isEdit = false
         item.loading = false
-        item.used = item.tempUsed // 保存成功后更新页面
-        this.$message.success('保存成功')
-      }, 2000)
+      })
     },
     async projectInit() {
       this.loading = true
       this.projectInfo = (await getProjectInfo(this.$route.query.id)).result
-      // this.quotaList = (await getProjectQuota(this.projectInfo.uuid)).result
+      let { result } = await getProjectQuota(this.projectInfo.uuid)
+      result.map(item => {
+        item.isEdit = false
+        item.loading = false
+        item.tempUsed = ''
+        item.tempLimit = ''
+      })
+      this.quotaList = result
       this.loading = false
     }
   }
@@ -142,6 +123,12 @@ export default {
 
 <style lang="scss" scoped>
 .project-info-container {
-    padding: 20px;
+  padding: 20px;
+  .no-quota{
+    line-height: 200px;
+    font-size: 16px;
+    color: #999;
+    text-align: center;
+  }
 }
 </style>

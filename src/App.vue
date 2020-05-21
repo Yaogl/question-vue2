@@ -11,15 +11,23 @@ export default {
   watch: {
     $route(val) {
       this.setBreadcrumbList(val)
+    },
+    userInfo(val) {
+      if (val.userName) {
+        !this.projectList.length && this.getProjectList()
+      }
     }
   },
   created() {
+    if (this.userInfo.userName) {
+      !this.projectList.length && this.getProjectList()
+    }
     this.setLoginTime()
-    this.getProjectList()
   },
   computed: {
     ...mapGetters([
-      'projectList'
+      'projectList',
+      'userInfo'
     ])
   },
   methods: {

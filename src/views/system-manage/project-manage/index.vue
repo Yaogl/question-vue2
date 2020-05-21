@@ -117,7 +117,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setAllUserList'
+      'setAllUserList',
+      'getProjectList'
     ]),
     toDetail(row) {
       this.$router.push({
@@ -157,6 +158,7 @@ export default {
           if (res.code === 200) {
             this.$message.success('删除成功')
             this.search()
+            this.getProjectList()
             this.operateLoading = false
           }
         })
