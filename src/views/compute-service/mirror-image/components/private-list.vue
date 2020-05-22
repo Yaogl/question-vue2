@@ -6,9 +6,9 @@
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" v-if="authBtns.IMAGE_PRIVATE_DELETE_BTN">删除</el-button>
+        <!-- <el-button type="primary" v-if="authBtns.IMAGE_PRIVATE_DELETE_BTN">删除</el-button>
         <el-button type="primary" v-if="authBtns.IMAGE_PRIVATE_SHARE_BTN">共享</el-button>
-        <el-button type="primary" v-if="authBtns.IMAGE_PRIVATE_COPY_BTN">跨区复制</el-button>
+        <el-button type="primary" v-if="authBtns.IMAGE_PRIVATE_COPY_BTN">跨区复制</el-button> -->
         <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right">
@@ -31,9 +31,9 @@
             :value="item.value">
           </el-option>
         </el-select>
-        <el-button type="primary" v-if="authBtns.IMAGE_EXPORT_BTN">
+        <!-- <el-button type="primary" v-if="authBtns.IMAGE_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">

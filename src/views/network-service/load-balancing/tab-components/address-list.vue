@@ -2,12 +2,12 @@
   <div class="IP-address-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" v-if="authBtns.ADDRESS_POOL_REFRESH_BTN">
+        <el-button type="ghost" @click="search" v-if="authBtns.ADDRESS_POOL_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" v-if="authBtns.ADDRESS_POOL_CREATE_BTN">创建地址池</el-button>
-        <el-button type="primary" v-if="authBtns.ADDRESS_POOL_DELETE_BTN">删除</el-button>
+        <!-- <el-button type="primary" v-if="authBtns.ADDRESS_POOL_CREATE_BTN">创建地址池</el-button>
+        <el-button type="primary" v-if="authBtns.ADDRESS_POOL_DELETE_BTN">删除</el-button> -->
         <!-- <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
             更多操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -44,9 +44,9 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary" v-if="authBtns.ADDRESS_POOL_EXPORT_BTN">
+        <!-- <el-button type="primary" v-if="authBtns.ADDRESS_POOL_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -73,6 +73,7 @@
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
+        v-loading="loading"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
@@ -82,7 +83,11 @@
         <el-table-column label="监听器" prop="name" v-if="showList.includes('3')" />
 
         <el-table-column label="描述" v-if="showList.includes('4')" />
-        <el-table-column label="项目" prop="project_name" v-if="showList.includes('5')" />
+        <el-table-column label="项目" prop="project_name" v-if="showList.includes('5')">
+          <template lang="html" slot-scope="scope">
+            {{ curProjectInfo.name }}
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('6')" />
         <!-- <el-table-column label="操作">
           <template lang="html" slot-scope="scope">
@@ -157,16 +162,14 @@ export default {
   computed: {
     ...mapGetters([
       'pageList',
-      'authBtns'
+      'authBtns',
+      'curProjectInfo'
     ])
   },
   methods: {
     fetchApi: getNetworkList,
     clickOperate(item) {
       console.log(item);
-    },
-    createSecret(operate){
-      this.$router.push('/network-service/vpc-network-create')
     },
     editCur(row, name) {
       this.curRow = row
@@ -175,7 +178,6 @@ export default {
     },
     formatData(list) {
       list.map(item => {
-        item.project_name = '开发项目'
         item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
       })
       return list

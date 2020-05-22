@@ -7,14 +7,14 @@
           刷新
         </el-button>
         <el-button type="primary" v-if="authBtns.SERVER_GROUP_CREATE_BTN" @click="createSecret('add')">创建容灾组</el-button>
-        <el-button type="primary" v-if="authBtns.SERVER_GROUP_DELETE_BTN">删除</el-button>
+        <!-- <el-button type="primary" v-if="authBtns.SERVER_GROUP_DELETE_BTN">删除</el-button> -->
         <span>&nbsp;</span>
       </el-col>
-      <el-col :span="12" align="right">
+      <!-- <el-col :span="12" align="right">
         <el-button type="primary" v-if="authBtns.SERVER_GROUP_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
         </el-button>
-      </el-col>
+      </el-col> -->
     </el-row>
     <el-card shadow="never" class="table-box">
       <el-form label-width="100px">
@@ -142,6 +142,8 @@ export default {
   methods: {
     fetchApi: getServerGroupList,
     createSecret(operate){
+      this.$message.info('功能开发中...')
+      return
       this.operate = operate
       this.visible = true
     }

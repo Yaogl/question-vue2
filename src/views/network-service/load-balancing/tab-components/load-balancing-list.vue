@@ -2,12 +2,12 @@
   <div class="load-balancing-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" v-if="authBtns.LOAD_BALANCING_REFRESH_BTN">
+        <el-button type="ghost" @click="search" v-if="authBtns.LOAD_BALANCING_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" v-if="authBtns.LOAD_BALANCING_CREATE_BTN">创建负载均衡</el-button>
-        <el-button type="primary" v-if="authBtns.LOAD_BALANCING_DELETE_BTN">删除</el-button>
+        <!-- <el-button type="primary" v-if="authBtns.LOAD_BALANCING_CREATE_BTN">创建负载均衡</el-button>
+        <el-button type="primary" v-if="authBtns.LOAD_BALANCING_DELETE_BTN">删除</el-button> -->
         <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right">
@@ -31,9 +31,9 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary" v-if="authBtns.LOAD_BALANCING_EXPORT_BTN">
+        <!-- <el-button type="primary" v-if="authBtns.LOAD_BALANCING_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -60,6 +60,7 @@
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
+        v-loading="loading"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">

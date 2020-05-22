@@ -26,7 +26,7 @@
       </el-col>
       <el-col :span="8" align="right">
         <!-- 标签管理 -->
-        <tags-manage v-model="query.tag" v-if="authBtns.INSTANCE_TAGS_BTN"/>
+        <!-- <tags-manage v-model="query.tag" v-if="authBtns.INSTANCE_TAGS_BTN"/> -->
         <el-select
           v-model="showList"
           multiple
@@ -495,6 +495,8 @@ export default {
       this.$router.push('/compute-service/cloud-host-create')
     },
     downLoad() {
+      this.$message.info('功能开发中...')
+      return
       this.dialogName = 'export-dialog'
       this.dialogVisible = true
     }

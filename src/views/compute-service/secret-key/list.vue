@@ -8,13 +8,13 @@
         </el-button>
         <el-button type="primary" v-if="authBtns.SSHKEY_CREATE_BTN" @click="createSecret('add')">创建秘钥对</el-button>
         <el-button type="primary" v-if="authBtns.SSHKEY_IMPORT_BTN" @click="createSecret('export')">导入秘钥对</el-button>
-        <el-button type="primary" v-if="authBtns.SSHKEY_DELETE_BTN">删除</el-button>
+        <!-- <el-button type="primary" v-if="authBtns.SSHKEY_DELETE_BTN">删除</el-button> -->
         <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right" v-if="authBtns.SSHKEY_EXPORT_BTN">
-        <el-button type="primary">
+        <!-- <el-button type="primary">
           <i class="el-icon-bottom"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -132,6 +132,8 @@ export default {
   methods: {
     fetchApi: getSshkeyList,
     createSecret(operate){
+      this.$message.info('功能开发中...')
+      return
       this.operate = operate
       this.visible = true
     }

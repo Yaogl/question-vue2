@@ -7,7 +7,7 @@
           刷新
         </el-button>
         <el-button v-if="authBtns.NETWORK_CREATE_BTN" type="primary" @click="createSecret('add')">创建VPC</el-button>
-        <el-button v-if="authBtns.NETWORK_DELETE_BTN" type="primary">删除</el-button>
+        <!-- <el-button v-if="authBtns.NETWORK_DELETE_BTN" type="primary">删除</el-button> -->
         <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right">
@@ -31,9 +31,9 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary" v-if="authBtns.NETWORK_EXPORT_BTN">
+        <!-- <el-button type="primary" v-if="authBtns.NETWORK_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -172,6 +172,8 @@ export default {
       })
     },
     createSecret(operate){
+      this.$message.info('功能开发中...')
+      return
       this.$router.push('/network-service/vpc-network-create')
     },
     editCur(row, name) {

@@ -7,7 +7,7 @@
           刷新
         </el-button>
         <el-button type="primary" v-if="authBtns.VOLUME_CREATE_BTN" @click="createSecret('add')">创建云硬盘</el-button>
-        <el-button type="primary" v-if="authBtns.VOLUME_DELETE_BTN">删除</el-button>
+        <!-- <el-button type="primary" v-if="authBtns.VOLUME_DELETE_BTN">删除</el-button>
         <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
             更多操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -19,7 +19,7 @@
               :label="item.label"
               :value="item.value">{{ item.label }}</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
+        </el-dropdown> -->
       </el-col>
       <el-col :span="12" align="right">
         <!-- <tags-manage v-model="query.tag"/> -->
@@ -44,9 +44,9 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary" @click="downLoad" v-if="authBtns.VOLUME_EXPORT_BTN">
+        <!-- <el-button type="primary" @click="downLoad" v-if="authBtns.VOLUME_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -219,6 +219,8 @@ export default {
       console.log(item);
     },
     createSecret(operate){
+      this.$message.info('功能开发中....')
+      return
       this.$router.push('/network-service/vpc-network-create')
     },
     editCur(row, name) {

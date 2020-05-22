@@ -51,6 +51,7 @@ export default {
         if (this.projectInfo.id) {
           this.formData.id = this.projectInfo.id
           this.formData.name = this.projectInfo.name
+          this.formData.desc = this.projectInfo.desc
         }
       }
     }

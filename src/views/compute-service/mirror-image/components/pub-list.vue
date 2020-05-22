@@ -8,11 +8,11 @@
         </el-button>
         <span>&nbsp;</span>
       </el-col>
-      <el-col :span="12" align="right" v-if="authBtns.IMAGE_EXPORT_BTN">
+      <!-- <el-col :span="12" align="right" v-if="authBtns.IMAGE_EXPORT_BTN">
         <el-button type="primary">
           <i class="el-icon-bottom"></i>
         </el-button>
-      </el-col>
+      </el-col> -->
     </el-row>
     <el-card shadow="never" class="table-box">
       <el-form label-width="100px">

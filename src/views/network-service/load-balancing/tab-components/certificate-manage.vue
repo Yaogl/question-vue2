@@ -2,12 +2,12 @@
   <div class="certificate-manage-list-container">
     <el-row>
       <el-col :span="12">
-        <el-button type="ghost" v-if="authBtns.CERTIFICATE_REFRESH_BTN">
+        <el-button type="ghost" @click="search" v-if="authBtns.CERTIFICATE_REFRESH_BTN">
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" v-if="authBtns.CERTIFICATE_CREATE_BTN">创建证书</el-button>
-        <el-button type="primary" v-if="authBtns.CERTIFICATE_DELETE_BTN">删除</el-button>
+        <!-- <el-button type="primary" v-if="authBtns.CERTIFICATE_CREATE_BTN">创建证书</el-button>
+        <el-button type="primary" v-if="authBtns.CERTIFICATE_DELETE_BTN">删除</el-button> -->
         <span>&nbsp;</span>
       </el-col>
       <el-col :span="12" align="right">
@@ -31,9 +31,9 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary" v-if="authBtns.CERTIFICATE_EXPORT_BTN">
+        <!-- <el-button type="primary" v-if="authBtns.CERTIFICATE_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -60,6 +60,7 @@
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
+        v-loading="loading"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">
@@ -72,7 +73,11 @@
         </el-table-column>
         <el-table-column label="监听器" prop="name" v-if="showList.includes('3')" />
         <el-table-column label="描述" v-if="showList.includes('4')" />
-        <el-table-column label="项目" prop="project_name" v-if="showList.includes('5')" />
+        <el-table-column label="项目" prop="project_name" v-if="showList.includes('5')">
+          <template slot-scope="scope">
+            {{ curProjectInfo.name }}
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="created_at" v-if="showList.includes('6')" />
 
       </el-table>
@@ -141,7 +146,8 @@ export default {
   computed: {
     ...mapGetters([
       'pageList',
-      'authBtns'
+      'authBtns',
+      'curProjectInfo'
     ])
   },
   methods: {
@@ -159,7 +165,6 @@ export default {
     },
     formatData(list) {
       list.map(item => {
-        item.project_name = '开发项目'
         item.created_at = dateFormat('YYYY-mm-dd HH:MM', item.created_at)
       })
       return list

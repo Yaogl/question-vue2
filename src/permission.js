@@ -7,10 +7,10 @@ import { getToken } from '@/utils/auth'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/403', '/403']
+const whiteList = ['/login', '/403']
 
 //使用钩子函数对路由进行权限跳转
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   NProgress.start()
   const token = getToken()
   if (token && store.getters.userInfo.userName) { // 如果有token 已经登录
@@ -18,12 +18,19 @@ router.beforeEach((to, from, next) => {
       next('/')
       NProgress.done()
     } else {
-      if (!store.getters.menuList.length) {
-        store.dispatch('getAuth').then(res => {
-          next()
-        })
-      } else {
+      const hasRoles = store.getters.menuList && store.getters.menuList.length > 0
+      if (hasRoles) {
         next()
+      } else {
+        try {
+          // 获取菜单
+          let result = await store.dispatch('getAuth')
+          result && next()
+        } catch (error) {
+          store.dispatch('loginOut')
+          next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
+          NProgress.done()
+        }
       }
     }
   } else {

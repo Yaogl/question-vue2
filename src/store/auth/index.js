@@ -69,19 +69,26 @@ const actions = {
     })
   },
   getAuth({ commit, state, rootState }) {
-    return getUserAuth(rootState.user.userInfo.userName).then(res => {
-      let menu = res.result.list.filter(item => item.type === 'menu')
-      let btns = res.result.list.filter(item => item.type === 'button')
-      let authBtns = {}
-      for (let item of btns) {
-        for (let kk in allBtns) {
-          if (allBtns[kk] === item.resourceCode) {
-            authBtns[kk] = allBtns[kk]
+    return new Promise((resolve) => {
+      getUserAuth(rootState.user.userInfo.userName).then(res => {
+        if (res.code === 200) {
+          let menu = res.result.list.filter(item => item.type === 'menu')
+          let btns = res.result.list.filter(item => item.type === 'button')
+          let authBtns = {}
+          for (let item of btns) {
+            for (let kk in allBtns) {
+              if (allBtns[kk] === item.resourceCode) {
+                authBtns[kk] = allBtns[kk]
+              }
+            }
           }
+          commit(types.USER_AUTH, authBtns)
+          commit(types.USER_MENU, toTreeData(menu, '0'))
+          resolve(true)
+        } else {
+          resolve(false)
         }
-      }
-      commit(types.USER_AUTH, authBtns)
-      commit(types.USER_MENU, toTreeData(menu, '0'))
+      })
     })
   },
   setSecurityInfo({ commit }, info) {

@@ -6,8 +6,8 @@
           <i class="el-icon-refresh"></i>
           刷新
         </el-button>
-        <el-button type="primary" v-if="authBtns.VPN_CONNECT_CREATE_BTN">创建VPN连接</el-button>
-        <el-button type="primary" v-if="authBtns.VPN_CONNECT_DELETE_BTN">删除</el-button>
+        <!-- <el-button type="primary" v-if="authBtns.VPN_CONNECT_CREATE_BTN">创建VPN连接</el-button>
+        <el-button type="primary" v-if="authBtns.VPN_CONNECT_DELETE_BTN">删除</el-button> -->
         <span>&nbsp;</span>
         <!-- <el-dropdown placement="bottom-start" trigger="click">
           <el-button class="el-dropdown-link">
@@ -45,9 +45,9 @@
           </el-option>
         </el-select>
 
-        <el-button type="primary" v-if="authBtns.VPN_CONNECT_EXPORT_BTN">
+        <!-- <el-button type="primary" v-if="authBtns.VPN_CONNECT_EXPORT_BTN">
           <i class="el-icon-bottom"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
     </el-row>
     <el-card shadow="never" class="table-box">
@@ -74,6 +74,7 @@
         :row-style="{height: '45px'}"
         :header-row-style="{height: '50px'}"
         :data="tableList"
+        v-loading="loading"
         @select-all="changeSelect"
         @select="changeSelect"
         style="width: 100%">

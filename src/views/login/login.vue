@@ -125,7 +125,7 @@ export default {
               delete clone.userPwd
               clone.name = res.result.name
               this.setUserInfo(clone)
-              this.$router.push('/')
+              this.$router.push(this.$route.query.redirect || '/')
             }
           }).catch(err => {
             this.refreshVerificationCode()
