@@ -96,7 +96,7 @@ const actions = {
       commit(types.SET_BREADCRUMB_LIST, list)
     } else {
       commit(types.PUSH_BREADCRUMB_LIST, {
-        index: router.path,
+        index: router.fullPath,
         title: router.meta.title
       })
     }
