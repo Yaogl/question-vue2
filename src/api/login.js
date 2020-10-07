@@ -2,7 +2,7 @@ import request from '../utils/request'
 
 export const authLogin = data => {
   return request({
-    url: '/web/auth/login',
+    url: '/api/users/login',
     method: 'post',
     data
   })
@@ -13,10 +13,11 @@ export const loginOut = () => {
     method: 'post'
   })
 }
-export const getVersionCode = () => {
+export const registerUser = (data) => {
   return request({
-    url: '/web/captcha',
-    method: 'get'
+    url: '/api/users/register',
+    method: 'post',
+    data
   })
 }
 export const refreshTokenApi = process.env.VUE_APP_WEB_URL + '/web/captcha'

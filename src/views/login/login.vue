@@ -1,63 +1,52 @@
 <template>
 <div class="login-wrap">
   <div class="ms-login">
-    <div class="ms-title">长城云平台</div>
+    <div class="ms-title">题库</div>
 
     <el-carousel :autoplay="false" indicator-position="none" ref="carousel">
       <el-carousel-item>
         <el-form :model="loginFormData" :rules="loginRules" ref="login" label-width="0px" size="normal" class="ms-content">
-          <el-form-item prop="userName">
-            <el-input v-model.trim="loginFormData.userName" placeholder="请输入用户名">
+          <el-form-item prop="username">
+            <el-input v-model.trim="loginFormData.username" placeholder="请输入用户名">
               <i slot="prefix" class="iconfont">&#xe651;</i>
             </el-input>
           </el-form-item>
-          <el-form-item prop="userPwd">
+          <el-form-item prop="password">
             <el-input
               placeholder="请输入密码"
               show-password
-              v-model.trim="loginFormData.userPwd"
+              v-model.trim="loginFormData.password"
               @keyup.enter.native="submitForm()">
               <i slot="prefix" class="iconfont">&#xe645;</i>
-            </el-input>
-          </el-form-item>
-
-          <el-form-item prop="verifyCode">
-            <el-input
-              placeholder="请输入验证码"
-              v-model.trim="loginFormData.verifyCode"
-              @keyup.enter.native="submitForm()">
-              <i slot="prefix" class="iconfont">&#xe645;</i>
-              <img slot="append" :src="verifyInfo.img" @click="refreshVerificationCode" width="120" height="40">
-
             </el-input>
           </el-form-item>
           <div class="login-btn">
             <el-button type="primary" @click="submitForm()">登录</el-button>
           </div>
           <p class="login-tips">
-            <!-- <el-button type="text" @click="transfer">去注册</el-button> -->
+            <el-button type="text" @click="transfer">去注册</el-button>
           </p>
         </el-form>
       </el-carousel-item>
       <el-carousel-item>
         <el-form :model="registerFormData" :rules="registerRules" ref="register" label-width="0px" size="normal" class="ms-content">
-          <el-form-item prop="uname">
-            <el-input v-model.trim="registerFormData.uname" placeholder="请输入用户名">
+          <el-form-item prop="username">
+            <el-input v-model.trim="registerFormData.username" placeholder="请输入用户名">
               <i slot="prefix" class="iconfont">&#xe651;</i>
             </el-input>
           </el-form-item>
-          <el-form-item prop="upwd">
-            <el-input type="upwd" placeholder="请输入密码" show-password v-model.trim="registerFormData.upwd">
+          <el-form-item prop="password">
+            <el-input type="upwd" placeholder="请输入密码" show-password v-model.trim="registerFormData.password">
               <i slot="prefix" class="iconfont">&#xe645;</i>
             </el-input>
           </el-form-item>
-          <el-form-item prop="tupwd">
-            <el-input type="upwd" placeholder="请确认密码" show-password v-model.trim="registerFormData.tupwd">
+          <el-form-item prop="realname">
+            <el-input placeholder="请输入真实姓名" v-model.trim="registerFormData.realname">
               <i slot="prefix" class="iconfont">&#xe645;</i>
             </el-input>
           </el-form-item>
           <div class="login-btn">
-            <el-button type="primary">注册</el-button>
+            <el-button type="primary" @click="registerSubmit">注册</el-button>
           </div>
           <p class="login-tips">
             <el-button type="text" @click="transfer">去登录</el-button>
@@ -71,7 +60,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { authLogin, getVersionCode } from '@/api/login'
+import { authLogin, registerUser } from '@/api/login'
 import * as Config from './config'
 // import MD5 from 'js-md5'
 
@@ -79,56 +68,49 @@ export default {
   data() {
     return {
       loginFormData: {
-        userName: '',
-        userPwd: '',
-        verifyCode: '',
-        verifyToken: ''
+        username: '',
+        password: ''
       },
       registerRules: Config.getRegisterRules(this),
       loginRules: Config.getLoginRules(this),
       registerFormData: {
-        userName: '',
-        userPwd: '',
-        tupwd: ''
+        username: '',
+        password: '',
+        realname: ''
       },
-      refreshLoading: false,
-      verifyInfo: {}
+      refreshLoading: false
     }
   },
   created() {
-    this.refreshVerificationCode()
   },
   methods: {
     ...mapActions([
       'setUserInfo'
     ]),
-    refreshVerificationCode(){
-      if (this.refreshLoading) return
-      this.refreshLoading = true
-      getVersionCode().then(res => {
-        res.result.img = 'data:image/jpg;base64,' + res.result.img
-        this.verifyInfo = res.result
-        this.refreshLoading = false
-      }).catch(err => {
-        this.refreshLoading = false
+    registerSubmit() {
+      this.$refs.register.validate(valid => {
+        if (valid) {
+          registerUser(this.registerFormData).then(res => {
+            console.log(res);
+            if (res.code === 200) {
+            }
+          })
+        }
       })
     },
     submitForm() {
       this.$refs.login.validate(valid => {
         if (valid) {
           let clone = JSON.parse(JSON.stringify(this.loginFormData))
-          // clone.userPwd = MD5(clone.userPwd)
-          clone.verifyToken = this.verifyInfo.cToken
           authLogin(clone).then(res => {
-            if (res.code === 200) {
+            console.log(res);
+            if (res.code === 0) {
               this.$message.success('登录成功')
-              delete clone.userPwd
-              clone.name = res.result.name
+              delete clone.password
+              clone.realname = res.data.realname
               this.setUserInfo(clone)
-              this.$router.push(this.$route.query.redirect || '/')
+              this.$router.push('/dashboard')
             }
-          }).catch(err => {
-            this.refreshVerificationCode()
           })
         }
       })

@@ -47,9 +47,12 @@ module.exports = {
       //   changeOrigin: true
       // },
       '/api': {
-        target: 'http://10.255.66.213:8089',
-        ws: false,
-        changeOrigin: true
+        target: 'http://182.92.153.233/api',
+        changeOrigin: true,
+        logLevel: 'debug',
+        pathRewrite: {
+          '^/api': ''
+        }
       }
     }
   },

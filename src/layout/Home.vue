@@ -4,7 +4,7 @@
   <div class="content-box" :class="{'content-collapse': sideBarCollapse}">
     <v-head></v-head>
     <!-- <v-tags></v-tags> -->
-    <v-breadcrumb />
+    <!-- <v-breadcrumb /> -->
     <div class="content">
       <transition name="move" mode="out-in">
         <keep-alive :include="keepLiveList">

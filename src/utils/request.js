@@ -1,38 +1,17 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
-import { baseUrls } from './baseUrl'
-import { getToken, setToken } from './auth'
-import { refreshTokenApi } from '@/api/login'
 
 const service = axios.create({
-  baseURL: 'http://10.255.128.190:81',
   timeout: 60000
 })
 
-
-service.interceptors.request.use(
-  config => {
-    if (getToken()) {
-      config.headers['Authorization'] = getToken()
-    }
-    return config
-  },
-  error => {
-    Promise.reject(error)
-  }
-)
-
 service.interceptors.response.use(
   response => {
-    if (response.headers.authorization) {
-      setToken(response.headers.authorization)
-    }
     const res = response.data
-
-    if (res.code === 100404 || res.code === 100401) { // 登录超时
+    if (res.code === -1 && res.message === '未登录') { // 登录超时
       Message({
-        message: res.resultMsg,
+        message: '请登录',
         type: 'error'
       })
       store.dispatch('loginOut')
@@ -40,7 +19,7 @@ service.interceptors.response.use(
       return
     }
 
-    if (res.code === 200) {
+    if (res.code === 0) {
       return Promise.resolve(res)
     } else {
       if (res.resultMsg) {

@@ -70,25 +70,25 @@ const actions = {
   },
   getAuth({ commit, state, rootState }) {
     return new Promise((resolve) => {
-      getUserAuth(rootState.user.userInfo.userName).then(res => {
-        if (res.code === 200) {
-          let menu = res.result.list.filter(item => item.type === 'menu')
-          let btns = res.result.list.filter(item => item.type === 'button')
-          let authBtns = {}
-          for (let item of btns) {
-            for (let kk in allBtns) {
-              if (allBtns[kk] === item.resourceCode) {
-                authBtns[kk] = allBtns[kk]
-              }
+      let menu = [
+        {
+          parentId: '0',
+          sortId: 1,
+          id: 1,
+          title: '题库',
+          index: '1', // 如果是顶级菜单，需标记一个唯一的index 组件使用
+          children: [
+            {
+              parentId: 1,
+              sortId: 1,
+              title: '题库列表',
+              index: '/dashbord'
             }
-          }
-          commit(types.USER_AUTH, authBtns)
-          commit(types.USER_MENU, toTreeData(menu, '0'))
-          resolve(true)
-        } else {
-          resolve(false)
+          ]
         }
-      })
+      ]
+      commit(types.USER_MENU, toTreeData(menu, '0'))
+      resolve(true)
     })
   },
   setSecurityInfo({ commit }, info) {

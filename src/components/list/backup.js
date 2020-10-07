@@ -49,27 +49,27 @@ export default {
 
       Object.assign(this.query, data.query)
     },
-    currentChange(pageNum) {
+    currentChange(page) {
       // el-pagination组件 current-change
-      this.query.pageNum = pageNum
-      this.fetchByPage(pageNum)
+      this.query.page = page
+      this.fetchByPage(page)
     },
-    changePages(pageSize) {
+    changePages(size) {
       // el-pagination组件  size-change
-      this.query.pageSize = pageSize
-      this.query.pageNum = 1
+      this.query.size = size
+      this.query.page = 1
       this.fetchByPage(1)
     },
     search() {
       this.beforeSearch()
       this.fetchByPage(1)
     },
-    fetchByPage(pageNum = this.query.pageNum) {
+    fetchByPage(page = this.query.page) {
       if (this.loading) {
         this.$message.warning('正在加载，请勿重复操作')
         return
       }
-      this.query.pageNum = pageNum
+      this.query.page = page
       if (this.cacheQuery) {
 
         // window.scrollTo(0, 0)
@@ -88,8 +88,8 @@ export default {
       this.loading = true
       return this.fetchApi(params).then(results => {
         this.loading = false
-        this.tableList = this.formatData(results.result.list || [])
-        this.total = Number(results.result.totalNum || 0) // 暂时不分页 前端假分页
+        this.tableList = this.formatData(results.data.data || [])
+        this.total = Number(results.data.total || 0) // 暂时不分页 前端假分页
         this.afterSearch()
       })
     },

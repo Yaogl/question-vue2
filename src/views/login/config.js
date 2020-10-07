@@ -1,32 +1,28 @@
 export const getLoginRules = (context) => {
   return {
-    userName: [
+    username: [
       { required: true, message: '请输入用户名', trigger: 'change' },
       { validator: validateUserName(context), trigger: 'blur' }
     ],
-    userPwd: [
+    password: [
       { required: true, message: '请输入密码', trigger: 'change' },
       // { validator: validatePassword(context), trigger: 'blur' }
-    ],
-    verifyCode: [
-      { required: true, message: '请输入验证码', trigger: 'change' }
     ]
   }
 }
 
 export const getRegisterRules = (context) => {
   return {
-    userName: [
+    username: [
       { required: true, message: '请输入用户名', trigger: 'change' },
       { validator: validateUserName(context), trigger: 'blur' }
     ],
-    userPwd: [
+    password: [
       { required: true, message: '请输入密码', trigger: 'change' },
       { validator: validatePassword(context), trigger: 'blur' }
     ],
-    verifyCode: [
-      { required: true, message: '请再次输入密码', trigger: 'change' },
-      { validator: againPassword(context), trigger: 'blur' }
+    realname: [
+      { required: true, message: '请输入真实姓名', trigger: 'change' }
     ]
   }
 }

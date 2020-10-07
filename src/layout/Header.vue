@@ -2,12 +2,6 @@
 <div class="header">
   <div class="header-left">
     <i :class="sideBarCollapse ? 'el-icon-s-unfold pointer' : 'el-icon-s-fold pointer'" @click="collapseChage"></i>
-    <div class="project-choose">
-      <span class="label">项目：</span>
-      <el-select :value="curProjectInfo" value-key="uuid" placeholder="请选择项目" @change="updateProject">
-        <el-option v-for="(item, index) in projectList" :key="item.uuid" :label="item.name" :value="item"></el-option>
-      </el-select>
-    </div>
   </div>
   <div class="header-right">
     <div class="header-user-con">
@@ -17,14 +11,10 @@
           <i class="el-icon-rank"></i>
         </el-tooltip>
       </div>
-      <!-- 用户头像 -->
-      <!-- <div class="user-avator">
-        <img src="../assets/img/img.jpg" />
-      </div> -->
       <!-- 用户名下拉菜单 -->
       <el-dropdown class="user-name" trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
-          {{ userInfo.name }}
+          {{ userInfo.realname }}
           <i class="el-icon-caret-bottom"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -52,9 +42,7 @@ export default {
     ...mapGetters([
       'sideBarCollapse',
       'isFullScreen',
-      'userInfo',
-      'projectList',
-      'curProjectInfo'
+      'userInfo'
     ])
   },
   methods: {

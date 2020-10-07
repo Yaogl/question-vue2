@@ -2,7 +2,7 @@
 <div class="sidebar">
   <div class="title-row">
     <i class="iconfont">&#xe665;</i>
-    <span v-if="!sideBarCollapse" class="title">长城云服务平台</span>
+    <span v-if="!sideBarCollapse" class="title">题库</span>
   </div>
   <el-menu class="sidebar-el-menu" @select="menuSelect" :default-active="onRoutes" :collapse="sideBarCollapse" background-color="#324157" text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened>
     <template v-for="item in menuList">
@@ -42,7 +42,18 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      // items: menuList
+      menuList: [
+        {
+          title: '题库',
+          index: '1',
+          children: [
+            {
+              title: '试题列表',
+              index: '/dashboard',
+            }
+          ]
+        }
+      ]
     }
   },
   computed: {
@@ -50,12 +61,12 @@ export default {
       return this.$route.path
     },
     ...mapGetters([
-      'sideBarCollapse',
-      'menuList'
+      'sideBarCollapse'
     ])
   },
   methods: {
     menuSelect(path) {
+      console.log(path);
       if (this.onRoutes === path) return
       this.$router.push(path)
     }

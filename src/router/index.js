@@ -1,17 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import computeServiceRouter from './compute-service'
-import networkServiceRouter from './network-service'
-import systemManageRouter from './system-manage'
-import storageServiceRouter from './storage-service'
-import securityRouter from './security'
-
 Vue.use(Router)
 const defaultRouter = [{
     path: '/dashboard',
     component: () => import('../views/dashboard'),
     meta: {
       title: '系统首页'
+    }
+  },
+  {
+    path: '/create-question',
+    component: () => import( /* webpackChunkName: "404" */ '../views/dashboard/create'),
+    meta: {
+      title: '404'
     }
   },
   {
@@ -30,13 +31,6 @@ const defaultRouter = [{
   }
 ]
 
-const lastRouter = defaultRouter.concat(
-  computeServiceRouter,
-  networkServiceRouter,
-  systemManageRouter,
-  storageServiceRouter,
-  securityRouter
-)
 export default new Router({
   routes: [{
       path: '/',
@@ -48,7 +42,7 @@ export default new Router({
       meta: {
         title: '全局'
       },
-      children: lastRouter
+      children: defaultRouter
     },
     {
       path: '/login',
