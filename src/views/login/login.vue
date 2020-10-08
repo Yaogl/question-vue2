@@ -21,7 +21,7 @@
             </el-input>
           </el-form-item>
           <div class="login-btn">
-            <el-button type="primary" @click="submitForm()">登录</el-button>
+            <el-button type="primary" :loading="loading" @click="submitForm()">登录</el-button>
           </div>
           <p class="login-tips">
             <el-button type="text" @click="transfer">去注册</el-button>
@@ -46,7 +46,7 @@
             </el-input>
           </el-form-item>
           <div class="login-btn">
-            <el-button type="primary" @click="registerSubmit">注册</el-button>
+            <el-button type="primary" @click="registerSubmit" :loading="loading">注册</el-button>
           </div>
           <p class="login-tips">
             <el-button type="text" @click="transfer">去登录</el-button>
@@ -78,7 +78,7 @@ export default {
         password: '',
         realname: ''
       },
-      refreshLoading: false
+      loading: false
     }
   },
   created() {
@@ -90,9 +90,12 @@ export default {
     registerSubmit() {
       this.$refs.register.validate(valid => {
         if (valid) {
+          this.loading = true
           registerUser(this.registerFormData).then(res => {
-            console.log(res);
-            if (res.code === 200) {
+            this.loading = false
+            if (res.code === 0) {
+              this.$message.success('注册成功')
+              this.transfer()
             }
           })
         }
@@ -101,9 +104,10 @@ export default {
     submitForm() {
       this.$refs.login.validate(valid => {
         if (valid) {
+          this.loading = true
           let clone = JSON.parse(JSON.stringify(this.loginFormData))
           authLogin(clone).then(res => {
-            console.log(res);
+            this.loading = false
             if (res.code === 0) {
               this.$message.success('登录成功')
               delete clone.password
