@@ -96,7 +96,12 @@ export default {
             if (res.code === 0) {
               this.$message.success('注册成功')
               this.transfer()
+            } else {
+              this.$message.error(res.message)
             }
+          }).catch(err => {
+            this.$message.error(err.message)
+            this.loading = false
           })
         }
       })

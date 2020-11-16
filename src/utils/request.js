@@ -22,12 +22,6 @@ service.interceptors.response.use(
     if (res.code === 0) {
       return Promise.resolve(res)
     } else {
-      if (res.resultMsg) {
-        Message({
-          message: res.resultMsg,
-          type: 'error'
-        })
-      }
       return Promise.reject(res)
     }
   },
